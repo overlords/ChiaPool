@@ -1,0 +1,8 @@
+Database:
+  Host: playwo.de
+  Database: AccountAPI
+  Username: AddUserName
+  Password: AddPassword
+Http:
+  Address: 127.0.0.1
+  Port: 10000

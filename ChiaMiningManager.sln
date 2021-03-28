@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30223.230
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaMiningManager.Server", "ChiaMiningManager.Server\ChiaMiningManager.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChiaMiningManager.Client", "ChiaMiningManager.Client\ChiaMiningManager.Client.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F56DF82-2E45-4776-81FD-43DF369FC911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F56DF82-2E45-4776-81FD-43DF369FC911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F56DF82-2E45-4776-81FD-43DF369FC911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F56DF82-2E45-4776-81FD-43DF369FC911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B31BC1D9-291C-41E8-8142-897D10366E18}
+	EndGlobalSection
+EndGlobal
