@@ -44,7 +44,7 @@ namespace ChiaMiningManager
 
                     webBuilder.ConfigureKestrel((context, options) =>
                     {
-                        options.Listen(IPAddress.Loopback, ApplicationPort);
+                        options.Listen(IPAddress.Any, ApplicationPort);
                     });
                 })
                 .ConfigureAppConfiguration(config =>
