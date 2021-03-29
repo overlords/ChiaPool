@@ -27,7 +27,7 @@ namespace ChiaMiningManager.Controllers
             }
 
      
-            return Ok();
+            return PhysicalFile("/root/ca.zip", "application/zip");
         }
     }
 }

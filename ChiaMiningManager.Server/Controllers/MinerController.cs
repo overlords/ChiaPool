@@ -3,6 +3,7 @@ using ChiaMiningManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -78,6 +79,33 @@ namespace ChiaMiningManager.Controllers
             await DbContext.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpGet("List")]
+        public async Task<IActionResult> GetAllMinersAsync()
+        {
+            var miners = await DbContext.Miners.ToListAsync();
+            miners = miners.Select(x => { x.Token = null; x.Address = null; x.NextIncrement = default; return x; }).ToList();
+            return Ok(miners);
+        }
+
+        [HttpGet("Info/Id/{id}")]
+        public async Task<IActionResult> GetMinerInfoByIdAsync([FromRoute] Guid id)
+        {
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Id == id);
+
+            return miner == null 
+                ? NotFound() 
+                : Ok(miner);
+        }
+        [HttpGet("Info/Id/{name}")]
+        public async Task<IActionResult> GetMinerInfoByNameAsync([FromRoute] string name)
+        {
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Name == name);
+
+            return miner == null 
+                ? NotFound() 
+                : Ok(miner);
         }
 
         private IPAddress GetRequestIP()
