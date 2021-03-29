@@ -125,34 +125,37 @@ namespace ChiaMiningManager.Services
         {
             using var adapter = System.GetTableAdapter(4);
             var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
-            var rules = System.GetRules(adapter, IpTable, IpChain);
 
-            foreach (var rule in rules)
+            foreach (var rule in chain.Rules)
             {
                 chain.DeleteRule(rule as IpTablesRule);
             }
+
+            var sync = new DefaultNetfilterSync<IpTablesRule>();
+            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);
         }
         private void AcceptIPInternal(IPAddress address)
         {
+            Logger.LogInformation($"Whitelisted {address}");
+
             using var adapter = System.GetTableAdapter(4);
 
             var chain = new IpTablesChain(IpTable, IpChain, 4, System);
-            var rule = IpTablesRule.Parse(GetAcceptRule(address), null, null);
+            var rule = new IpTablesRule(System, chain);
+            rule.AppendToRule(GetAcceptRule(address));
             chain.AddRule(rule);
 
             var sync = new DefaultNetfilterSync<IpTablesRule>();
             (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);           
-            Logger.LogInformation($"Whitelisted {address}");
         }
         private void DropIPInternal(IPAddress address)
         {
+            Logger.LogInformation($"Blacklisted {address}");
+
             using var adapter = System.GetTableAdapter(4);
             var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
-            var rules = System.GetRules(adapter, IpTable, IpChain);
 
-            var rule = rules
-                .Select(x => x as IpTablesRule)
-                .FirstOrDefault(x => x.GetCommand().Contains($"{address}"));
+            var rule = chain.Rules.FirstOrDefault(x => x.GetCommand().Contains($"{address}"));
 
             if (rule == null)
             {
@@ -160,7 +163,8 @@ namespace ChiaMiningManager.Services
             }
 
             chain.DeleteRule(rule);
-            Logger.LogInformation($"Blacklisted {address}");
+            var sync = new DefaultNetfilterSync<IpTablesRule>();
+            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);
         }
 
         private string GetAcceptRule(IPAddress address)
