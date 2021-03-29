@@ -15,6 +15,8 @@ RUN iptables -N WHITE \
 && iptables -A INPUT -p tcp --dport 8447 -j WHITE \
 && iptables -A INPUT -p tcp --dport 8447 -j DROP
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent 
+
 RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb
 
