@@ -2,33 +2,30 @@
 
 namespace ChiaMiningManager.Models
 {
-    public class MinerContext : DbContext
+    public class ConfigurationContext : DbContext
     {
-        public DbSet<Miner> Miners { get; set; }
+        public DbSet<Plot> Plots { get; set; }
 
-        public MinerContext(DbContextOptions options)
+        public ConfigurationContext(DbContextOptions options)
             : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Miner>(b =>
+            modelBuilder.Entity<Plot>(b =>
             {
                 b.Property(x => x.Id);
                 b.HasKey(x => x.Id);
+
+                b.Property(x => x.CreatedAt);
 
                 b.Property(x => x.Name);
                 b.HasIndex(x => x.Name)
                 .IsUnique();
 
-                b.Property(x => x.Token);
-                b.HasIndex(x => x.Token)
-                .IsUnique();
-
-                b.Property(x => x.Address);
-                b.Property(x => x.PlotMinutes);
-                b.Property(x => x.NextIncrement);
+                b.Property(x => x.Minutes);
+                b.Property(x => x.Path);
             });
         }
     }

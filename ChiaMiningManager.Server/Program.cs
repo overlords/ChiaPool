@@ -1,16 +1,16 @@
-using System.IO;
-using System.Threading.Tasks;
+using ChiaMiningManager.Configuration;
+using Common.Configuration;
+using Common.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ChiaMiningManager.Configuration;
-using YamlDotNet.Serialization;
-using Common.Extensions;
-using System.Reflection;
-using System;
-using Common.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
+using YamlDotNet.Serialization;
 
 namespace ChiaMiningManager
 {
@@ -18,7 +18,6 @@ namespace ChiaMiningManager
     {
         public const string ConfigPath = "config.yaml";
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006")]
         public static async Task Main(string[] args)
         {
             bool generatedConfig = await TryCreateConfigAsync(ConfigPath);
@@ -41,7 +40,7 @@ namespace ChiaMiningManager
             }
 
             await webHost.Services.InitializeApplicationServicesAsync(assembly);
-            webHost.Services.RunApplicationServices(assembly);        
+            webHost.Services.RunApplicationServices(assembly);
 
             await webHost.StartAsync();
             await webHost.WaitForShutdownAsync();
@@ -72,6 +71,7 @@ namespace ChiaMiningManager
                 {
                     config.Sources.Clear();
                     config.AddJsonFile("appsettings.json", false);
+                    config.AddYamlFile("config.yaml", false);
                 });
 
         public static async Task<bool> TryCreateConfigAsync(string path)

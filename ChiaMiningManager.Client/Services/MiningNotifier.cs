@@ -1,7 +1,9 @@
 ﻿using ChiaMiningManager.Configuration;
 using Common.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,60 +13,114 @@ namespace ChiaMiningManager.Services
 {
     public class MiningNotifier : Service
     {
-        [Inject]
-        private readonly AuthOption AuthOptions;
+        private const int TimeBetweenClaimRequests = 60 * 1000; //1 Minute
+
         [Inject]
         private readonly HttpClient Client;
 
-        private const int TimeBetweenClaims = 60 * 1000;
+        [Inject]
+        private readonly AuthOption AuthOptions;
 
         protected override async ValueTask RunAsync()
         {
+            await SendStartRequest();
+
+            var delayTask = Task.Delay(TimeBetweenClaimRequests);
+            var scope = Provider.CreateScope();
             while (true)
             {
-                await Task.Delay(TimeBetweenClaims);
+                await delayTask;
+                delayTask = Task.Delay(TimeBetweenClaimRequests);
 
-                try
-                {
-                    await SendClaimRequestAsync();
-                }
-                catch (HttpRequestException)
-                {
-                    Logger.LogError("Could not claim mined time: Could not reach server, are you connected to the internet?");
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex, "An error occured while claiming mined time");
-                }
+                var plotManager = scope.ServiceProvider.GetRequiredService<PlotManager>();
+                await SendClaimRequest(plotManager);
+                await plotManager.IncrementPlots();
             }
         }
 
-        private async Task SendClaimRequestAsync()
+        private async Task SendStartRequest()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "pool.playwo.de/miner/start");
+            request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
+
+            try
+            {
+                var response = await Client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Logger.LogInformation("Successfully started mining session!");
+                    return;
+                }
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        Logger.LogCritical("Could not start mining session: The server could not identify your ip!");
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        Logger.LogCritical("Could not start mining session: Your miner token is invalid!");
+                        break;
+                    default:
+                        Logger.LogError($"Could not start mining session: The server responded with {response.StatusCode}");
+                        break;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                Logger.LogError($"Could not start mining session: There was a connection error, are you connected to the internet?");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Could not start mining session: An error occured");
+            }
+        }
+
+        private async Task SendClaimRequest(PlotManager plotManager)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "pool.playwo.de/miner/claim");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
-            var response = await Client.SendAsync(request);
+            int plotCount = await plotManager.GetPlotsCountAsync();
 
-            if (response.IsSuccessStatusCode)
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>()
             {
-                return;
+                ["activePlots"] = $"{plotCount}",
+            });
+
+            try
+            {
+                var response = await Client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.NotFound:
+                        Logger.LogCritical("Could not claim PM: The server could not identify your ip!");
+                        break;
+                    case HttpStatusCode.Unauthorized:
+                        Logger.LogCritical("Could not claim PM: Your miner token is invalid!");
+                        break;
+                    case HttpStatusCode.Conflict:
+                        Logger.LogError("Could not claim PM: Are you using the same token for multiple miners?");
+                        break;
+                    default:
+                        Logger.LogError($"Could not claim PM: The server responded with {response.StatusCode}");
+                        break;
+                }
             }
-
-            switch (response.StatusCode)
+            catch (HttpRequestException)
             {
-                case HttpStatusCode.NotFound:
-                    Logger.LogCritical("Could not claim mined time: Invalid token!");
-                    break;
-                case HttpStatusCode.Conflict:
-                    Logger.LogError("Could not claim mined time: Not enough time has passed since last claim. Are you using the same token on multiple devices?");
-                    break;
-                default:
-                    Logger.LogError($"Could not claim mined time: Server responded with {response.StatusCode}. Try updating your image");
-                    break;
+                Logger.LogError($"Could not claim PM: There was a connection error, are you connected to the internet?");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"Could not claim PM: An error occured");
             }
         }
-
     }
 }

@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Common.Configuration;
+﻿using Common.Configuration;
+using System.Net;
 
 namespace ChiaMiningManager.Configuration
 {

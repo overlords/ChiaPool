@@ -5,6 +5,7 @@
 
 # Config files
 *.config.yaml
+config.yaml
 
 # User-specific files
 *.rsuser

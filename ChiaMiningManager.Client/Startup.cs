@@ -1,5 +1,6 @@
 using ChiaMiningManager.Configuration;
 using ChiaMiningManager.Models;
+using ChiaMiningManager.Services;
 using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+using System.Net.Http;
 using System.Reflection;
 
 namespace ChiaMiningManager
@@ -25,12 +26,13 @@ namespace ChiaMiningManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(Configuration, Assembly.GetExecutingAssembly());
+            services.AddSingleton<HttpClient>();
+            services.AddScoped<PlotManager>();
 
-            services.AddDbContext<MinerContext>((provider, options) =>
+            services.AddDbContext<ConfigurationContext>((provider, options) =>
             {
-                var dbOptions = provider.GetRequiredService<IOptionsMonitor<DatabaseOptions>>();
-                string connectionString = dbOptions.CurrentValue.BuildConnectionString();
-                options.UseNpgsql(connectionString);
+                var authOptions = provider.GetRequiredService<AuthOption>();
+                options.UseSqlite(@$"Data Source=data.db");
             });
 
             services.AddControllers();

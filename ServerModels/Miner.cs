@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace ChiaMiningManager.Models
 {
@@ -8,7 +9,7 @@ namespace ChiaMiningManager.Models
         public string Name { get; set; }
         public string Token { get; set; }
 
-        public short Plots { get; set; }
+        public IPAddress Address { get; set; }
         public long PlotMinutes { get; set; }
         public DateTimeOffset NextIncrement { get; set; }
 
