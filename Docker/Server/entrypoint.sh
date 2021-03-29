@@ -25,4 +25,7 @@ sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 chia start farmer
 
 cd /root
+
+zip -r ca.zip .chia/mainnet/config/ssl/ca
+
 sh runmanager.sh
