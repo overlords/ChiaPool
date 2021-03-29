@@ -144,8 +144,11 @@ namespace ChiaMiningManager.Services
         {
             using var adapter = System.GetTableAdapter(4);
             var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
+            var rules = System.GetRules(adapter, IpTable, IpChain);
 
-            var rule = chain.Rules.FirstOrDefault(x => x.GetCommand().Contains($"{address}"));
+            var rule = rules
+                .Select(x => x as IpTablesRule)
+                .FirstOrDefault(x => x.GetCommand().Contains($"{address}"));
 
             if (rule == null)
             {
