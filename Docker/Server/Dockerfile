@@ -11,12 +11,6 @@ ARG BRANCH
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iptables curl jq python3 ansible tar bash ca-certificates git openssl unzip wget python3-pip sudo acl build-essential python3-dev python3.8-venv python3.8-distutils apt nfs-common python-is-python3
 
-RUN iptables -N WHITE \
-&& iptables -A INPUT -p tcp --dport 8447 -j WHITE \
-&& iptables -A INPUT -p tcp --dport 8447 -j DROP
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iptables-persistent 
-
 RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb
 
