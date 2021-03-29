@@ -5,6 +5,7 @@ using IPTables.Net.Iptables;
 using IPTables.Net.Iptables.Adapter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -139,6 +140,7 @@ namespace ChiaMiningManager.Services
             rule.AppendToRule(GetAcceptRule(address));
 
             chain.AddRule(rule);
+            Logger.LogInformation($"Whitelisted {address}");
         }
         private void DropIPInternal(IPAddress address)
         {
@@ -156,6 +158,7 @@ namespace ChiaMiningManager.Services
             }
 
             chain.DeleteRule(rule);
+            Logger.LogInformation($"Blacklisted {address}");
         }
 
         private string GetAcceptRule(IPAddress address)
