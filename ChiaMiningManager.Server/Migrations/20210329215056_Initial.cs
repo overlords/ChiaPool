@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using System.Net;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ChiaMiningManager.Migrations
 {
@@ -14,7 +15,7 @@ namespace ChiaMiningManager.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: true),
-                    Plots = table.Column<short>(type: "smallint", nullable: false),
+                    Address = table.Column<IPAddress>(type: "inet", nullable: true),
                     PlotMinutes = table.Column<long>(type: "bigint", nullable: false),
                     NextIncrement = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
