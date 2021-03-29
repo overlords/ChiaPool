@@ -1,3 +1,2 @@
 cd manager
-
-. ./ChiaMiningManager.Client
+./ChiaMiningManager.Client
