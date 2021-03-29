@@ -11,3 +11,5 @@ services:
       - /yourplotspath:/plots #Add more plot directories here
       # /yoursecondplotpath:/plots2
       - /yourlogspath:/root/.chia/mainnet/log
+    env_file:
+      - harvester.env

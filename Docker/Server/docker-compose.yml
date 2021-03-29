@@ -16,3 +16,5 @@ services:
       - /yourconfigpath:/root/.chia/mainnet/config
     cap_add:
       - NET_ADMIN
+    env_file:
+      - node.env
