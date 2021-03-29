@@ -4,27 +4,33 @@ EXPOSE 8444
 EXPOSE 8447
 EXPOSE 8666
 
-ARG BRANCH
 
 WORKDIR /root
+ARG BRANCH
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get upgrade -y
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl jq python3 ansible tar bash ca-certificates git openssl unzip wget python3-pip sudo acl build-essential python3-dev python3.8-venv python3.8-distutils apt nfs-common python-is-python3
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iptables curl jq python3 ansible tar bash ca-certificates git openssl unzip wget python3-pip sudo acl build-essential python3-dev python3.8-venv python3.8-distutils apt nfs-common python-is-python3
 
 RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
 && dpkg -i packages-microsoft-prod.deb
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
-&& apt-get install -y apt-transport-https && \
-&& apt-get update && \
-&& apt-get install -y dotnet-sdk-5.0
+&& apt-get install -y apt-transport-https \
+&& apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata dotnet-sdk-5.0
+
+WORKDIR /root
 
 RUN echo "Cloning ChiaMiningManager"
-RUN git clone --branch main https://github.com/Playwo/ChiaMiningManager.git \
+RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
 && cd ChiaMiningManager/ChiaMiningManager.Server \
-&& dotnet publish --self-contained -o /root/manager
+&& dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
+&& chmod +x /root/manager/ChiaMiningManager.Server
 
-RUN DEBIAN_FRONTEND apt purge -y dotnet-sdk-5.0 apt-transport-https #Only required for the build
+RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ #Only required for build
+&& apt-get autoremove
+
+WORKDIR /root
 
 RUN echo "Cloning chia-blockchain"
 RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain.git \
@@ -33,8 +39,9 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 && chmod +x install.sh \
 && /usr/bin/sh ./install.sh
 
-WORKDIR /chia-blockchain
 RUN mkdir /plots
+WORKDIR /root
 ADD ./entrypoint.sh entrypoint.sh
+ADD ./runmanager.sh runmanager.sh
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]

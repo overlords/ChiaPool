@@ -14,7 +14,7 @@ RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-p
 RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 && apt-get install -y apt-transport-https \
 && apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata dotnet-sdk-5.0
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata dotnet-sdk-5.0
 
 WORKDIR /root
 
@@ -24,7 +24,8 @@ RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
 && dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
 && chmod +x /root/manager/ChiaMiningManager.Client
 
-RUN DEBIAN_FRONTEND=noninteractive apt purge -y dotnet-sdk-5.0 apt-transport-https #Only required for the build
+RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ #Only required for build
+&& apt-get autoremove
 
 WORKDIR /root
 
