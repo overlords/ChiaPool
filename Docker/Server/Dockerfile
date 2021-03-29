@@ -29,7 +29,7 @@ RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
 
 #Only required for build
 RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ 
-&& apt-get autoremove
+&& apt-get autoremove -y
 
 WORKDIR /root
 
