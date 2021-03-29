@@ -37,7 +37,7 @@ namespace ChiaMiningManager.Controllers
             {
                 return NotFound();
             }
-            if (minerAddress != miner.Address)
+            if (!minerAddress.Equals(miner.Address))
             {
                 await FirewallService.SwapMinerIP(miner.Address, minerAddress);
                 miner.Address = minerAddress;
@@ -67,7 +67,7 @@ namespace ChiaMiningManager.Controllers
             {
                 return NotFound();
             }
-            if (minerAddress != miner.Address)
+            if (!minerAddress.Equals(miner.Address))
             {
                 await FirewallService.SwapMinerIP(miner.Address, minerAddress);
                 miner.Address = minerAddress;
