@@ -23,4 +23,4 @@ cat ~/.chia/mainnet/config/config.yaml
 chia start farmer
 
 cd /root
-sh runmanager
+sh runmanager.sh
