@@ -6,7 +6,7 @@ services:
     ports:
       - 8444:8444
       - 8447:8447 
-      - 8666:8666
+      - 127.0.0.1:8666:8666
     restart: always
     container_name: ChiaNode
     volumes:
