@@ -27,7 +27,8 @@ RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
 && dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
 && chmod +x /root/manager/ChiaMiningManager.Server
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ #Only required for build
+#Only required for build
+RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ 
 && apt-get autoremove
 
 WORKDIR /root
