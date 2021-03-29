@@ -109,7 +109,7 @@ namespace ChiaMiningManager.Controllers
         }
 
         private IPAddress GetRequestIP()
-            => !Request.Headers.TryGetValue("HTTP_X_FORWARDED_FOR", out var value)
+            => !Request.Headers.TryGetValue("HTTP_X-FORWARDED-FOR", out var value)
                 ? null
                 : IPAddress.Parse(value);
     }
