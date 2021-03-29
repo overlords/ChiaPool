@@ -1,0 +1,2 @@
+cd manager
+./ChiaMiningManager.Server

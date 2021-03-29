@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{58F4BB
 		Docker\Server\Dockerfile = Docker\Server\Dockerfile
 		Docker\Server\entrypoint.sh = Docker\Server\entrypoint.sh
 		Docker\Server\node.env = Docker\Server\node.env
-		runmanager.sh = runmanager.sh
+		Docker\Server\runmanager.sh = Docker\Server\runmanager.sh
 	EndProjectSection
 EndProject
 Global
