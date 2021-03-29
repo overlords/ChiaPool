@@ -26,8 +26,7 @@ namespace ChiaMiningManager.Controllers
                 return Unauthorized();
             }
 
-            var file = ZipFile.CreateFromDirectory()
-
+     
             return Ok();
         }
     }
