@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  harvester:
+    image: AddImageHere
+    ports:
+      - 8888:8888
+    restart: always
+    container_name: ChiaHarvester
+    volumes:
+      - /yourplotspath:/plots #Add more plot directories here
+      # /yoursecondplotpath:/plots2
+      - /yourlogspath:/root/.chia/mainnet/log

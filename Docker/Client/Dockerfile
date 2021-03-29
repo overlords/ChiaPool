@@ -20,7 +20,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
 RUN echo "Cloning ChiaMiningManager"
 RUN git clone --branch main https://github.com/Playwo/ChiaMiningManager.git \
 && cd ChiaMiningManager/ChiaMiningManager.Client \
-&& dotnet publish --self-contained -o /root/manager
+&& dotnet publish --self-contained -o /root/manager \
+&& chmod +x /root/manager/ChiaMiningManager.Client 
 
 RUN DEBIAN_FRONTEND apt purge -y dotnet-sdk-5.0 apt-transport-https #Only required for the build
 
