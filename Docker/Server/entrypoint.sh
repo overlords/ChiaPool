@@ -1,4 +1,4 @@
-cd /chia-blockchain
+cd chia-blockchain
 
 . ./activate
 
