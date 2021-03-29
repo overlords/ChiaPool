@@ -6,12 +6,10 @@ namespace ChiaMiningManager.Configuration
 {
     public class DatabaseOptions : Option
     {
-        public string ConnectionString = "";
+        public string ConnectionString = Environment.GetEnvironmentVariable("db_connection");
 
         protected override ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
         {
-            ConnectionString = Environment.GetEnvironmentVariable("db_connection");
-
             return base.ValidateAsync(provider);
         }
     }
