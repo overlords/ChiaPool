@@ -123,10 +123,11 @@ namespace ChiaMiningManager.Services
         {
             using var adapter = System.GetTableAdapter(4);
             var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
+            var rules = System.GetRules(adapter, IpTable, IpChain);
 
-            foreach (var rule in chain.Rules)
+            foreach (var rule in rules)
             {
-                chain.DeleteRule(rule);
+                chain.DeleteRule(rule as IpTablesRule);
             }
         }
         private void AcceptIPInternal(IPAddress address)
