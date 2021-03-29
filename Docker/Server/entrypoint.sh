@@ -4,7 +4,7 @@ cd /chia-blockchain
 
 chia init
 
-if [[ ${keys} == "generate" ]]; then
+if [ ${keys} == "generate" ]; then
   echo "to use your own keys pass them as a variable keys=\"24words\""
   chia keys generate
 else
