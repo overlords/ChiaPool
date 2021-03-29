@@ -9,8 +9,12 @@ namespace ChiaMiningManager.Configuration
         public string Token { get; set; } = "";
 
         protected override ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
-            => !Guid.TryParse(Token, out _)
+        {
+            Token = Environment.GetEnvironmentVariable("token");
+
+            return !Guid.TryParse(Token, out _)
                 ? ValueTask.FromResult(ValidationResult.Failed("Miner token has invalid format!"))
                 : base.ValidateAsync(provider);
+        }
     }
 }

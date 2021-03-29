@@ -1,7 +1,6 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using System;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands

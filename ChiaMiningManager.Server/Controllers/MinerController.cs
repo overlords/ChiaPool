@@ -80,7 +80,7 @@ namespace ChiaMiningManager.Controllers
             return Ok();
         }
 
-        private IPAddress GetRequestIP() 
+        private IPAddress GetRequestIP()
             => !Request.Headers.TryGetValue("HTTP_X_FORWARDED_FOR", out var value)
                 ? null
                 : IPAddress.Parse(value);

@@ -28,7 +28,7 @@ namespace ChiaMiningManager.Commands
 
             await console.Output.WriteLineAsync($"Id    Name    Minutes");
 
-            foreach(var plot in plots)
+            foreach (var plot in plots)
             {
                 await console.Output.WriteLineAsync($"{plot.Id} {plot.Name} {plot.Minutes}");
             }

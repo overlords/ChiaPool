@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace ChiaMiningManager
@@ -28,8 +27,8 @@ namespace ChiaMiningManager
 
             services.AddDbContext<MinerContext>((provider, options) =>
             {
-                var dbOptions = provider.GetRequiredService<IOptionsMonitor<DatabaseOptions>>();
-                string connectionString = dbOptions.CurrentValue.BuildConnectionString();
+                var dbOptions = provider.GetRequiredService<DatabaseOptions>();
+                string connectionString = dbOptions.ConnectionString;
                 options.UseNpgsql(connectionString);
             });
 

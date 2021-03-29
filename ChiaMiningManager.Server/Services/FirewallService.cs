@@ -1,6 +1,5 @@
 ﻿using ChiaMiningManager.Models;
 using Common.Services;
-using Dynamitey.DynamicObjects;
 using IPTables.Net;
 using IPTables.Net.Iptables;
 using IPTables.Net.Iptables.Adapter;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using SystemInteract.Local;
 
 namespace ChiaMiningManager.Services
 {
@@ -27,9 +27,10 @@ namespace ChiaMiningManager.Services
         public FirewallService()
         {
             var ad = new IPTablesBinaryAdapter();
-            System = new IpTablesSystem(null, ad);
+            var fa = new LocalFactory();
+            System = new IpTablesSystem(fa, ad);
 
-            AccessSemaphore = new SemaphoreSlim(1,1);
+            AccessSemaphore = new SemaphoreSlim(1, 1);
         }
 
         protected override async ValueTask InitializeAsync()
@@ -38,7 +39,7 @@ namespace ChiaMiningManager.Services
 
         }
 
-        protected  override async ValueTask RunAsync()
+        protected override async ValueTask RunAsync()
         {
             while (true)
             {
@@ -68,8 +69,8 @@ namespace ChiaMiningManager.Services
 
                 var ruleSet = new IpTablesRuleSet(4, rules, System);
                 var chain = System.GetChain(adapter, IpTable, IpChain);
-                
-                foreach(var rule in ruleSet.Rules)
+
+                foreach (var rule in ruleSet.Rules)
                 {
                     chain.AddRule(rule);
                 }
@@ -123,7 +124,7 @@ namespace ChiaMiningManager.Services
             using var adapter = System.GetTableAdapter(4);
             var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
 
-            foreach(var rule in chain.Rules)
+            foreach (var rule in chain.Rules)
             {
                 chain.DeleteRule(rule);
             }

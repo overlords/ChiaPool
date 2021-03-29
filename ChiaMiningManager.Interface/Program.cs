@@ -34,7 +34,7 @@ namespace ChiaMiningManager
             services.AddTransient<ClientApiAccessor>();
             services.AddTransient<ServerApiAccessor>();
 
-            foreach(var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null))
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null))
             {
                 services.AddTransient(type);
             }
