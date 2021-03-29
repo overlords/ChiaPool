@@ -3,6 +3,7 @@ using Common.Services;
 using IPTables.Net;
 using IPTables.Net.Iptables;
 using IPTables.Net.Iptables.Adapter;
+using IPTables.Net.Netfilter.TableSync;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -134,12 +135,13 @@ namespace ChiaMiningManager.Services
         private void AcceptIPInternal(IPAddress address)
         {
             using var adapter = System.GetTableAdapter(4);
-            var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
 
-            var rule = new IpTablesRule(System, chain);
-            rule.AppendToRule(GetAcceptRule(address));
-
+            var chain = new IpTablesChain(IpTable, IpChain, 4, System);
+            var rule = IpTablesRule.Parse(GetAcceptRule(address), null, null);
             chain.AddRule(rule);
+
+            var sync = new DefaultNetfilterSync<IpTablesRule>();
+            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);           
             Logger.LogInformation($"Whitelisted {address}");
         }
         private void DropIPInternal(IPAddress address)
