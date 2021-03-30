@@ -23,7 +23,7 @@ namespace Chia.NET.Models
         public double PendingChange { get; }
 
         [JsonConstructor]
-        internal Wallet()
+        public Wallet()
         {
         }
     }

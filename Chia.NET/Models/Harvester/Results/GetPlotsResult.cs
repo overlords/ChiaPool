@@ -14,7 +14,7 @@ namespace Chia.NET.Models
         public Plot[] Plots { get; }
 
         [JsonConstructor]
-        internal GetPlotsResult()
+        public GetPlotsResult()
         {
         }
     }

@@ -8,7 +8,7 @@ namespace Chia.NET.Models
         public Wallet Wallet { get; }
 
         [JsonConstructor]
-        internal GetWalletBalanceResult()
+        public GetWalletBalanceResult()
         {
         }
     }
