@@ -4,7 +4,7 @@ iptables -A INPUT -p tcp --dport 8447 -j DROP
 
 cd chia-blockchain
 
-. ./activate
+./activate
 
 chia init
 
@@ -28,4 +28,5 @@ cd /root
 
 zip -r ca.zip .chia/mainnet/config/ssl/ca
 
-sh runmanager.sh
+cd ../manager
+./ChiaMiningManager.Server

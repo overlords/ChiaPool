@@ -21,7 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{09F0F1
 		Docker\Client\Dockerfile = Docker\Client\Dockerfile
 		Docker\Client\entrypoint.sh = Docker\Client\entrypoint.sh
 		Docker\Client\harvester.env = Docker\Client\harvester.env
-		Docker\Client\runmanager.sh = Docker\Client\runmanager.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{58F4BB16-9A0E-4EC5-95CB-5F85908D5580}"
@@ -30,7 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{58F4BB
 		Docker\Server\Dockerfile = Docker\Server\Dockerfile
 		Docker\Server\entrypoint.sh = Docker\Server\entrypoint.sh
 		Docker\Server\node.env = Docker\Server\node.env
-		Docker\Server\runmanager.sh = Docker\Server\runmanager.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{79892A9F-6348-4DC1-BC63-2368B627D00E}"

@@ -16,5 +16,5 @@ done
 
 chia start harvester
 
-cd /root
-sh runmanager.sh
+cd ../manager
+./ChiaMiningManager.Client
