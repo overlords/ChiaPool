@@ -4,7 +4,7 @@ iptables -A INPUT -p tcp --dport 8447 -j DROP
 
 cd chia-blockchain
 
-./activate
+. ./activate
 
 chia init
 
