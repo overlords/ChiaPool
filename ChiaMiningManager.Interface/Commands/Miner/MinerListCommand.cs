@@ -2,6 +2,7 @@
 using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands.Miner
@@ -26,12 +27,18 @@ namespace ChiaMiningManager.Commands.Miner
                 return;
             }
 
-            await console.Output.WriteLineAsync("Id    Name    PM");
+            int idLength = miners.Max(x => x.Id.ToString().Length) + 2;
+            int nameLength = miners.Max(x => x.Name.Length);
+
+            await console.Output.WriteLineAsync($"Id{GetWhiteSpace(idLength)}Name{GetWhiteSpace(nameLength)}PM");
 
             foreach(var miner in miners)
             {
                 await console.Output.WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
             }
         }
+
+        private string GetWhiteSpace(int length)
+            => new string(' ', length);
     }
 }
