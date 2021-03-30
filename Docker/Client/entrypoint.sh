@@ -5,6 +5,7 @@ cd ../chia-blockchain
 
 . ./activate
 
+chia init
 chia init -c ca
 sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 chia configure --set-farmer-peer ${farmer_host}:${farmer_port}

@@ -106,7 +106,7 @@ namespace ChiaMiningManager.Services
             foreach (var entry in archive.Entries)
             {
                 string path = $"/root/chia-blockchain/ca/{entry.FullName}";
-                entry.ExtractToFile(path);
+                entry.ExtractToFile(path, true);
             }
         }
     }

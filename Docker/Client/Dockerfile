@@ -22,7 +22,8 @@ RUN echo "Cloning ChiaMiningManager"
 RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
 && cd ChiaMiningManager/ChiaMiningManager.Client \
 && dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
-&& chmod +x /root/manager/ChiaMiningManager.Client
+&& chmod +x /root/manager/ChiaMiningManager.Client \
+&& mkdir ca
 
 #Only required for build
 RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ 
