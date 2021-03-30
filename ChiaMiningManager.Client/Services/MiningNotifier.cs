@@ -87,11 +87,6 @@ namespace ChiaMiningManager.Services
             }
         }
 
-        private async Task<int> GetPlotCount()
-        {
-            var plots = //await HarvesterClient.GetPlotsAsync();
 
-            return plots.Count;
-        }
     }
 }

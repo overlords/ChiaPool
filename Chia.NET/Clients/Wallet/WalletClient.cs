@@ -1,5 +1,4 @@
-﻿using Chia.NET.Clients.Wallet;
-using Chia.NET.Models;
+﻿using Chia.NET.Models;
 using System.Threading.Tasks;
 
 namespace Chia.NET.Clients
