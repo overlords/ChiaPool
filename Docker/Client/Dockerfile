@@ -40,6 +40,5 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 RUN mkdir /plots
 WORKDIR /root
 ADD ./entrypoint.sh entrypoint.sh
-ADD ./runmanager.sh runmanager.sh
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]
