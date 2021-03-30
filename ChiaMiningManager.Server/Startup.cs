@@ -25,7 +25,7 @@ namespace ChiaMiningManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(Configuration, Assembly.GetExecutingAssembly());
-            services.AddSingleton<WalletClient>();
+            services.AddApplication(Configuration, Assembly.GetAssembly(typeof(WalletClient)));
 
             services.AddDbContext<MinerContext>((provider, options) =>
             {

@@ -1,3 +1,4 @@
+using Chia.NET.Clients;
 using Common.Configuration;
 using Common.Extensions;
 using Microsoft.AspNetCore.Hosting;
@@ -22,6 +23,7 @@ namespace ChiaMiningManager
             var webHost = CreateHostBuilder(args).Build();
             var logger = webHost.Services.GetRequiredService<ILogger<Startup>>();
             var assembly = Assembly.GetExecutingAssembly();
+            var chiaNetAssembly = Assembly.GetAssembly(typeof(WalletClient));
 
             var validationResult = await webHost.Services.ValidateOptionsAsync(assembly);
 
@@ -31,7 +33,10 @@ namespace ChiaMiningManager
             }
 
             await webHost.Services.InitializeApplicationServicesAsync(assembly);
+            await webHost.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
+
             webHost.Services.RunApplicationServices(assembly);
+            webHost.Services.RunApplicationServices(chiaNetAssembly);
 
             await webHost.StartAsync();
             await webHost.WaitForShutdownAsync();

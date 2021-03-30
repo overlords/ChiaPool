@@ -1,4 +1,5 @@
 ﻿using Chia.NET.Models;
+using Common.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,19 +10,27 @@ using System.Threading.Tasks;
 
 namespace Chia.NET.Clients
 {
-    public abstract class ChiaApiClient
+    public abstract class ChiaApiClient : Service
     {
-        private readonly HttpClient Client;
+        private HttpClient Client;
+        private readonly string CertName;
 
         public ChiaApiClient(string certName)
         {
-            string certificatePath = Path.Combine("/root/.chia/mainnet/config/ssl", certName, $"private_{certName}.crt");
-            string keyPath = Path.Combine(certName, $"private_{certName}.key");
+            CertName = certName;
+        }
 
-            var cert = X509Certificate2.CreateFromPemFile(certificatePath, keyPath);
+        protected override ValueTask InitializeAsync()
+        {
+            string certificatePath = Path.Combine("/root/.chia/mainnet/config/ssl", CertName, $"private_{CertName}.crt");
+            string keyPath = Path.Combine(CertName, $"private_{CertName}.key");
+            var certificate = X509Certificate2.CreateFromPemFile(certificatePath, keyPath);
+
             var handler = new HttpClientHandler();
-            handler.ClientCertificates.Add(cert);
+            handler.ClientCertificates.Add(certificate);
             Client = new HttpClient(handler);
+
+            return ValueTask.CompletedTask;
         }
 
         protected async Task<T> PostAsync<T>(Uri requestUri, IDictionary<string, string> parameters = null) where T : ChiaResult

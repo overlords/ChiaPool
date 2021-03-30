@@ -27,8 +27,8 @@ namespace ChiaMiningManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(Configuration, Assembly.GetExecutingAssembly());
+            services.AddApplication(Configuration, Assembly.GetAssembly(typeof(HarvesterClient)));
             services.AddSingleton<HttpClient>();
-            services.AddSingleton<HarvesterClient>();
             services.AddScoped<PlotManager>();
 
             services.AddDbContext<ConfigurationContext>((provider, options) =>

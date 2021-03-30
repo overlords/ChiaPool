@@ -1,3 +1,4 @@
+using Chia.NET.Clients;
 using ChiaMiningManager.Models;
 using ChiaMiningManager.Services;
 using Common.Extensions;
@@ -23,6 +24,7 @@ namespace ChiaMiningManager
             Application = CreateHostBuilder(args).Build();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
             var assembly = Assembly.GetExecutingAssembly();
+            var chiaNetAssembly = Assembly.GetAssembly(typeof(HarvesterClient));
 
             var validationResult = await Application.Services.ValidateOptionsAsync(assembly);
 
@@ -42,7 +44,10 @@ namespace ChiaMiningManager
                 return;
             }
 
+            await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
+
             Application.Services.RunApplicationServices(assembly);
+            Application.Services.RunApplicationServices(chiaNetAssembly);
 
             await Application.StartAsync();
             await Application.WaitForShutdownAsync();
