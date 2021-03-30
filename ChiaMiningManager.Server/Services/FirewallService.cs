@@ -64,7 +64,7 @@ namespace ChiaMiningManager.Services
 
                 var rules = new List<string>();
 
-                foreach (var miner in miners)
+                foreach (var miner in miners.Where(x => x.Address != null))
                 {
                     rules.Add(GetAcceptRule(miner.Address));
                 }
@@ -136,6 +136,10 @@ namespace ChiaMiningManager.Services
         }
         private void AcceptIPInternal(IPAddress address)
         {
+            if (address == null)
+            {
+                return;
+            }
             Logger.LogInformation($"Whitelisted {address}");
 
             using var adapter = System.GetTableAdapter(4);
@@ -150,6 +154,10 @@ namespace ChiaMiningManager.Services
         }
         private void DropIPInternal(IPAddress address)
         {
+            if (address == null)
+            {
+                return;
+            }
             Logger.LogInformation($"Blacklisted {address}");
 
             using var adapter = System.GetTableAdapter(4);
