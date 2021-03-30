@@ -28,7 +28,10 @@ namespace Chia.NET.Clients
             string keyPath = Path.Combine(SslDirectory, CertName, $"private_{CertName}.key");
             var certificate = X509Certificate2.CreateFromPemFile(certificatePath, keyPath);
 
-            var handler = new HttpClientHandler();
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => true
+            };
             handler.ClientCertificates.Add(certificate);
             Client = new HttpClient(handler);
 
