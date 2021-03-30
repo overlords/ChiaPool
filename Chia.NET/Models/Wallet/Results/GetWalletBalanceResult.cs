@@ -7,6 +7,7 @@ namespace Chia.NET.Models
         [JsonPropertyName("wallet_balance")]
         public Wallet Wallet { get; }
 
+        [JsonConstructor]
         internal GetWalletBalanceResult()
         {
         }

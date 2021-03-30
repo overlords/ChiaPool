@@ -13,6 +13,7 @@ namespace Chia.NET.Models
         [JsonPropertyName("plot_public_key")]
         public string PublicKey { get; }
 
+        [JsonConstructor]
         internal Plot()
         {
         }

@@ -7,6 +7,7 @@ namespace Chia.NET.Models
         [JsonPropertyName("success")]
         public bool Success { get; set; }
 
+        [JsonConstructor]
         internal ChiaResult()
         {
         }
