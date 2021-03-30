@@ -94,8 +94,8 @@ namespace ChiaMiningManager.Controllers
         {
             var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Id == id);
 
-            return miner == null 
-                ? NotFound() 
+            return miner == null
+                ? NotFound()
                 : Ok(miner);
         }
         [HttpGet("Get/Name/{name}")]
@@ -103,8 +103,8 @@ namespace ChiaMiningManager.Controllers
         {
             var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Name == name);
 
-            return miner == null 
-                ? NotFound() 
+            return miner == null
+                ? NotFound()
                 : Ok(miner);
         }
 

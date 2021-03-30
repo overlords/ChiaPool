@@ -1,17 +1,19 @@
-cd chia-blockchain
+cd manager
+./ChiaMiningManager.Client init
 
-. ./activate
+cd ../chia-blockchain
 
-chia init
+./activate
+
+chia init -c ca
+sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
+chia configure --set-farmer-peer ${farmer_host}:${farmer_port}
 
 for i in $(echo ${plot_dirs} | tr ";" "\n") 
 do
   chia plots add -d $i
 done
 
-sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
-
-chia configure --set-farmer-peer ${farmer_host}:${farmer_port}
 chia start harvester
 
 cd /root

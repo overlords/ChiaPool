@@ -32,7 +32,7 @@ namespace ChiaMiningManager.Commands.Miner
 
             await console.Output.WriteLineAsync($"Id{GetWhiteSpace(idLength)}Name{GetWhiteSpace(nameLength)}PM");
 
-            foreach(var miner in miners)
+            foreach (var miner in miners)
             {
                 await console.Output.WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
             }

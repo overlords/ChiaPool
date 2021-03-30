@@ -12,7 +12,7 @@ namespace ChiaMiningManager.Api
         private const string ApiUrl = "https://pool.playwo.de";
 
         public ServerApiAccessor(HttpClient client)
-            :base(client)
+            : base(client)
         {
         }
 

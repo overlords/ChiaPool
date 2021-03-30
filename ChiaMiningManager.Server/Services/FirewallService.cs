@@ -146,7 +146,7 @@ namespace ChiaMiningManager.Services
             chain.AddRule(rule);
 
             var sync = new DefaultNetfilterSync<IpTablesRule>();
-            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);           
+            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);
         }
         private void DropIPInternal(IPAddress address)
         {

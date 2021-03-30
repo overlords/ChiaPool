@@ -12,7 +12,7 @@ namespace ChiaMiningManager.Api
         private const string ApiUrl = "http://localhost:8888";
 
         public ClientApiAccessor(HttpClient client)
-            :base(client)
+            : base(client)
         {
         }
 

@@ -14,7 +14,7 @@ namespace ChiaMiningManager.Models
         public static Uri ListMiners(string baseUrl)
             => new Uri(baseUrl + "/Miner/List");
         public static Uri GetMinerById(string baseUrl, Guid id)
-            => new Uri(baseUrl + $"/Miner/Get/Id/{id}");        
+            => new Uri(baseUrl + $"/Miner/Get/Id/{id}");
         public static Uri GetMinerByName(string baseUrl, string name)
             => new Uri(baseUrl + $"/Miner/Get/name/{name}");
 

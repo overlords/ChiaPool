@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 using System.Net;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ChiaMiningManager.Migrations
 {

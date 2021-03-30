@@ -17,7 +17,7 @@ namespace ChiaMiningManager.Controllers
         }
 
         [HttpGet("Ca")]
-        public async Task<IActionResult> GetCAKeysAsync([FromHeader(Name = "Authorization")] string token) 
+        public async Task<IActionResult> GetCAKeysAsync([FromHeader(Name = "Authorization")] string token)
             => !await DbContext.Miners.AnyAsync(x => x.Token == token)
                 ? Unauthorized()
                 : PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
