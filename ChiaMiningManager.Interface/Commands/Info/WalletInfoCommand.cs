@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ChiaMiningManager.Commands
 {
     [Command("Info Wallet", Description = "Show the pool wallet info")]
-    class WalletInfoCommand : ICommand
+    public class WalletInfoCommand : ICommand
     {
         private readonly ServerApiAccessor ApiClient;
 
