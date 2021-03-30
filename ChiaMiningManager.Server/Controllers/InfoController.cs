@@ -25,13 +25,8 @@ namespace ChiaMiningManager.Controllers
         }
 
         [HttpGet("Wallet")]
-        public async Task<IActionResult> GetWalletInfoAsync([FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> GetWalletInfoAsync()
         {
-            if (!await DbContext.Miners.AnyAsync(x => x.Token == token))
-            {
-                return Unauthorized();
-            }
-
             var wallet = await WalletClient.GetWalletBalance(1);
             return Ok(wallet);
         }
