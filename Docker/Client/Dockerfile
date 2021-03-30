@@ -35,7 +35,8 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 && cd chia-blockchain \
 && git submodule update --init mozilla-ca \
 && chmod +x install.sh \
-&& /usr/bin/sh ./install.sh
+&& /usr/bin/sh ./install.sh \
+&& chmod +x activate
 
 RUN mkdir /plots
 WORKDIR /root
