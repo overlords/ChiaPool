@@ -12,6 +12,8 @@ namespace Chia.NET.Clients
 {
     public abstract class ChiaApiClient : Service
     {
+        private const string SslDirectory = "/root/.chia/mainnet/config/ssl";
+
         private HttpClient Client;
         private readonly string CertName;
 
@@ -22,8 +24,8 @@ namespace Chia.NET.Clients
 
         protected override ValueTask InitializeAsync()
         {
-            string certificatePath = Path.Combine("/root/.chia/mainnet/config/ssl", CertName, $"private_{CertName}.crt");
-            string keyPath = Path.Combine(CertName, $"private_{CertName}.key");
+            string certificatePath = Path.Combine(SslDirectory, CertName, $"private_{CertName}.crt");
+            string keyPath = Path.Combine(SslDirectory, CertName, $"private_{CertName}.key");
             var certificate = X509Certificate2.CreateFromPemFile(certificatePath, keyPath);
 
             var handler = new HttpClientHandler();
