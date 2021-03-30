@@ -1,4 +1,5 @@
 ﻿using Chia.NET.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Chia.NET.Clients
@@ -18,7 +19,10 @@ namespace Chia.NET.Clients
         /// <returns></returns>
         public async Task<Wallet> GetWalletBalance(int walletId)
         {
-            var result = await PostAsync<GetWalletBalanceResult>(WalletRoutes.GetWalletBalance(ApiUrl));
+            var result = await PostAsync<GetWalletBalanceResult>(WalletRoutes.GetWalletBalance(ApiUrl), new Dictionary<string, string>() 
+            {
+                ["wallet_id"] = $"{walletId}"
+            });
             return result.Wallet;
         }
     }
