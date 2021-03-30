@@ -7,9 +7,6 @@ namespace ChiaMiningManager.Services
 
 
 
-        private void ExecuteBash(string command)
-        {
-
-        }
+        
     }
 }

@@ -72,27 +72,27 @@ namespace ChiaMiningManager.Services
                 {
                     var data = await response.Content.ReadAsStreamAsync();
                     RefreshCAKeysFromStream(data);
-                    Logger.LogInformation("Successfully updated certificates");
+                    Logger.LogInformation("Successfully updated keys");
                     return true;
                 }
 
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.Unauthorized:
-                        Logger.LogCritical("Could not start update keys: Your miner token is invalid!");
+                        Logger.LogCritical("Could not update keys: Your miner token is invalid!");
                         break;
                     default:
-                        Logger.LogError($"Could not start update keys: The server responded with {response.StatusCode}");
+                        Logger.LogError($"Could not update keys: The server responded with {response.StatusCode}");
                         break;
                 }
             }
             catch (HttpRequestException)
             {
-                Logger.LogError($"Could not start update keys: There was a connection error, are you connected to the internet?");
+                Logger.LogError($"Could not update keys: There was a connection error, are you connected to the internet?");
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, $"Could not start update keys: An error occured!");
+                Logger.LogError(ex, $"Could not update keys: An error occured!");
             }
 
 

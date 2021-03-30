@@ -22,8 +22,8 @@ RUN echo "Cloning ChiaMiningManager"
 RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
 && cd ChiaMiningManager/ChiaMiningManager.Client \
 && dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
-&& chmod +x /root/manager/ChiaMiningManager.Client \
-&& mkdir ca
+&& chmod +x /root/manager/ChiaMiningManager.Client 
+
 
 #Only required for build
 RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y dotnet-sdk-5.0 apt-transport-https \ 
@@ -37,10 +37,15 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 && git submodule update --init mozilla-ca \
 && chmod +x install.sh \
 && /usr/bin/sh ./install.sh \
-&& chmod +x activate
+&& chmod +x activate \
+&& mkdir ca
 
 RUN mkdir /plots
 WORKDIR /root
 ADD ./entrypoint.sh entrypoint.sh
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y dos2unix \
+&& dos2unix entrypoint.sh \
+&& apt-get autoremove -y
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]

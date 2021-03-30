@@ -45,4 +45,8 @@ RUN mkdir /plots
 WORKDIR /root
 ADD ./entrypoint.sh entrypoint.sh
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y dos2unix \
+&& dos2unix entrypoint.sh \
+&& apt-get autoremove -y
+
 ENTRYPOINT ["bash", "./entrypoint.sh"]
