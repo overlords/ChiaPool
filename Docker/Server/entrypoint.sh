@@ -28,5 +28,5 @@ cd /root
 
 zip -r ca.zip .chia/mainnet/config/ssl/ca
 
-cd ../manager
+cd manager
 ./ChiaMiningManager.Server
