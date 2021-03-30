@@ -22,7 +22,7 @@ namespace Chia.NET.Models
         [JsonPropertyName("pending_change")]
         public double PendingChange { get; }
 
-        private Wallet()
+        internal Wallet()
         {
         }
     }

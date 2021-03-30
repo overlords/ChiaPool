@@ -7,7 +7,7 @@ namespace Chia.NET.Models
         [JsonPropertyName("directories")]
         public string[] Directories { get; }
 
-        private GetPlotDirectoriesResult()
+        internal GetPlotDirectoriesResult()
         {
         }
     }

@@ -13,7 +13,7 @@ namespace Chia.NET.Models
         [JsonPropertyName("plots")]
         public Plot[] Plots { get; }
 
-        private GetPlotsResult()
+        internal GetPlotsResult()
         {
         }
     }
