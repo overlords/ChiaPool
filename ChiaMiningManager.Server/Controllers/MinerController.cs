@@ -89,7 +89,7 @@ namespace ChiaMiningManager.Controllers
             return Ok(miners);
         }
 
-        [HttpGet("Info/Id/{id}")]
+        [HttpGet("Get/Id/{id}")]
         public async Task<IActionResult> GetMinerInfoByIdAsync([FromRoute] Guid id)
         {
             var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Id == id);
@@ -98,7 +98,7 @@ namespace ChiaMiningManager.Controllers
                 ? NotFound() 
                 : Ok(miner);
         }
-        [HttpGet("Info/Id/{name}")]
+        [HttpGet("Get/Name/{name}")]
         public async Task<IActionResult> GetMinerInfoByNameAsync([FromRoute] string name)
         {
             var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Name == name);

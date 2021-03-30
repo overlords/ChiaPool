@@ -40,7 +40,7 @@ namespace ChiaMiningManager.Services
 
         private async Task SendStartRequest()
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://pool.playwo.de:8666/miner/start");
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://pool.playwo.de/miner/start");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
             try

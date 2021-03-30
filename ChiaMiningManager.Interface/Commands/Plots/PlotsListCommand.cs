@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands
 {
-    [Command("Plots List")]
+    [Command("Plot List", Description = "Lists all plots of your harvester")]
     public class PlotsListCommand : ICommand
     {
         private readonly ClientApiAccessor ApiClient;

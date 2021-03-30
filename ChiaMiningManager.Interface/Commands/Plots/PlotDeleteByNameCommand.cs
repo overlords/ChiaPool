@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands
 {
-    [Command("Plots DeleteName", Description = "Deletes a plot by specifying the plot name")]
+    [Command("Plot DeleteName", Description = "Deletes a plot by specifying the plot name")]
     public class PlotDeleteByNameCommand : ICommand
     {
         private readonly ClientApiAccessor ApiClient;
