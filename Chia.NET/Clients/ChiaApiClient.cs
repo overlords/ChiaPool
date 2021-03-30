@@ -42,7 +42,7 @@ namespace Chia.NET.Clients
         {
             using var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
-                Content = new FormUrlEncodedContent(parameters ?? new Dictionary<string, string>())
+                Content = JsonContent.Create(parameters ?? new Dictionary<string, string>())
             };
 
             var response = await Client.SendAsync(request);
