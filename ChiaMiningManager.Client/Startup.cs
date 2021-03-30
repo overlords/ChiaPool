@@ -1,3 +1,4 @@
+using Chia.NET.Clients;
 using ChiaMiningManager.Configuration;
 using ChiaMiningManager.Models;
 using ChiaMiningManager.Services;
@@ -27,6 +28,7 @@ namespace ChiaMiningManager
         {
             services.AddApplication(Configuration, Assembly.GetExecutingAssembly());
             services.AddSingleton<HttpClient>();
+            services.AddSingleton<HarvesterClient>();
             services.AddScoped<PlotManager>();
 
             services.AddDbContext<ConfigurationContext>((provider, options) =>

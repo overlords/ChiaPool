@@ -1,4 +1,5 @@
-﻿using ChiaMiningManager.Configuration;
+﻿using Chia.NET.Clients;
+using ChiaMiningManager.Configuration;
 using Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,9 @@ namespace ChiaMiningManager.Services
 
         [Inject]
         private readonly HttpClient Client;
+
+        [Inject]
+        private readonly HarvesterClient HarvesterClient;
 
         [Inject]
         private readonly AuthOption AuthOptions;
@@ -81,6 +85,13 @@ namespace ChiaMiningManager.Services
             {
                 Logger.LogError(ex, $"Could not claim PM: An error occured");
             }
+        }
+
+        private async Task<int> GetPlotCount()
+        {
+            var plots = //await HarvesterClient.GetPlotsAsync();
+
+            return plots.Count;
         }
     }
 }

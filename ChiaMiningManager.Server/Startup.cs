@@ -1,3 +1,4 @@
+using Chia.NET.Clients;
 using ChiaMiningManager.Configuration;
 using ChiaMiningManager.Models;
 using Common.Extensions;
@@ -24,6 +25,7 @@ namespace ChiaMiningManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplication(Configuration, Assembly.GetExecutingAssembly());
+            services.AddSingleton<WalletClient>();
 
             services.AddDbContext<MinerContext>((provider, options) =>
             {

@@ -5,7 +5,7 @@ using CliFx.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands.Miner
+namespace ChiaMiningManager.Commands
 {
     [Command("Miner List", Description = "Lists all miners in the pool")]
     public class MinerListCommand : ICommand

@@ -15,7 +15,7 @@ namespace ChiaMiningManager.Api
             Client = client;
         }
 
-        protected async Task<T> PostFromJsonAsync<T>(Uri uri, IDictionary<string, string> parameters)
+        protected async Task<T> PostAsync<T>(Uri uri, IDictionary<string, string> parameters)
         {
             var content = new FormUrlEncodedContent(parameters);
             var response = await Client.PostAsync(uri, content);

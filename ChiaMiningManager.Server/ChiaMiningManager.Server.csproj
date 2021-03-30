@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Chia.NET\Chia.NET.csproj" />
     <ProjectReference Include="..\ServerModels\ServerModels.csproj" />
   </ItemGroup>
 
