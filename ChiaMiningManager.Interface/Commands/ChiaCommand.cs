@@ -2,7 +2,6 @@
 using CliFx.Infrastructure;
 using System;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands
@@ -58,7 +57,7 @@ namespace ChiaMiningManager.Commands
         {
             using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Yellow);
             await WriteAsync(message);
-        }        
+        }
         protected async Task WarnLineAsync(string message)
         {
             using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Yellow);

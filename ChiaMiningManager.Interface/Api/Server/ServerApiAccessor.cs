@@ -1,5 +1,4 @@
-﻿using Chia.NET.Models;
-using ChiaMiningManager.Models;
+﻿using ChiaMiningManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;

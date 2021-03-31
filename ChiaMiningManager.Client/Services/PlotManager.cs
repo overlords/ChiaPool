@@ -1,10 +1,7 @@
 ﻿using Chia.NET.Clients;
 using ChiaMiningManager.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Services
@@ -90,7 +87,7 @@ namespace ChiaMiningManager.Services
             var plots = await HarvesterClient.GetPlotsAsync();
             var plotInfos = await DbContext.Plots.ToListAsync();
 
-            foreach(var plot in plots)
+            foreach (var plot in plots)
             {
                 var plotInfo = plotInfos.FirstOrDefault(x => x.PublicKey == plot.PublicKey);
 

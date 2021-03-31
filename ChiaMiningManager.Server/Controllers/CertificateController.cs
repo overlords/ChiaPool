@@ -1,6 +1,7 @@
 ﻿using ChiaMiningManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Controllers
@@ -21,5 +22,11 @@ namespace ChiaMiningManager.Controllers
             => !await DbContext.Miners.AnyAsync(x => x.Token == token)
                 ? Unauthorized()
                 : PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
+
+        [HttpGet("Keys")]
+        public async Task<IActionResult> GetKeysAsync([FromHeader(Name = "Authorization")] string token)
+                    => !await DbContext.Miners.AnyAsync(x => x.Token == token)
+                ? Unauthorized()
+                : Ok(Environment.GetEnvironmentVariable("keys"));
     }
 }

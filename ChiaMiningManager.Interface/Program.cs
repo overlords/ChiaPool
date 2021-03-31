@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager
@@ -35,7 +34,7 @@ namespace ChiaMiningManager
             services.AddTransient<ClientApiAccessor>();
             services.AddTransient<ServerApiAccessor>();
 
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null && !x.IsAbstract)) 
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null && !x.IsAbstract))
             {
                 services.AddTransient(type);
             }

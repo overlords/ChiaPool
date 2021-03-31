@@ -1,5 +1,4 @@
 ﻿using ChiaMiningManager.Api;
-using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;

@@ -1,4 +1,5 @@
 ﻿using Chia.NET.Models;
+using Chia.NET.Models.Shared;
 using Common.Services;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace Chia.NET.Clients
 
         private HttpClient Client;
         private readonly string CertName;
+        private readonly string ApiUrl;
 
-        public ChiaApiClient(string certName)
+        public ChiaApiClient(string certName, string apiUrl)
         {
             CertName = certName;
+            ApiUrl = apiUrl;
         }
 
         protected override ValueTask InitializeAsync()
@@ -37,6 +40,14 @@ namespace Chia.NET.Clients
 
             return ValueTask.CompletedTask;
         }
+
+
+        /// <summary>
+        /// Returns a list of peers that we are currently connected to.
+        /// </summary>
+        /// <returns></returns>
+        public Task<ChiaConnection[]> GetConnections()
+            => PostAsync<ChiaConnection[]>(SharedRoutes.GetConnections(ApiUrl));
 
         protected async Task<T> PostAsync<T>(Uri requestUri, IDictionary<string, string> parameters = null) where T : ChiaResult
         {

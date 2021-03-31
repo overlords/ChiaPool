@@ -1,8 +1,6 @@
 ﻿using ChiaMiningManager.Api;
-using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using System;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands
@@ -44,7 +42,7 @@ namespace ChiaMiningManager.Commands
             if (FileName != default)
             {
                 success = await ClientAccessor.DeletePlotByFileNameAsync(FileName);
-            } 
+            }
 
             if (!success)
             {
