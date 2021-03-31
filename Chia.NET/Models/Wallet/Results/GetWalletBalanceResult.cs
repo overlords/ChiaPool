@@ -2,10 +2,10 @@
 
 namespace Chia.NET.Models
 {
-    internal sealed class GetWalletBalanceResult : ChiaResult
+    public sealed class GetWalletBalanceResult : ChiaResult
     {
         [JsonPropertyName("wallet_balance")]
-        public Wallet Wallet { get; }
+        public Wallet Wallet { get; init; }
 
         [JsonConstructor]
         public GetWalletBalanceResult()
