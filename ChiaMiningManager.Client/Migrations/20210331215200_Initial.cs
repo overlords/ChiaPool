@@ -11,6 +11,7 @@ namespace ChiaMiningManager.Migrations
                 columns: table => new
                 {
                     PublicKey = table.Column<string>(type: "TEXT", nullable: false),
+                    FileName = table.Column<string>(type: "TEXT", nullable: true),
                     Minutes = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

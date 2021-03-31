@@ -20,6 +20,9 @@ namespace ChiaMiningManager.Migrations
                     b.Property<string>("PublicKey")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FileName")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Minutes")
                         .HasColumnType("INTEGER");
 
