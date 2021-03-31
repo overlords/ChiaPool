@@ -17,6 +17,9 @@ namespace ChiaMiningManager.Api
         {
         }
 
+        public Task<ServerStatus> GetStatusAsync()
+            => Client.GetFromJsonAsync<ServerStatus>(ServerRoutes.Status(ApiUrl));
+
         public Task<List<Miner>> GetMinersAsync()
             => Client.GetFromJsonAsync<List<Miner>>(ServerRoutes.ListMiners(ApiUrl));
 

@@ -8,7 +8,7 @@ namespace Chia.NET.Clients
     {
         private const string ApiUrl = "https://localhost:9256/";
 
-        public WalletClient() 
+        public WalletClient()
             : base("wallet")
         {
         }
@@ -19,7 +19,7 @@ namespace Chia.NET.Clients
         /// <returns></returns>
         public async Task<Wallet> GetWalletBalance(int walletId)
         {
-            var result = await PostAsync<GetWalletBalanceResult>(WalletRoutes.GetWalletBalance(ApiUrl), new Dictionary<string, string>() 
+            var result = await PostAsync<GetWalletBalanceResult>(WalletRoutes.GetWalletBalance(ApiUrl), new Dictionary<string, string>()
             {
                 ["wallet_id"] = $"{walletId}"
             });

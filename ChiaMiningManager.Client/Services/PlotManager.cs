@@ -1,9 +1,6 @@
 ﻿using Chia.NET.Clients;
 using ChiaMiningManager.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,7 +24,7 @@ namespace ChiaMiningManager.Services
 
             var finalPlotInfos = new PlotInfo[plots.Length];
 
-            for(int i = 0; i < plots.Length; i++)
+            for (int i = 0; i < plots.Length; i++)
             {
                 var plotInfo = plotInfos.FirstOrDefault(x => x.PublicKey == plots[i].PublicKey);
 

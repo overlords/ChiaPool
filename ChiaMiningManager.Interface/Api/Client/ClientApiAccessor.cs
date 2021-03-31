@@ -1,7 +1,4 @@
-﻿using Chia.NET.Models;
-using ChiaMiningManager.Models;
-using System;
-using System.Collections.Generic;
+﻿using ChiaMiningManager.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -16,6 +13,9 @@ namespace ChiaMiningManager.Api
             : base(client)
         {
         }
+
+        public Task<ClientStatus> GetStatusAsync()
+            => Client.GetFromJsonAsync<ClientStatus>(ClientRoutes.Status(ApiUrl));
 
         public Task<PlotInfo[]> GetPlotsAsync()
             => Client.GetFromJsonAsync<PlotInfo[]>(ClientRoutes.ListPlots(ApiUrl));

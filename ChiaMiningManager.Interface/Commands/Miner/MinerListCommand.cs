@@ -10,16 +10,16 @@ namespace ChiaMiningManager.Commands
     [Command("Miner List", Description = "Lists all miners in the pool")]
     public class MinerListCommand : ICommand
     {
-        private readonly ServerApiAccessor ApiClient;
+        private readonly ServerApiAccessor ServerAccessor;
 
         public MinerListCommand(ServerApiAccessor apiClient)
         {
-            ApiClient = apiClient;
+            ServerAccessor = apiClient;
         }
 
         public async ValueTask ExecuteAsync(IConsole console)
         {
-            var miners = await ApiClient.GetMinersAsync();
+            var miners = await ServerAccessor.GetMinersAsync();
 
             if (miners.Count == 0)
             {

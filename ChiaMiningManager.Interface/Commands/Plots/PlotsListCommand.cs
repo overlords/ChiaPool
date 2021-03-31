@@ -10,16 +10,16 @@ namespace ChiaMiningManager.Commands
     [Command("Plot List", Description = "Lists all plots of your harvester")]
     public class PlotsListCommand : ICommand
     {
-        private readonly ClientApiAccessor ApiClient;
+        private readonly ClientApiAccessor ClientAccessor;
 
         public PlotsListCommand(ClientApiAccessor apiClient)
         {
-            ApiClient = apiClient;
+            ClientAccessor = apiClient;
         }
 
         public async ValueTask ExecuteAsync(IConsole console)
         {
-            var plots = await ApiClient.GetPlotsAsync();
+            var plots = await ClientAccessor.GetPlotsAsync();
 
             if (plots.Length == 0)
             {

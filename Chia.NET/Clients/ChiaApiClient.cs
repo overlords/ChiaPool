@@ -49,12 +49,12 @@ namespace Chia.NET.Clients
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadFromJsonAsync<T>();
 
-            return !result.Success 
-                ? throw new Exception("Chia responded with unsuccessful") 
+            return !result.Success
+                ? throw new Exception("Chia responded with unsuccessful")
                 : result;
         }
 
-        protected Task PostAsync(Uri requestUri, IDictionary<string, string> parameters = null) 
+        protected Task PostAsync(Uri requestUri, IDictionary<string, string> parameters = null)
             => PostAsync<ChiaResult>(requestUri, parameters);
     }
 }

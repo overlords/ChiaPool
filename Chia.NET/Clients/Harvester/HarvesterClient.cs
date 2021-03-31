@@ -9,8 +9,8 @@ namespace Chia.NET.Clients
         private const string ApiUrl = "https://localhost:8560/";
 
         public HarvesterClient()
-            :base("harvester")
-        { 
+            : base("harvester")
+        {
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Chia.NET.Clients
         /// Refreshes the plots, forces the harvester to search for and load new plots.
         /// </summary>
         /// <returns></returns>
-        public Task RefreshPlotsAsync() 
+        public Task RefreshPlotsAsync()
             => PostAsync(HarvesterRoutes.RefreshPlots(ApiUrl));
 
         /// <summary>

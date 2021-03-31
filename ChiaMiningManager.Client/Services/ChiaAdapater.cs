@@ -7,6 +7,6 @@ namespace ChiaMiningManager.Services
 
 
 
-        
+
     }
 }
