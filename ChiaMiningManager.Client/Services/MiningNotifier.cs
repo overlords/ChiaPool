@@ -46,7 +46,7 @@ namespace ChiaMiningManager.Services
 
         private async Task SendClaimRequest(PlotManager plotManager)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/miner/claim");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/miner/claim");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
             int plotCount = await plotManager.GetPlotsCountAsync();

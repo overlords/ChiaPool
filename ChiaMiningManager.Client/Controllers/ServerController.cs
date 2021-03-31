@@ -25,7 +25,7 @@ namespace ChiaMiningManager.Controllers
         [HttpGet("Info/Wallet")]
         public async Task<IActionResult> GetWalletAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/Info/Status");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/Info/Status");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
             var response = await Client.SendAsync(request);
             object result = null;
