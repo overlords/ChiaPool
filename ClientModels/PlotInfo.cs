@@ -6,9 +6,10 @@
         public string FileName { get; set; }
         public int Minutes { get; set; }
 
-        public PlotInfo(string publicKey)
+        public PlotInfo(string publicKey, string fileName)
         {
             PublicKey = publicKey;
+            FileName = fileName;
         }
         public PlotInfo()
         {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ChiaMiningManager.Commands
 {
     [Command("Miner List", Description = "Lists all miners in the pool")]
-    public class MinerListCommand : ICommand
+    public class MinerListCommand : ChiaCommand
     {
         private readonly ServerApiAccessor ServerAccessor;
 
@@ -17,28 +17,28 @@ namespace ChiaMiningManager.Commands
             ServerAccessor = apiClient;
         }
 
-        public async ValueTask ExecuteAsync(IConsole console)
+        protected override async Task ExecuteAsync(IConsole console)
         {
             var miners = await ServerAccessor.GetMinersAsync();
 
             if (miners.Count == 0)
             {
-                await console.Output.WriteLineAsync("No miners found");
+                await WarnLineAsync("No miners found");
                 return;
             }
 
             int idLength = miners.Max(x => x.Id.ToString().Length) + 2;
             int nameLength = miners.Max(x => x.Name.Length);
 
-            await console.Output.WriteLineAsync($"Id{GetWhiteSpace(idLength)}Name{GetWhiteSpace(nameLength)}PM");
+            long totalPM = miners.Sum(x => x.PlotMinutes);
+            await InfoLineAsync($"Total PM mined in the pool: {totalPM}");
+            await WriteLineAsync("");
+            await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
 
             foreach (var miner in miners)
             {
-                await console.Output.WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
+                await WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
             }
         }
-
-        private string GetWhiteSpace(int length)
-            => new string(' ', length);
     }
 }

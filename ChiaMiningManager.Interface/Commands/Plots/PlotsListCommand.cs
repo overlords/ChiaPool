@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ChiaMiningManager.Commands
 {
     [Command("Plot List", Description = "Lists all plots of your harvester")]
-    public class PlotsListCommand : ICommand
+    public class PlotsListCommand : ChiaCommand
     {
         private readonly ClientApiAccessor ClientAccessor;
 
@@ -17,28 +17,25 @@ namespace ChiaMiningManager.Commands
             ClientAccessor = apiClient;
         }
 
-        public async ValueTask ExecuteAsync(IConsole console)
+        protected override async Task ExecuteAsync(IConsole console)
         {
             var plots = await ClientAccessor.GetPlotsAsync();
 
             if (plots.Length == 0)
             {
-                await console.Output.WriteLineAsync("There are no plots on this miner!");
+                await WarnLineAsync("There are no plots on this miner!");
                 return;
             }
 
             int publicKeyLength = plots.Max(x => x.PublicKey.Length) - 6;
             int fileNameLength = plots.Max(x => x.FileName.Length) - 5;
 
-            await console.Output.WriteLineAsync($"Public Key{GetWhiteSpace(publicKeyLength)}File Name{GetWhiteSpace(fileNameLength)}Minutes");
+            await InfoLineAsync($"Public Key{Space(publicKeyLength)}File Name{Space(fileNameLength)}Minutes");
 
             foreach (var plot in plots)
             {
-                await console.Output.WriteLineAsync($"{plot.PublicKey}    {plot.FileName}    {plot.Minutes}");
+                await WriteLineAsync($"{plot.PublicKey}    {plot.FileName}    {plot.Minutes}");
             }
         }
-
-        private string GetWhiteSpace(int length)
-            => new string(' ', length);
     }
 }

@@ -12,5 +12,8 @@ namespace ChiaMiningManager.Api
             => new Uri(apiUrl + "Plots/DeleteId");
         public static Uri DeletePlotByName(string apiUrl)
             => new Uri(apiUrl + "Plots/DeleteName");
+
+        public static Uri ServerWalletInfo(string apiUrl)
+            => new Uri(apiUrl + "Server/Info/Wallet");
     }
 }

@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 namespace ChiaMiningManager.Commands
 {
     [Command("Info Wallet", Description = "Show the pool wallet info")]
-    public class WalletInfoCommand : ICommand
+    public class WalletInfoCommand : ChiaCommand
     {
-        private readonly ServerApiAccessor ServerAccessor;
+        private readonly ClientApiAccessor ClientAccessor;
 
-        public WalletInfoCommand(ServerApiAccessor apiClient)
+        public WalletInfoCommand(ClientApiAccessor clientAccessor)
         {
-            ServerAccessor = apiClient;
+            ClientAccessor = clientAccessor;
         }
 
-        public async ValueTask ExecuteAsync(IConsole console)
+        protected override async Task ExecuteAsync(IConsole console)
         {
-            var wallet = await ServerAccessor.GetWalletBalanceAsync();
+            var wallet = await ClientAccessor.GetWalletBalanceAsync();
 
             await console.Output.WriteLineAsync($"Confirmed Balance   : {wallet.ConfirmedBalance} XCH");
             await console.Output.WriteLineAsync($"Unconfirmed Balance : {wallet.UnconfirmedBalance} XCH");

@@ -27,8 +27,5 @@ namespace ChiaMiningManager.Api
             => Client.GetFromJsonAsync<Miner>(ServerRoutes.GetMinerById(ApiUrl, id));
         public Task<Miner> GetMinerByNameAsync(string name)
             => Client.GetFromJsonAsync<Miner>(ServerRoutes.GetMinerByName(ApiUrl, name));
-
-        public Task<Wallet> GetWalletBalanceAsync()
-            => Client.GetFromJsonAsync<Wallet>(ServerRoutes.GetWalletBalance(ApiUrl));
     }
 }

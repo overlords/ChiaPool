@@ -1,5 +1,6 @@
 ﻿using Chia.NET.Clients;
 using ChiaMiningManager.Configuration;
+using ChiaMiningManager.Configuration.Options;
 using Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,9 @@ namespace ChiaMiningManager.Services
         [Inject]
         private readonly AuthOption AuthOptions;
 
+        [Inject]
+        private readonly ServerOptions ServerOptions;
+
         protected override async ValueTask RunAsync()
         {
             var delayTask = Task.Delay(TimeBetweenClaimRequests);
@@ -42,7 +46,7 @@ namespace ChiaMiningManager.Services
 
         private async Task SendClaimRequest(PlotManager plotManager)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://pool.playwo.de/miner/claim");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/miner/claim");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
             int plotCount = await plotManager.GetPlotsCountAsync();

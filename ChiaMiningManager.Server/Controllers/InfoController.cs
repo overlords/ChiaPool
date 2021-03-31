@@ -1,4 +1,5 @@
 ﻿using Chia.NET.Clients;
+using ChiaMiningManager.Extensions;
 using ChiaMiningManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,13 +23,15 @@ namespace ChiaMiningManager.Controllers
         [HttpGet("Wallet")]
         public async Task<IActionResult> GetWalletInfoAsync([FromHeader(Name = "Authorization")] string token)
         {
-            if (!await DbContext.Miners.AnyAsync(x => x.Token == token))
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
+            if (miner == null)
             {
                 return Unauthorized();
             }
+            var totalPM = await DbContext.Miners.SumAsync(x => x.PlotMinutes);
 
-            var wallet = await WalletClient.GetWalletBalance(1);
-            return Ok(wallet);
+            var totalWallet = await WalletClient.GetWalletBalance(1);
+            return Ok(totalWallet.MultiplyBy(miner.PlotMinutes / totalPM));
         }
 
         [HttpGet("Status")]

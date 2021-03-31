@@ -1,39 +1,58 @@
-﻿//using ChiaMiningManager.Api;
-//using CliFx;
-//using CliFx.Attributes;
-//using CliFx.Infrastructure;
-//using System;
-//using System.Threading.Tasks;
+﻿using ChiaMiningManager.Api;
+using CliFx;
+using CliFx.Attributes;
+using CliFx.Infrastructure;
+using System;
+using System.Threading.Tasks;
 
-//namespace ChiaMiningManager.Commands
-//{
-//    [Command("Plot Delete", Description = "Deletes a plot file")]
-//    public class PlotDeleteCommand : ICommand
-//    {
-//        private readonly ClientApiAccessor ApiClient;
+namespace ChiaMiningManager.Commands
+{
+    [Command("Plot Delete", Description = "Deletes a plot file")]
+    public class PlotDeleteCommand : ChiaCommand
+    {
+        private readonly ClientApiAccessor ClientAccessor;
 
-//        public PlotDeleteCommand(ClientApiAccessor apiClient)
-//        {
-//            ApiClient = apiClient;
-//        }
+        public PlotDeleteCommand(ClientApiAccessor clientAccessor)
+        {
+            ClientAccessor = clientAccessor;
+        }
 
-//        [CommandOption("id", 'i', Description = "The id of the plot file")]
-//        public Guid Id { get; set; }
+        [CommandOption("pubkey", 'p', Description = "The public key of the plot file")]
+        public string PublicKey { get; set; }
 
-//        [CommandOption("id", 'i', Description = "The name of the plot file")]
-//        public string { get; set; }
+        [CommandOption("file", 'f', Description = "The filename of the plot file")]
+        public string FileName { get; set; }
 
-//        public async ValueTask ExecuteAsync(IConsole console)
-//        {
-//            bool success = await ApiClient.DeletePlotByIdAsync(Id);
+        protected override async Task ExecuteAsync(IConsole console)
+        {
+            if (PublicKey == default && PublicKey == default)
+            {
+                await ErrorLineAsync("Please specify the public key or file name of the plot");
+                return;
+            }
+            if (FileName != default && FileName != default)
+            {
+                await ErrorLineAsync("Please specify either the public key or file name of the plot, not both");
+                return;
+            }
+            bool success = false;
 
-//            if (success)
-//            {
-//                await console.Output.WriteLineAsync("Ok");
-//                return;
-//            }
+            if (PublicKey != default)
+            {
+                success = await ClientAccessor.DeletePlotByPublicKeyAsync(PublicKey);
+            }
+            if (FileName != default)
+            {
+                success = await ClientAccessor.DeletePlotByFileNameAsync(FileName);
+            } 
 
-//            await console.Output.WriteLineAsync("Plot not found!");
-//        }
-//    }
-//}
+            if (!success)
+            {
+                await WarnLineAsync("Plot not found!");
+                return;
+            }
+
+            await SuccessLineAsync("Ok");
+        }
+    }
+}

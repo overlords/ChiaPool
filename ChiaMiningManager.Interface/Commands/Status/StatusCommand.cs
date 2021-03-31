@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace ChiaMiningManager.Commands.Status
 {
     [Command("Status", Description = "Get miner status")]
-    public class StatusCommand : ICommand
+    public class StatusCommand : ChiaCommand
     {
         private readonly ServerApiAccessor ServerAccessor;
         private readonly ClientApiAccessor ClientAccessor;
@@ -24,7 +24,7 @@ namespace ChiaMiningManager.Commands.Status
             ClientAccessor = clientAccessor;
         }
 
-        public async ValueTask ExecuteAsync(IConsole console)
+        protected override async Task ExecuteAsync(IConsole console)
         {
             var clientStatusTask = ClientAccessor.GetStatusAsync().Try();
             var serverStatusTask = ServerAccessor.GetStatusAsync().Try();

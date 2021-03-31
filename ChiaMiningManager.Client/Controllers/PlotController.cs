@@ -20,12 +20,12 @@ namespace ChiaMiningManager.Controllers
         public Task<PlotInfo[]> GetPlotsAsync()
             => PlotManager.GetPlotsAsync();
 
-        //[HttpPost("DeleteId")]
-        //public Task<bool> DeletePlotByIdAsync([FromForm] Guid id)
-        //    => PlotManager.DeletePlotByIdAsync(id);
+        [HttpPost("DeleteId")]
+        public Task<bool> DeletePlotByPubKeyAsync([FromForm] string pubKey)
+            => PlotManager.DeletePlotByPubKeyAsync(pubKey);
 
-        //[HttpPost("DeleteName")]
-        //public Task<bool> DeletePlotByIdAsync([FromForm] string name)
-        //    => PlotManager.DeletePlotByNameAsync(name);
+        [HttpPost("DeleteName")]
+        public Task<bool> DeletePlotByFileNameAsync([FromForm] string fileName)
+            => PlotManager.DeletePlotByFileNameAsync(fileName);
     }
 }

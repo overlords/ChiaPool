@@ -1,6 +1,8 @@
-﻿using ChiaMiningManager.Configuration.Options;
+﻿using ChiaMiningManager.Configuration;
+using ChiaMiningManager.Configuration.Options;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Controllers
@@ -11,17 +13,21 @@ namespace ChiaMiningManager.Controllers
     {
         private readonly HttpClient Client;
         private readonly ServerOptions ServerOptions;
+        private readonly AuthOption AuthOptions;
 
-        public ServerController(HttpClient client, ServerOptions serverOptions)
+        public ServerController(HttpClient client, ServerOptions serverOptions, AuthOption authOptions)
         {
             Client = client;
             ServerOptions = serverOptions;
+            AuthOptions = authOptions;
         }
 
-        [HttpGet("Info/Status")]
-        public async Task<IActionResult> GetServerStatusAsync()
+        [HttpGet("Info/Wallet")]
+        public async Task<IActionResult> GetWalletAsync()
         {
-            var response = await Client.GetAsync($"{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/Info/Status");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/Info/Status");
+            request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
+            var response = await Client.SendAsync(request);
             object result = null;
 
             if (response.IsSuccessStatusCode)

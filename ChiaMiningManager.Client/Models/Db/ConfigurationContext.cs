@@ -18,7 +18,7 @@ namespace ChiaMiningManager.Models
                 b.Property(x => x.PublicKey);
                 b.HasKey(x => x.PublicKey);
 
-                b.Ignore(x => x.FileName);
+                b.Property(x => x.FileName);
                 b.Property(x => x.Minutes);
 
                 b.ToTable("PlotInfos");

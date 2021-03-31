@@ -12,7 +12,5 @@ namespace ChiaMiningManager.Api
             => new Uri(apiUrl + $"Miner/Get/Id/{id}");
         public static Uri GetMinerByName(string apiUrl, string name)
             => new Uri(apiUrl + $"Miner/Get/name/{name}");
-        public static Uri GetWalletBalance(string apiUrl)
-            => new Uri(apiUrl + "Info/Wallet");
     }
 }
