@@ -2,6 +2,7 @@
 using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Commands
@@ -20,18 +21,23 @@ namespace ChiaMiningManager.Commands
         {
             var plots = await ApiClient.GetPlotsAsync();
 
-            if (plots.Count == 0)
+            if (plots.Length == 0)
             {
                 await console.Output.WriteLineAsync("There are no plots on this miner!");
                 return;
             }
 
-            await console.Output.WriteLineAsync($"Id    Name    Minutes");
+            int publicKeyLength = plots.Max(x => x.PublicKey.Length) - 6;
+
+            await console.Output.WriteLineAsync($"Public Key{GetWhiteSpace(publicKeyLength)}File Path");
 
             foreach (var plot in plots)
             {
-                await console.Output.WriteLineAsync($"{plot.Id} {plot.Name} {plot.Minutes}");
+                await console.Output.WriteLineAsync($"{plot.PublicKey}    {plot.FileName}");
             }
         }
+
+        private string GetWhiteSpace(int length)
+            => new string(' ', length);
     }
 }
