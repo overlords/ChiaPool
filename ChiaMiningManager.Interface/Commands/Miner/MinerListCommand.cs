@@ -32,7 +32,7 @@ namespace ChiaMiningManager.Commands
 
             long totalPM = miners.Sum(x => x.PlotMinutes);
             await InfoLineAsync($"Total PM mined in the pool: {totalPM}");
-            await WriteLineAsync("");
+            await WriteLineAsync();
             await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
 
             foreach (var miner in miners)

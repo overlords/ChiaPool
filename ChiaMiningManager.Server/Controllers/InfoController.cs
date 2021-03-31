@@ -37,7 +37,8 @@ namespace ChiaMiningManager.Controllers
         [HttpGet("Status")]
         public async Task<IActionResult> GetStatusAsync()
         {
-            return Ok();
+            var status = new ServerStatus();
+            return Ok(status);
         }
     }
 }

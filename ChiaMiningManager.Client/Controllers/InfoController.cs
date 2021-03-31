@@ -20,12 +20,9 @@ namespace ChiaMiningManager.Controllers
         public async Task<IActionResult> GetStatusAsync()
         {
             int plotCount = await PlotManager.GetPlotsCountAsync();
+            var status = new ClientStatus(plotCount);
 
-            var status = new ClientStatus();
-
-
-
-            return Ok();
+            return Ok(status);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ChiaMiningManager.Commands
 
         protected Task WriteAsync(string message)
             => TargetConsole.Output.WriteAsync(message);
-        protected Task WriteLineAsync(string message)
+        protected Task WriteLineAsync(string message = "")
             => TargetConsole.Output.WriteLineAsync(message);
 
         protected async Task SuccessAsync(string message)

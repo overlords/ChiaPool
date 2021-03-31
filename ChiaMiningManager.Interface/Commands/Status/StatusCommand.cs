@@ -32,30 +32,29 @@ namespace ChiaMiningManager.Commands.Status
             ClientStatus clientStatus = await clientStatusTask;
             ServerStatus serverStatus = await serverStatusTask;
 
-            console.WithForegroundColor(ConsoleColor.Cyan);
-            await console.Output.WriteAsync($"Client ");
+            await InfoAsync($"Client ");
 
             if (clientStatus == null)
             {
-                console.WithForegroundColor(ConsoleColor.DarkRed);
-                await console.Output.WriteLineAsync("Offline");
+                await ErrorLineAsync("Offline");
             }
             else
             {
-                await console.Output.WriteLineAsync("Online");
+                await SuccessLineAsync("Online");
+                await WriteLineAsync();
+                await InfoLineAsync("Currently harvesting");
+                await WriteLineAsync();
             }
 
-            console.WithForegroundColor(ConsoleColor.Cyan);
-            await console.Output.WriteAsync($"Server ");
+            await InfoAsync($"Server ");
 
             if (serverStatus == null)
             {
-                console.WithForegroundColor(ConsoleColor.DarkRed);
-                await console.Output.WriteLineAsync("Offline");
+                await ErrorLineAsync("Offline");
             }
             else
             {
-                await console.Output.WriteLineAsync("Online");
+                await SuccessLineAsync("Online");
             }
 
             console.ResetColor();
