@@ -1,9 +1,6 @@
-﻿using Chia.NET.Clients;
-using Chia.NET.Models;
+﻿using ChiaMiningManager.Models;
 using ChiaMiningManager.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Controllers
@@ -12,16 +9,16 @@ namespace ChiaMiningManager.Controllers
     [ApiController]
     public class PlotController : ControllerBase
     {
-        private readonly HarvesterClient HarvesterClient;
+        private readonly PlotManager PlotManager;
 
-        public PlotController(HarvesterClient harvesterClient)
+        public PlotController(PlotManager plotManager)
         {
-            HarvesterClient = harvesterClient;
+            PlotManager = plotManager;
         }
 
         [HttpGet("List")]
-        public Task<Plot[]> GetPlotsAsync()
-            => HarvesterClient.GetPlotsAsync();
+        public Task<PlotInfo[]> GetPlotsAsync()
+            => PlotManager.GetPlotsAsync();
 
         //[HttpPost("DeleteId")]
         //public Task<bool> DeletePlotByIdAsync([FromForm] Guid id)

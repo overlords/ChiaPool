@@ -28,12 +28,13 @@ namespace ChiaMiningManager.Commands
             }
 
             int publicKeyLength = plots.Max(x => x.PublicKey.Length) - 6;
+            int fileNameLength = plots.Max(x => x.FileName.Length) - 5;
 
-            await console.Output.WriteLineAsync($"Public Key{GetWhiteSpace(publicKeyLength)}File Path");
+            await console.Output.WriteLineAsync($"Public Key{GetWhiteSpace(publicKeyLength)}File Name{GetWhiteSpace(fileNameLength)}Minutes");
 
             foreach (var plot in plots)
             {
-                await console.Output.WriteLineAsync($"{plot.PublicKey}    {plot.FileName}");
+                await console.Output.WriteLineAsync($"{plot.PublicKey}    {plot.FileName}    {plot.Minutes}");
             }
         }
 

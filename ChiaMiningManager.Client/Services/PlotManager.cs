@@ -1,8 +1,10 @@
-﻿using ChiaMiningManager.Models;
+﻿using Chia.NET.Clients;
+using ChiaMiningManager.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChiaMiningManager.Services
@@ -10,50 +12,50 @@ namespace ChiaMiningManager.Services
     public class PlotManager
     {
         private readonly ConfigurationContext DbContext;
+        private readonly HarvesterClient HarvesterClient;
 
-        public PlotManager(ConfigurationContext dbContext)
+        public PlotManager(ConfigurationContext dbContext, HarvesterClient harvesterClient)
         {
             DbContext = dbContext;
+            HarvesterClient = harvesterClient;
         }
 
-        public Task<List<Plot>> GetPlotsAsync()
-            => DbContext.Plots.ToListAsync();
-
-        public Task<int> GetPlotsCountAsync()
-            => DbContext.Plots.CountAsync();
-
-        public async Task<bool> DeletePlotByIdAsync(Guid id)
+        public async Task<PlotInfo[]> GetPlotsAsync()
         {
-            var plot = await DbContext.Plots.FirstOrDefaultAsync(x => x.Id == id);
+            var plots = await HarvesterClient.GetPlotsAsync();
+            var plotInfos = await DbContext.Plots.ToListAsync();
 
-            if (plot == null)
+            var finalPlotInfos = new PlotInfo[plots.Length];
+
+            for(int i = 0; i < plots.Length; i++)
             {
-                return false;
+                var plotInfo = plotInfos.FirstOrDefault(x => x.PublicKey == plots[i].PublicKey);
+
+                if (plotInfo == null)
+                {
+                    plotInfo = new PlotInfo(plots[i].PublicKey);
+                    DbContext.Plots.Add(plotInfo);
+                }
+                else
+                {
+                    plotInfos.Remove(plotInfo);
+                }
+
+                finalPlotInfos[i] = plotInfo;
             }
 
-            DbContext.Plots.Remove(plot);
-            File.Delete(plot.Path);
+            DbContext.RemoveRange(plotInfos);
             await DbContext.SaveChangesAsync();
-            return true;
-        }
-        public async Task<bool> DeletePlotByNameAsync(string name)
-        {
-            var plot = await DbContext.Plots.FirstOrDefaultAsync(x => x.Name == name);
 
-            if (plot == null)
-            {
-                return false;
-            }
-
-            DbContext.Plots.Remove(plot);
-            File.Delete(plot.Path);
-            await DbContext.SaveChangesAsync();
-            return true;
+            return finalPlotInfos;
         }
+
+        public async Task<int> GetPlotsCountAsync()
+            => (await HarvesterClient.GetPlotsAsync()).Length;
 
         public async Task IncrementPlots()
         {
-            var plots = await GetPlotsAsync();
+            var plots = await DbContext.Plots.ToListAsync();
 
             foreach (var plot in plots)
             {

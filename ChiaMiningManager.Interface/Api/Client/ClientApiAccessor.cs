@@ -1,4 +1,5 @@
 ﻿using Chia.NET.Models;
+using ChiaMiningManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -16,8 +17,8 @@ namespace ChiaMiningManager.Api
         {
         }
 
-        public Task<Plot[]> GetPlotsAsync()
-            => Client.GetFromJsonAsync<Plot[]>(ClientRoutes.ListPlots(ApiUrl));
+        public Task<PlotInfo[]> GetPlotsAsync()
+            => Client.GetFromJsonAsync<PlotInfo[]>(ClientRoutes.ListPlots(ApiUrl));
 
         //public Task<bool> DeletePlotByIdAsync(Guid id)
         //    => PostAsync<bool>(ClientRoutes.DeletePlotById(ApiUrl), new Dictionary<string, string>()

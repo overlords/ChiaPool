@@ -4,7 +4,7 @@ namespace ChiaMiningManager.Models
 {
     public class ConfigurationContext : DbContext
     {
-        public DbSet<Plot> Plots { get; set; }
+        public DbSet<PlotInfo> Plots { get; set; }
 
         public ConfigurationContext(DbContextOptions options)
             : base(options)
@@ -13,19 +13,15 @@ namespace ChiaMiningManager.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Plot>(b =>
+            modelBuilder.Entity<PlotInfo>(b =>
             {
-                b.Property(x => x.Id);
-                b.HasKey(x => x.Id);
+                b.Property(x => x.PublicKey);
+                b.HasKey(x => x.PublicKey);
 
-                b.Property(x => x.CreatedAt);
-
-                b.Property(x => x.Name);
-                b.HasIndex(x => x.Name)
-                .IsUnique();
-
+                b.Ignore(x => x.FileName);
                 b.Property(x => x.Minutes);
-                b.Property(x => x.Path);
+
+                b.ToTable("PlotInfos");
             });
         }
     }
