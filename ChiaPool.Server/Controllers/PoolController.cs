@@ -25,13 +25,15 @@ namespace ChiaPool.Controllers
         [HttpGet("Info")]
         public async Task<IActionResult> GetPoolInfoAsync()
         {
+            var minimumActiveTime = DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1);
+
             var poolInfo = new PoolInfo()
             {
                 Name = CustomizationOptions.PoolName,
                 TotalMinerCount = await DbContext.Miners.CountAsync(),
                 TotalPlotCount = await DbContext.Miners.SumAsync(x => x.LastPlotCount),
-                ActiveMinerCount = await DbContext.Miners.CountAsync(x => x.NextIncrement >= DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1)),
-                ActivePlotCount = await DbContext.Miners.Where(x => x.NextIncrement >= DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1)).SumAsync(x => x.LastPlotCount),
+                ActiveMinerCount = await DbContext.Miners.CountAsync(x => x.NextIncrement >= minimumActiveTime),
+                ActivePlotCount = await DbContext.Miners.Where(x => x.NextIncrement >= minimumActiveTime).SumAsync(x => x.LastPlotCount),
             };
 
             return Ok(poolInfo);
