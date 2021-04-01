@@ -128,15 +128,8 @@ namespace ChiaPool.Services
         private void FlushIPsInternal()
         {
             using var adapter = System.GetTableAdapter(4);
-            var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
-
-            foreach (var rule in chain.Rules)
-            {
-                chain.DeleteRule(rule as IpTablesRule);
-            }
-
             var sync = new DefaultNetfilterSync<IpTablesRule>();
-            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);
+            (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, Enumerable.Empty<IpTablesRule>(), sync);
         }
         private void AcceptIPInternal(IPAddress address)
         {
