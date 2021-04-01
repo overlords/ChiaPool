@@ -5,7 +5,7 @@ namespace Chia.NET.Models
     public sealed class Plot
     {
         [JsonPropertyName("file_size")]
-        public int FileSize { get; init; }
+        public ulong FileSize { get; init; }
 
         [JsonPropertyName("filename")]
         public string FileName { get; init; }
