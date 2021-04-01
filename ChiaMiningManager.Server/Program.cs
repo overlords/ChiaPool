@@ -86,15 +86,16 @@ namespace ChiaMiningManager
                 try
                 {
                     await farmerApiClient.SetRewardTargets(Environment.GetEnvironmentVariable("wallet_address"));
+                    logger.LogInformation("Done");
+                    return;
                 }
                 catch 
                 {
                     logger.LogWarning($"Connection failed. Trying again in 1.5 seconds. {9 - i} retries left");
                 }
-
             }
 
-            logger.LogInformation("Done");
+            throw new Exception("Conenction Error!");
         }
     }
 }

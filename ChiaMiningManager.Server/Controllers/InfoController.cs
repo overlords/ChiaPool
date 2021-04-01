@@ -30,7 +30,7 @@ namespace ChiaMiningManager.Controllers
             }
             var totalPM = await DbContext.Miners.SumAsync(x => x.PlotMinutes);
 
-            var totalWallet = await WalletClient.GetWalletBalance(1);
+            var totalWallet = await WalletClient.GetWalletBalance((int)ChiaWalletId.Wallet);
             return Ok(totalWallet.MultiplyBy(miner.PlotMinutes / totalPM));
         }
 
