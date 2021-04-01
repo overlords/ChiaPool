@@ -82,7 +82,7 @@ namespace ChiaMiningManager
 
             for(int i = 0; i < 10; i++)
             {
-                await Task.Delay(5);
+                await Task.Delay(5000);
                 try
                 {
                     await farmerApiClient.SetRewardTargets(Environment.GetEnvironmentVariable("wallet_address"));
