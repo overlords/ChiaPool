@@ -1,4 +1,5 @@
-﻿using ChiaPool.Models;
+﻿using ChiaPool.Extensions;
+using ChiaPool.Models;
 using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -85,7 +86,7 @@ namespace ChiaPool.Controllers
         public async Task<IActionResult> GetAllMinersAsync()
         {
             var miners = await DbContext.Miners.ToListAsync();
-            miners = miners.Select(x => { x.Token = null; x.Address = null; x.NextIncrement = default; return x; }).ToList();
+            miners = miners.Select(x => x.WithoutSecrets()).ToList();
             return Ok(miners);
         }
 
@@ -96,7 +97,7 @@ namespace ChiaPool.Controllers
 
             return miner == null
                 ? NotFound()
-                : Ok(miner);
+                : Ok(miner.WithoutSecrets());
         }
         [HttpGet("Get/Name/{name}")]
         public async Task<IActionResult> GetMinerInfoByNameAsync([FromRoute] string name)
@@ -105,7 +106,7 @@ namespace ChiaPool.Controllers
 
             return miner == null
                 ? NotFound()
-                : Ok(miner);
+                : Ok(miner.WithoutSecrets());
         }
         [HttpGet("Get/Token/{token}")]
         public async Task<IActionResult> GetMinerInfoByTokenAsync([FromRoute] string token)
@@ -114,7 +115,7 @@ namespace ChiaPool.Controllers
 
             return miner == null
                 ? NotFound()
-                : Ok(miner);
+                : Ok(miner.WithoutSecrets());
         }
 
         private IPAddress GetRequestIP()

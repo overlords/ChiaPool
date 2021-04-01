@@ -38,7 +38,8 @@ namespace ChiaPool.Commands.Miner
                 ? await ServerAccessor.GetMinerByIdAsync(Id)
                 : await ClientAccessor.GetCurrentMinerAsync();
 
-
+            await InfoAsync($"Miner ID      |   {miner.Id}");
+            await InfoAsync($"Miner Name    |   {miner.Name}");
 
         }
     }

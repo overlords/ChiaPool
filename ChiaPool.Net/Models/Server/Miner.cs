@@ -5,7 +5,7 @@ namespace ChiaPool.Models
 {
     public class Miner
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get; init; }
         public string Name { get; set; }
         public string Token { get; set; }
 
@@ -13,6 +13,9 @@ namespace ChiaPool.Models
         public long PlotMinutes { get; set; }
         public DateTimeOffset NextIncrement { get; set; }
 
+        public Miner()
+        {
+        }
         public Miner(string name)
         {
             Id = Guid.NewGuid();
