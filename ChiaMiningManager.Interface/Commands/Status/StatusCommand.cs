@@ -37,7 +37,7 @@ namespace ChiaMiningManager.Commands.Status
             {
                 await SuccessLineAsync("Online");
                 await WriteLineAsync();
-                await InfoLineAsync("Currently harvesting");
+                await InfoLineAsync($"Currently harvesting {clientStatus.PlotCount} plots");
                 await WriteLineAsync();
             }
 
