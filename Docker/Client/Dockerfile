@@ -18,11 +18,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata dotnet-sdk-5.0
 
 WORKDIR /root
 
-RUN echo "Cloning ChiaMiningManager"
-RUN git clone https://github.com/Playwo/ChiaMiningManager.git \
-&& cd ChiaMiningManager/ChiaMiningManager.Client \
+RUN echo "Cloning ChiaPool"
+RUN git clone https://github.com/Playwo/ChiaPool.git \
+&& cd ChiaPool/ChiaPool.Client \
 && dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
-&& chmod +x /root/manager/ChiaMiningManager.Client 
+&& chmod +x /root/manager/ChiaPool.Client 
 
 
 #Only required for build
