@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30223.230
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Server", "ChiaMiningManager.Server\ChiaPool.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Server", "ChiaPool.Server\ChiaPool.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Client", "ChiaMiningManager.Client\ChiaPool.Client.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Client", "ChiaPool.Client\ChiaPool.Client.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Interface", "ChiaMiningManager.Interface\ChiaPool.Interface.csproj", "{4262F84B-1B32-46B7-9604-E8130EDB2FCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Interface", "ChiaPool.Interface\ChiaPool.Interface.csproj", "{4262F84B-1B32-46B7-9604-E8130EDB2FCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{32D83479-5A96-4305-8488-C6CC9314FD2C}"
 EndProject
