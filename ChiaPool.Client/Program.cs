@@ -1,4 +1,5 @@
 using Chia.NET.Clients;
+using ChiaPool.Api;
 using ChiaPool.Models;
 using ChiaPool.Services;
 using Common.Extensions;
@@ -25,6 +26,7 @@ namespace ChiaPool
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
             var assembly = Assembly.GetExecutingAssembly();
             var chiaNetAssembly = Assembly.GetAssembly(typeof(HarvesterClient));
+            var chiaPoolNetAssembly = Assembly.GetAssembly(typeof(ServerApiAccessor));
 
             var validationResult = await Application.Services.ValidateOptionsAsync(assembly);
 
@@ -36,6 +38,7 @@ namespace ChiaPool
 
             await MigrateDatabaseAsync();
             await Application.Services.InitializeApplicationServicesAsync(assembly);
+            await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
 
             if (args.Length == 1 && args[0] == "init")
             {
@@ -47,6 +50,7 @@ namespace ChiaPool
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 
             Application.Services.RunApplicationServices(assembly);
+            Application.Services.RunApplicationServices(chiaPoolNetAssembly);
             Application.Services.RunApplicationServices(chiaNetAssembly);
 
             await Application.StartAsync();
