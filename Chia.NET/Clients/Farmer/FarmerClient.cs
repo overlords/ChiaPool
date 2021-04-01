@@ -6,7 +6,7 @@ namespace Chia.NET.Clients
 {
     public sealed class FarmerClient : ChiaApiClient
     {
-        private const string ApiUrl = "https://localhost:8559";
+        private const string ApiUrl = "https://localhost:8559/";
 
         public FarmerClient() 
             : base("farmer", ApiUrl)
