@@ -37,7 +37,12 @@ namespace ChiaPool
             await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 
-            await RunInitAsync();
+            if (args.Length == 1 && args[0] == "init")
+            {
+                await RunInitAsync();
+                Application.Dispose();
+                return;
+            }
 
             Application.Services.RunApplicationServices(assembly);
             Application.Services.RunApplicationServices(chiaNetAssembly);
