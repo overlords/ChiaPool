@@ -30,7 +30,7 @@ namespace ChiaPool.Commands
             }
             else
             {
-                await InfoAsync("[Your Wallet]");
+                await InfoAsync($"[Your Wallet : {wallet.Percentage}% of the pool wallet]");
             }
 
             await InfoAsync($"Confirmed Balance   : {wallet.ConfirmedBalance}   XCH");
