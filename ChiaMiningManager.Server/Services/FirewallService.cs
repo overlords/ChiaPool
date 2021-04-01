@@ -7,6 +7,7 @@ using IPTables.Net.Netfilter.TableSync;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -37,8 +38,7 @@ namespace ChiaMiningManager.Services
 
         protected override async ValueTask InitializeAsync()
         {
-            await RefreshMinerIPsAsync();
-
+            await RefreshIPWhiteListAsync();
         }
 
         protected override async ValueTask RunAsync()
@@ -46,13 +46,14 @@ namespace ChiaMiningManager.Services
             while (true)
             {
                 await Task.Delay(IPRefreshDelay);
-                await RefreshMinerIPsAsync();
+                await RefreshIPWhiteListAsync();
             }
         }
 
-        private async Task RefreshMinerIPsAsync()
+        private async Task RefreshIPWhiteListAsync()
         {
             await AccessSemaphore.WaitAsync();
+            Logger.LogInformation("Refreshing iptables whitelist...");
             FlushIPsInternal();
 
             try
@@ -64,18 +65,21 @@ namespace ChiaMiningManager.Services
 
                 var rules = new List<string>();
 
-                foreach (var miner in miners.Where(x => x.Address != null))
+                foreach (var miner in miners.Where(x => x.Address != null && //Has an IP
+                                                   x.NextIncrement >= DateTimeOffset.UtcNow - TimeSpan.FromHours(1))) //Has updated 
                 {
                     rules.Add(GetAcceptRule(miner.Address));
                 }
 
                 var ruleSet = new IpTablesRuleSet(4, rules, System);
-                var chain = System.GetChain(adapter, IpTable, IpChain);
 
-                foreach (var rule in ruleSet.Rules)
-                {
-                    chain.AddRule(rule);
-                }
+                var sync = new DefaultNetfilterSync<IpTablesRule>();
+                (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, ruleSet.Rules, sync);
+                Logger.LogInformation("Finished refreshing iptables whitelist");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "There was an error while refreshing iptables whitelist");
             }
             finally
             {
@@ -140,7 +144,6 @@ namespace ChiaMiningManager.Services
             {
                 return;
             }
-            Logger.LogInformation($"Whitelisted {address}");
 
             using var adapter = System.GetTableAdapter(4);
 
@@ -151,6 +154,7 @@ namespace ChiaMiningManager.Services
 
             var sync = new DefaultNetfilterSync<IpTablesRule>();
             (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);
+            Logger.LogInformation($"Whitelisted {address}");
         }
         private void DropIPInternal(IPAddress address)
         {
@@ -158,7 +162,6 @@ namespace ChiaMiningManager.Services
             {
                 return;
             }
-            Logger.LogInformation($"Blacklisted {address}");
 
             using var adapter = System.GetTableAdapter(4);
             var chain = System.GetChain(adapter, IpTable, IpChain) as IpTablesChain;
@@ -173,6 +176,7 @@ namespace ChiaMiningManager.Services
             chain.DeleteRule(rule);
             var sync = new DefaultNetfilterSync<IpTablesRule>();
             (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, chain.Rules, sync);
+            Logger.LogInformation($"Blacklisted {address}");
         }
 
         private string GetAcceptRule(IPAddress address)

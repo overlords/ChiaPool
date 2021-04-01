@@ -8,7 +8,7 @@ namespace Chia.NET.Clients
     {
         private const string ApiUrl = "https://localhost:8559/";
 
-        public FarmerClient() 
+        public FarmerClient()
             : base("farmer", ApiUrl)
         {
         }
@@ -18,6 +18,6 @@ namespace Chia.NET.Clients
             {
                 ["farmer_target"] = targetAddress,
                 ["pool_target"] = targetAddress,
-            }); 
+            });
     }
 }

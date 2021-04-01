@@ -80,7 +80,7 @@ namespace ChiaMiningManager
 
             logger.LogInformation("Configuring farmer reward target");
 
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 await Task.Delay(5000);
                 try
@@ -89,7 +89,7 @@ namespace ChiaMiningManager
                     logger.LogInformation("Done");
                     return;
                 }
-                catch 
+                catch
                 {
                     logger.LogWarning($"Connection failed. Trying again in 5 seconds. {9 - i} retries left");
                 }

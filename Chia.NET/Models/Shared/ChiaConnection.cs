@@ -9,7 +9,7 @@ namespace Chia.NET.Models
         public string NodeId { get; init; }
 
         [JsonPropertyName("bytes_read")]
-        public int BytesRead { get; init; } 
+        public int BytesRead { get; init; }
 
         [JsonPropertyName("bytes_written")]
         public int BytesWritten { get; init; }
