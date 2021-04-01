@@ -19,14 +19,14 @@ namespace ChiaPool.Commands.Pool
         {
             var poolInfo = await ServerAccessor.GetPoolInfoAsync();
 
-            await InfoAsync($"[Info for Pool {poolInfo.Name}]");
+            await InfoLineAsync($"[Info for Pool {poolInfo.Name}]");
 
-            await InfoAsync($"Total  Miners     |   {poolInfo.TotalMinerCount}");
-            await InfoAsync($"Active Miners     |   {poolInfo.ActiveMinerCount}");
-            await InfoAsync($"Total  Plots      |   {poolInfo.TotalPlotCount}");
-            await InfoAsync($"Active Plots      |   {poolInfo.ActivePlotCount}");
-            await InfoAsync($"Total Pool Size   |   {103 * poolInfo.TotalPlotCount} GB");
-            await InfoAsync($"PM Mining Speed   |   {poolInfo.ActivePlotCount / 60d} PM / second");
+            await InfoLineAsync($"Total  Miners     |   {poolInfo.TotalMinerCount}");
+            await InfoLineAsync($"Active Miners     |   {poolInfo.ActiveMinerCount}");
+            await InfoLineAsync($"Total  Plots      |   {poolInfo.TotalPlotCount}");
+            await InfoLineAsync($"Active Plots      |   {poolInfo.ActivePlotCount}");
+            await InfoLineAsync($"Total Pool Size   |   {103 * poolInfo.TotalPlotCount} GB");
+            await InfoLineAsync($"PM Mining Speed   |   {poolInfo.ActivePlotCount / 60d} PM / second");
         }
     }
 }
