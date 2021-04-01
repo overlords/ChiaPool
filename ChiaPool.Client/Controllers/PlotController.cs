@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
 {
-    [Route("Plots")]
+    [Route("Plot")]
     [ApiController]
     public class PlotController : ControllerBase
     {
@@ -20,11 +20,11 @@ namespace ChiaPool.Controllers
         public Task<PlotInfo[]> GetPlotsAsync()
             => PlotManager.GetPlotsAsync();
 
-        [HttpPost("DeleteId")]
+        [HttpPost("DeleteKey")]
         public Task<bool> DeletePlotByPubKeyAsync([FromForm] string pubKey)
             => PlotManager.DeletePlotByPubKeyAsync(pubKey);
 
-        [HttpPost("DeleteName")]
+        [HttpPost("DeleteFile")]
         public Task<bool> DeletePlotByFileNameAsync([FromForm] string fileName)
             => PlotManager.DeletePlotByFileNameAsync(fileName);
     }

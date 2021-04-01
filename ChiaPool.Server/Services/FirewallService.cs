@@ -65,10 +65,10 @@ namespace ChiaPool.Services
 
                 var rules = new List<string>();
 
-                foreach (var miner in miners.Where(x => x.Address != null && //Has an IP
+                foreach (var miner in miners.Where(x => x.LastAddress != null && //Has an IP
                                                    x.NextIncrement >= DateTimeOffset.UtcNow - TimeSpan.FromHours(1))) //Has updated 
                 {
-                    rules.Add(GetAcceptRule(miner.Address));
+                    rules.Add(GetAcceptRule(miner.LastAddress));
                 }
 
                 var ruleSet = new IpTablesRuleSet(4, rules, System);

@@ -15,7 +15,8 @@ namespace ChiaPool.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: true),
-                    Address = table.Column<IPAddress>(type: "inet", nullable: true),
+                    LastAddress = table.Column<IPAddress>(type: "inet", nullable: true),
+                    LastPlotCount = table.Column<short>(type: "smallint", nullable: false),
                     PlotMinutes = table.Column<long>(type: "bigint", nullable: false),
                     NextIncrement = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },

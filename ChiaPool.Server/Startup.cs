@@ -29,7 +29,7 @@ namespace ChiaPool
 
             services.AddDbContext<MinerContext>((provider, options) =>
             {
-                var dbOptions = provider.GetRequiredService<DatabaseOptions>();
+                var dbOptions = provider.GetRequiredService<DatabaseOption>();
                 string connectionString = dbOptions.ConnectionString;
                 options.UseNpgsql(connectionString);
             });

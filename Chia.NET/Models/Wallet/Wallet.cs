@@ -22,9 +22,12 @@ namespace Chia.NET.Models
         [JsonPropertyName("pending_change")]
         public double PendingChange { get; init; }
 
+        public double Percentage { get; init; }
+
         [JsonConstructor]
         public Wallet()
         {
+            Percentage = 100;
         }
     }
 }

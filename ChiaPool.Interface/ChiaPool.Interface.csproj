@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Pool\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Chia.NET\Chia.NET.csproj" />
     <ProjectReference Include="..\ChiaPool.Net\ChiaPool.Net.csproj" />
   </ItemGroup>

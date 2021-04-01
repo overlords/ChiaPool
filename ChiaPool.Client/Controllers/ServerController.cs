@@ -1,8 +1,7 @@
-﻿using ChiaPool.Configuration;
+﻿using ChiaPool.Api;
+using ChiaPool.Configuration;
 using ChiaPool.Configuration.Options;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -11,33 +10,26 @@ namespace ChiaPool.Controllers
     [ApiController]
     public class ServerController : ControllerBase
     {
-        private readonly HttpClient Client;
-        private readonly ServerOptions ServerOptions;
+        private readonly ServerApiAccessor ServerAccessor;
+        private readonly ServerOption ServerOptions;
         private readonly AuthOption AuthOptions;
 
-        public ServerController(HttpClient client, ServerOptions serverOptions, AuthOption authOptions)
+        public ServerController(ServerApiAccessor serverAccessor, ServerOption serverOptions, AuthOption authOptions)
         {
-            Client = client;
+            ServerAccessor = serverAccessor;
             ServerOptions = serverOptions;
             AuthOptions = authOptions;
         }
 
-        [HttpGet("Info/Wallet")]
-        public async Task<IActionResult> GetWalletAsync()
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/Info/Status");
-            request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
-            var response = await Client.SendAsync(request);
-            object result = null;
+        [HttpGet("Miner/Get/Current")]
+        public async Task<IActionResult> GetCurrentMinerAsync()
+            => Ok(await ServerAccessor.GetMinerByTokenAsync(AuthOptions.Token));
 
-            if (response.IsSuccessStatusCode)
-            {
-                result = await response.Content.ReadAsStringAsync();
-            }
-
-            return StatusCode((int)response.StatusCode, result);
-        }
-
-
+        [HttpGet("Wallet/Get/Current")]
+        public async Task<IActionResult> GetCurrentWalletAsync()
+            => Ok(await ServerAccessor.GetWalletByTokenAsync(AuthOptions.Token));
+        [HttpGet("Wallet/Get/Pool")]
+        public async Task<IActionResult> GetPoolWalletAsync()
+            => Ok(await ServerAccessor.GetPoolWalletAsync(AuthOptions.Token));
     }
 }

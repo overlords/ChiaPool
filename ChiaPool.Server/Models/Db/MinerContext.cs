@@ -26,7 +26,9 @@ namespace ChiaPool.Models
                 b.HasIndex(x => x.Token)
                 .IsUnique();
 
-                b.Property(x => x.Address);
+                b.Property(x => x.LastAddress);
+                b.Property(x => x.LastPlotCount);
+
                 b.Property(x => x.PlotMinutes);
                 b.Property(x => x.NextIncrement);
             });

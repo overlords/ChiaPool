@@ -27,7 +27,7 @@ namespace ChiaPool.Services
         private readonly AuthOption AuthOptions;
 
         [Inject]
-        private readonly ServerOptions ServerOptions;
+        private readonly ServerOption ServerOptions;
 
         protected override async ValueTask RunAsync()
         {
@@ -49,7 +49,7 @@ namespace ChiaPool.Services
             var request = new HttpRequestMessage(HttpMethod.Post, $"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/miner/claim");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
-            int plotCount = await plotManager.GetPlotsCountAsync();
+            int plotCount = await plotManager.GetPlotCountAsync();
 
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string>()
             {

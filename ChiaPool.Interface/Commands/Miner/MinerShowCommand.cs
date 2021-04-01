@@ -1,5 +1,4 @@
 ﻿using ChiaPool.Api;
-using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System;
@@ -7,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Commands.Miner
 {
-    [Command("Miner Info", Description = "Retrives information about a specific miner. Defaults to you")]
-    public class MinerInfoCommand : ChiaCommand
+    [Command("Miner Show", Description = "Retrieves information about a specific miner. Defaults to you")]
+    public class MinerShowCommand : ChiaCommand
     {
         private readonly ClientApiAccessor ClientAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public MinerInfoCommand(ClientApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        public MinerShowCommand(ClientApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
         {
             ClientAccessor = clientAccessor;
             ServerAccessor = serverAccessor;

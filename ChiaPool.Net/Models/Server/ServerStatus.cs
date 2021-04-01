@@ -1,6 +1,6 @@
 ﻿namespace ChiaPool.Models
 {
-    public class ServerStatus
+    public sealed class ServerStatus
     {
         public ServerStatus()
         {

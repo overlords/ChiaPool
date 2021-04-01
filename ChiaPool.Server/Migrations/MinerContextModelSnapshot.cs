@@ -20,14 +20,17 @@ namespace ChiaPool.Migrations
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("ChiaMiningManager.Models.Miner", b =>
+            modelBuilder.Entity("ChiaPool.Models.Miner", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<IPAddress>("Address")
+                    b.Property<IPAddress>("LastAddress")
                         .HasColumnType("inet");
+
+                    b.Property<short>("LastPlotCount")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

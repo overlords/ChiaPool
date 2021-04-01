@@ -21,7 +21,7 @@ namespace ChiaPool.Services
         private readonly AuthOption AuthOptions;
 
         [Inject]
-        private readonly ServerOptions ServerOptions;
+        private readonly ServerOption ServerOptions;
 
         public async Task<bool> SendStartRequest()
         {

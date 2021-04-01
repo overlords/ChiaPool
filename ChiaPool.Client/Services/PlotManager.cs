@@ -23,7 +23,7 @@ namespace ChiaPool.Services
             return await DbContext.Plots.ToArrayAsync();
         }
 
-        public async Task<int> GetPlotsCountAsync()
+        public async Task<int> GetPlotCountAsync()
             => (await HarvesterClient.GetPlotsAsync()).Length;
 
         public async Task IncrementPlots()

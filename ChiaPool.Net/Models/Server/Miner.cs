@@ -3,13 +3,15 @@ using System.Net;
 
 namespace ChiaPool.Models
 {
-    public class Miner
+    public sealed class Miner
     {
         public Guid Id { get; init; }
         public string Name { get; set; }
         public string Token { get; set; }
 
-        public IPAddress Address { get; set; }
+        public IPAddress LastAddress { get; set; }
+        public short LastPlotCount { get; set; }
+
         public long PlotMinutes { get; set; }
         public DateTimeOffset NextIncrement { get; set; }
 
@@ -22,6 +24,7 @@ namespace ChiaPool.Models
             Name = name;
             Token = Guid.NewGuid().ToString();
             NextIncrement = DateTimeOffset.UtcNow;
+            LastPlotCount = 0;
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Configuration.Options
 {
-    public class ServerOptions : Option
+    public class ServerOption : Option
     {
-        public string PoolHost { get; set; } = Environment.GetEnvironmentVariable("pool_host");
-        private string ManagerPortString { get; set; } = Environment.GetEnvironmentVariable("manager_port");
-        public short ManagerPort { get; set; }
+        public string PoolHost { get; init; } = Environment.GetEnvironmentVariable("pool_host");
+        private string ManagerPortString { get; init; } = Environment.GetEnvironmentVariable("manager_port");
+        public short ManagerPort { get; private set; }
 
         protected override ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
         {

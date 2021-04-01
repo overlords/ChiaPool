@@ -38,10 +38,10 @@ namespace ChiaPool.Controllers
             {
                 return NotFound();
             }
-            if (!minerAddress.Equals(miner.Address))
+            if (!minerAddress.Equals(miner.LastAddress))
             {
-                await FirewallService.SwapMinerIP(miner.Address, minerAddress);
-                miner.Address = minerAddress;
+                await FirewallService.SwapMinerIP(miner.LastAddress, minerAddress);
+                miner.LastAddress = minerAddress;
             }
 
             await DbContext.SaveChangesAsync();
@@ -68,12 +68,13 @@ namespace ChiaPool.Controllers
             {
                 return NotFound();
             }
-            if (!minerAddress.Equals(miner.Address))
+            if (!minerAddress.Equals(miner.LastAddress))
             {
-                await FirewallService.SwapMinerIP(miner.Address, minerAddress);
-                miner.Address = minerAddress;
+                await FirewallService.SwapMinerIP(miner.LastAddress, minerAddress);
+                miner.LastAddress = minerAddress;
             }
 
+            miner.LastPlotCount = activePlots;
             miner.PlotMinutes += activePlots;
             miner.NextIncrement = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(50); //10 second bufffer
 
