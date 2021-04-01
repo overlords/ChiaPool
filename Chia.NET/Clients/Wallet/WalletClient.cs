@@ -9,7 +9,7 @@ namespace Chia.NET.Clients
         private const string ApiUrl = "https://localhost:9256/";
 
         public WalletClient()
-            : base("wallet")
+            : base("wallet", ApiUrl)
         {
         }
 

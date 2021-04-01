@@ -27,6 +27,6 @@ namespace ChiaMiningManager.Controllers
         public async Task<IActionResult> GetKeysAsync([FromHeader(Name = "Authorization")] string token)
                     => !await DbContext.Miners.AnyAsync(x => x.Token == token)
                 ? Unauthorized()
-                : Ok(Environment.GetEnvironmentVariable("keys"));
+                : Ok(Environment.GetEnvironmentVariable("farmer_keys"));
     }
 }

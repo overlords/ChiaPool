@@ -6,14 +6,31 @@ cd chia-blockchain
 
 . ./activate
 
-chia init
-
-if [ ${keys} == "generate" ]; then
-  echo "to use your own keys pass them as a variable keys=\"24words\""
-  chia keys generate
-else
-  echo "${keys}" | chia keys add
+if [ ${wallet_keys} == "" ]; then
+  echo "You need to provide keys for the wallet!"
+  echo "generating new keys, add them to the node.env file (wallet_keys=\"24words\")"
+  chia keys generate_and_print
+  exit 1
 fi
+if [ ${wallet_address} == ""]; then
+	echo "You need to provide a wallet address!"
+	echo "Your wallet address is the \"First wallet address\" in the following output. Add it to your node.env file (wallet_address=xch...)"
+	echo "${wallet_keys}" | chia keys add
+	chia keys show
+	exit 1
+fi
+if [ ${farmer_keys} == ""]; then
+	echo "You need to provide keys for plotting!"
+	echo "generating new keys, add them to the node.env file (farmer_keys=\"24words\")"
+	chia keys generate_and_print
+	exit 1
+fi
+
+echo "${farmer_keys}" | chia keys add
+echo "${wallet_keys}" | chia keys add
+
+chia init
+echo "${farmer_keys}" | chia keys add
 
 for i in $(echo ${plot_dirs} | tr ";" "\n") 
 do

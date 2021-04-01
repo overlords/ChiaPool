@@ -1,5 +1,4 @@
 ﻿using Chia.NET.Models;
-using Chia.NET.Models.Shared;
 using Common.Services;
 using System;
 using System.Collections.Generic;
@@ -46,8 +45,11 @@ namespace Chia.NET.Clients
         /// Returns a list of peers that we are currently connected to.
         /// </summary>
         /// <returns></returns>
-        public Task<ChiaConnection[]> GetConnections()
-            => PostAsync<ChiaConnection[]>(SharedRoutes.GetConnections(ApiUrl));
+        public async Task<ChiaConnection[]> GetConnections()
+        {
+            var result = await PostAsync<GetConnectionsResult>(SharedRoutes.GetConnections(ApiUrl));
+            return result.Connections;
+        }
 
         protected async Task<T> PostAsync<T>(Uri requestUri, IDictionary<string, string> parameters = null) where T : ChiaResult
         {

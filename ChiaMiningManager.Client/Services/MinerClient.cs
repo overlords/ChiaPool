@@ -1,4 +1,5 @@
 ﻿using ChiaMiningManager.Configuration;
+using ChiaMiningManager.Configuration.Options;
 using Common.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,9 +20,12 @@ namespace ChiaMiningManager.Services
         [Inject]
         private readonly AuthOption AuthOptions;
 
+        [Inject]
+        private readonly ServerOptions ServerOptions;
+
         public async Task<bool> SendStartRequest()
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://pool.playwo.de/miner/start");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/miner/start");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
             try
@@ -61,7 +65,7 @@ namespace ChiaMiningManager.Services
 
         public async Task<bool> RefreshCAKeysAsync()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://pool.playwo.de/cert/ca");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/cert/ca");
             request.Headers.Authorization = new AuthenticationHeaderValue(AuthOptions.Token);
 
             try

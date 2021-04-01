@@ -9,7 +9,7 @@ namespace Chia.NET.Clients
         private const string ApiUrl = "https://localhost:8560/";
 
         public HarvesterClient()
-            : base("harvester")
+            : base("harvester", ApiUrl)
         {
         }
 
