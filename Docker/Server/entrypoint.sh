@@ -52,8 +52,10 @@ cd /root/.chia/mainnet/config/ssl/ca
 
 zip -r /root/ca.zip .
 
+cd /root/manager
+./ChiaPool.Server init
+
 { echo "1"; echo "S"; } | chia wallet show
 { echo "2"; echo "S"; } | chia wallet show
 
-cd /root/manager
 ./ChiaPool.Server
