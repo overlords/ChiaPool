@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>ChiaMiningManager</RootNamespace>
-    <AssemblyName>ChiaMiningManager</AssemblyName>
+    <RootNamespace>ChiaPool</RootNamespace>
+    <AssemblyName>ChiaPool</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,8 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chia.NET\Chia.NET.csproj" />
-    <ProjectReference Include="..\ClientModels\ClientModels.csproj" />
-    <ProjectReference Include="..\ServerModels\ServerModels.csproj" />
+    <ProjectReference Include="..\ChiaPool.Net\ChiaPool.Net.csproj" />
   </ItemGroup>
 
 </Project>

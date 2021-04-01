@@ -1,6 +1,6 @@
 ﻿using Common.Services;
 
-namespace ChiaMiningManager.Services
+namespace ChiaPool.Services
 {
     public class ChiaAdapater : Service
     {

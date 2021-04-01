@@ -1,11 +1,11 @@
 ﻿using Chia.NET.Models;
-using ChiaMiningManager.Models;
+using ChiaPool.Models;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Api
+namespace ChiaPool.Api
 {
     public class ClientApiAccessor : ApiAccessor
     {
@@ -36,6 +36,8 @@ namespace ChiaMiningManager.Api
 
         public Task<Wallet> GetWalletBalanceAsync()
             => Client.GetFromJsonAsync<Wallet>(ClientRoutes.ServerWalletInfo(ApiUrl));
+        public Task<Miner> GetCurrentMinerAsync()
+            => Client.GetFromJsonAsync<Miner>(ClientRoutes.GetCurrentMiner(ApiUrl));
 
     }
 }

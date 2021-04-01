@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Configuration
+namespace ChiaPool.Configuration
 {
     public class AuthOption : Option
     {

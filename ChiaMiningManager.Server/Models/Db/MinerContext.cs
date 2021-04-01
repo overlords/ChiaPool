@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ChiaMiningManager.Models
+namespace ChiaPool.Models
 {
     public class MinerContext : DbContext
     {

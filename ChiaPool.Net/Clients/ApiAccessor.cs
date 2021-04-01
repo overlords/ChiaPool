@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Api
+namespace ChiaPool.Api
 {
     public abstract class ApiAccessor
     {

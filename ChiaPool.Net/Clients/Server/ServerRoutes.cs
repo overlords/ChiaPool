@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChiaMiningManager.Api
+namespace ChiaPool.Api
 {
     public static class ServerRoutes
     {
@@ -11,6 +11,8 @@ namespace ChiaMiningManager.Api
         public static Uri GetMinerById(string apiUrl, Guid id)
             => new Uri(apiUrl + $"Miner/Get/Id/{id}");
         public static Uri GetMinerByName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Miner/Get/name/{name}");
+            => new Uri(apiUrl + $"Miner/Get/Name/{name}");
+        public static Uri GetMinerByToken(string apiUrl, string token)
+            => new Uri(apiUrl + $"Miner/Get/Token/{token}");
     }
 }

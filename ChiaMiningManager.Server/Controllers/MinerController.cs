@@ -1,5 +1,5 @@
-﻿using ChiaMiningManager.Models;
-using ChiaMiningManager.Services;
+﻿using ChiaPool.Models;
+using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Controllers
+namespace ChiaPool.Controllers
 {
     [Route("Miner")]
     [ApiController]
@@ -102,6 +102,15 @@ namespace ChiaMiningManager.Controllers
         public async Task<IActionResult> GetMinerInfoByNameAsync([FromRoute] string name)
         {
             var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Name == name);
+
+            return miner == null
+                ? NotFound()
+                : Ok(miner);
+        }
+        [HttpGet("Get/Token/{token}")]
+        public async Task<IActionResult> GetMinerInfoByTokenAsync([FromRoute] string token)
+        {
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
 
             return miner == null
                 ? NotFound()

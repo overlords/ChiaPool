@@ -1,9 +1,9 @@
-﻿using ChiaMiningManager.Models;
-using ChiaMiningManager.Services;
+﻿using ChiaPool.Models;
+using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Controllers
+namespace ChiaPool.Controllers
 {
     [Route("Plots")]
     [ApiController]

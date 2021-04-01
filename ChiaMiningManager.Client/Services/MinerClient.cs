@@ -1,5 +1,5 @@
-﻿using ChiaMiningManager.Configuration;
-using ChiaMiningManager.Configuration.Options;
+﻿using ChiaPool.Configuration;
+using ChiaPool.Configuration.Options;
 using Common.Services;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Services
+namespace ChiaPool.Services
 {
     public class MinerClient : Service
     {

@@ -1,5 +1,5 @@
 cd manager
-./ChiaMiningManager.Client init
+./ChiaPool.Client init
 
 cd ../chia-blockchain
 
@@ -20,4 +20,4 @@ done
 chia start harvester
 
 cd ../manager
-./ChiaMiningManager.Client
+./ChiaPool.Client

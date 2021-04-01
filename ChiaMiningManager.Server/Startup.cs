@@ -1,6 +1,6 @@
 using Chia.NET.Clients;
-using ChiaMiningManager.Configuration;
-using ChiaMiningManager.Models;
+using ChiaPool.Configuration;
+using ChiaPool.Models;
 using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-namespace ChiaMiningManager
+namespace ChiaPool
 {
     public class Startup
     {

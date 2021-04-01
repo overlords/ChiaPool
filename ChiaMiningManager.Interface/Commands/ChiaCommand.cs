@@ -4,7 +4,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands
+namespace ChiaPool.Commands
 {
     public abstract class ChiaCommand : ICommand
     {

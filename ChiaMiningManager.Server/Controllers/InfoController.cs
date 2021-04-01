@@ -1,11 +1,11 @@
 ﻿using Chia.NET.Clients;
-using ChiaMiningManager.Extensions;
-using ChiaMiningManager.Models;
+using ChiaPool.Extensions;
+using ChiaPool.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Controllers
+namespace ChiaPool.Controllers
 {
     [Route("Info")]
     [ApiController]

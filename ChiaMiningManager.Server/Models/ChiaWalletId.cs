@@ -1,4 +1,4 @@
-﻿namespace ChiaMiningManager.Models
+﻿namespace ChiaPool.Models
 {
     public enum ChiaWalletId
     {

@@ -1,6 +1,6 @@
 ﻿using Chia.NET.Clients;
-using ChiaMiningManager.Configuration;
-using ChiaMiningManager.Configuration.Options;
+using ChiaPool.Configuration;
+using ChiaPool.Configuration.Options;
 using Common.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Services
+namespace ChiaPool.Services
 {
     public class MiningNotifier : Service
     {

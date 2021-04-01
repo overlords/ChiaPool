@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>ChiaMiningManager.Client</AssemblyName>
+    <AssemblyName>ChiaPool.Client</AssemblyName>
     <LangVersion>preview</LangVersion>
-    <RootNamespace>ChiaMiningManager</RootNamespace>
+    <RootNamespace>ChiaPool</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chia.NET\Chia.NET.csproj" />
-    <ProjectReference Include="..\ClientModels\ClientModels.csproj" />
+    <ProjectReference Include="..\ChiaPool.Net\ChiaPool.Net.csproj" />
   </ItemGroup>
 
 

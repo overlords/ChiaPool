@@ -1,11 +1,11 @@
-﻿using ChiaMiningManager.Api;
+﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands
+namespace ChiaPool.Commands
 {
-    [Command("Info Wallet", Description = "Show the pool wallet info")]
+    [Command("Wallet Info", Description = "Show the pool wallet info")]
     public class WalletInfoCommand : ChiaCommand
     {
         private readonly ClientApiAccessor ClientAccessor;

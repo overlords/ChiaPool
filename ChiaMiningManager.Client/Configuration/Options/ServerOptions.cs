@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Configuration.Options
+namespace ChiaPool.Configuration.Options
 {
     public class ServerOptions : Option
     {

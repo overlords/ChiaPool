@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Extensions
+namespace ChiaPool.Extensions
 {
     public static class TaskExtensions
     {

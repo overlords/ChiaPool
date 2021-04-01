@@ -2,7 +2,7 @@
 using System;
 using System.Net;
 
-namespace ChiaMiningManager.Migrations
+namespace ChiaPool.Migrations
 {
     public partial class Initial : Migration
     {

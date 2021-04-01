@@ -1,10 +1,10 @@
 ﻿using Chia.NET.Clients;
-using ChiaMiningManager.Models;
+using ChiaPool.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Services
+namespace ChiaPool.Services
 {
     public class PlotManager
     {

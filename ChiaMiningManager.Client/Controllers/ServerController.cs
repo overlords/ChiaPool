@@ -1,11 +1,11 @@
-﻿using ChiaMiningManager.Configuration;
-using ChiaMiningManager.Configuration.Options;
+﻿using ChiaPool.Configuration;
+using ChiaPool.Configuration.Options;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Controllers
+namespace ChiaPool.Controllers
 {
     [Route("Server")]
     [ApiController]

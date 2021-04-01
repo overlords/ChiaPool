@@ -1,19 +1,25 @@
-﻿using ChiaMiningManager.Models;
-using ChiaMiningManager.Services;
+﻿using ChiaPool.Api;
+using ChiaPool.Configuration;
+using ChiaPool.Models;
+using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Controllers
+namespace ChiaPool.Controllers
 {
     [Route("Info")]
     [ApiController]
     public class InfoController : ControllerBase
     {
         private readonly PlotManager PlotManager;
+        private readonly ServerApiAccessor ServerAccessor;
+        private readonly AuthOption AuthOptions;
 
-        public InfoController(PlotManager plotManager)
+        public InfoController(PlotManager plotManager, ServerApiAccessor serverAccessor, AuthOption authOptions)
         {
             PlotManager = plotManager;
+            ServerAccessor = serverAccessor;
+            AuthOptions = authOptions;
         }
 
         [HttpGet("Status")]
@@ -23,6 +29,13 @@ namespace ChiaMiningManager.Controllers
             var status = new ClientStatus(plotCount);
 
             return Ok(status);
+        }
+
+        [HttpGet("Miner")]
+        public async Task<IActionResult> GetCurrentMinerAsync()
+        {
+            var result = await ServerAccessor.GetMinerByTokenAsync(AuthOptions.Token);
+            return Ok(result);
         }
     }
 }

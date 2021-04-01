@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ChiaMiningManager.Migrations
+namespace ChiaPool.Migrations
 {
     public partial class Initial : Migration
     {

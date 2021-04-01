@@ -1,10 +1,10 @@
-﻿using ChiaMiningManager.Api;
+﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands
+namespace ChiaPool.Commands
 {
     [Command("Miner List", Description = "Lists all miners in the pool")]
     public class MinerListCommand : ChiaCommand

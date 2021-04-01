@@ -1,4 +1,4 @@
-﻿using ChiaMiningManager.Models;
+﻿using ChiaPool.Models;
 using Common.Services;
 using IPTables.Net;
 using IPTables.Net.Iptables;
@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SystemInteract.Local;
 
-namespace ChiaMiningManager.Services
+namespace ChiaPool.Services
 {
     public class FirewallService : Service
     {

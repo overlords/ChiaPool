@@ -1,11 +1,11 @@
-﻿using ChiaMiningManager.Api;
-using ChiaMiningManager.Extensions;
-using ChiaMiningManager.Models;
+﻿using ChiaPool.Api;
+using ChiaPool.Extensions;
+using ChiaPool.Models;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands.Status
+namespace ChiaPool.Commands.Status
 {
     [Command("Status", Description = "Get miner status")]
     public class StatusCommand : ChiaCommand

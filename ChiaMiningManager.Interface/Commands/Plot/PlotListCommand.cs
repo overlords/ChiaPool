@@ -1,17 +1,17 @@
-﻿using ChiaMiningManager.Api;
+﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands
+namespace ChiaPool.Commands
 {
     [Command("Plot List", Description = "Lists all plots of your harvester")]
-    public class PlotsListCommand : ChiaCommand
+    public class PlotListCommand : ChiaCommand
     {
         private readonly ClientApiAccessor ClientAccessor;
 
-        public PlotsListCommand(ClientApiAccessor apiClient)
+        public PlotListCommand(ClientApiAccessor apiClient)
         {
             ClientAccessor = apiClient;
         }

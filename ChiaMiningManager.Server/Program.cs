@@ -1,5 +1,5 @@
 using Chia.NET.Clients;
-using ChiaMiningManager.Models;
+using ChiaPool.Models;
 using Common.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager
+namespace ChiaPool
 {
     public class Program
     {

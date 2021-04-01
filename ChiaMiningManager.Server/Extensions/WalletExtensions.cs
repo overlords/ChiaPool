@@ -1,6 +1,6 @@
 ﻿using Chia.NET.Models;
 
-namespace ChiaMiningManager.Extensions
+namespace ChiaPool.Extensions
 {
     public static class WalletExtensions
     {

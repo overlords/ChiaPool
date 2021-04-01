@@ -53,4 +53,4 @@ cd /root/.chia/mainnet/config/ssl/ca
 zip -r /root/ca.zip .
 
 cd /root/manager
-./ChiaMiningManager.Server
+./ChiaPool.Server

@@ -1,4 +1,4 @@
-﻿using ChiaMiningManager.Api;
+﻿using ChiaPool.Api;
 using CliFx;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager
+namespace ChiaPool
 {
     public class Program
     {

@@ -1,9 +1,9 @@
-﻿using ChiaMiningManager.Api;
+﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Commands
+namespace ChiaPool.Commands
 {
     [Command("Plot Delete", Description = "Deletes a plot file")]
     public class PlotDeleteCommand : ChiaCommand

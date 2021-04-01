@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace ChiaMiningManager.Models
+namespace ChiaPool.Models
 {
     public class Miner
     {

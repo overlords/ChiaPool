@@ -1,11 +1,11 @@
-﻿using ChiaMiningManager.Models;
+﻿using ChiaPool.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace ChiaMiningManager.Api
+namespace ChiaPool.Api
 {
     public class ServerApiAccessor : ApiAccessor
     {
@@ -26,5 +26,7 @@ namespace ChiaMiningManager.Api
             => Client.GetFromJsonAsync<Miner>(ServerRoutes.GetMinerById(ApiUrl, id));
         public Task<Miner> GetMinerByNameAsync(string name)
             => Client.GetFromJsonAsync<Miner>(ServerRoutes.GetMinerByName(ApiUrl, name));
+        public Task<Miner> GetMinerByTokenAsync(string token)
+            => Client.GetFromJsonAsync<Miner>(ServerRoutes.GetMinerByToken(ApiUrl, token));
     }
 }

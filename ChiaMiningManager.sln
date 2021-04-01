@@ -3,15 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30223.230
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaMiningManager.Server", "ChiaMiningManager.Server\ChiaMiningManager.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Server", "ChiaMiningManager.Server\ChiaPool.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaMiningManager.Client", "ChiaMiningManager.Client\ChiaMiningManager.Client.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Client", "ChiaMiningManager.Client\ChiaPool.Client.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaMiningManager.Interface", "ChiaMiningManager.Interface\ChiaMiningManager.Interface.csproj", "{4262F84B-1B32-46B7-9604-E8130EDB2FCB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientModels", "ClientModels\ClientModels.csproj", "{9279BF8D-1268-4997-9B94-2015C0360C8C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerModels", "ServerModels\ServerModels.csproj", "{9F400A6B-92DF-4ABC-8329-15D7E6A53E8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Interface", "ChiaMiningManager.Interface\ChiaPool.Interface.csproj", "{4262F84B-1B32-46B7-9604-E8130EDB2FCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{32D83479-5A96-4305-8488-C6CC9314FD2C}"
 EndProject
@@ -36,7 +32,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chia.NET", "Chia.NET\Chia.NET.csproj", "{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chia.NET", "Chia.NET\Chia.NET.csproj", "{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChiaPool.Net", "ChiaPool.Net\ChiaPool.Net.csproj", "{AA1B2EFB-E566-4CF3-8A12-EC54D83831FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,18 +54,14 @@ Global
 		{4262F84B-1B32-46B7-9604-E8130EDB2FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4262F84B-1B32-46B7-9604-E8130EDB2FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4262F84B-1B32-46B7-9604-E8130EDB2FCB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9279BF8D-1268-4997-9B94-2015C0360C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9279BF8D-1268-4997-9B94-2015C0360C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9279BF8D-1268-4997-9B94-2015C0360C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9279BF8D-1268-4997-9B94-2015C0360C8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F400A6B-92DF-4ABC-8329-15D7E6A53E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F400A6B-92DF-4ABC-8329-15D7E6A53E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F400A6B-92DF-4ABC-8329-15D7E6A53E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F400A6B-92DF-4ABC-8329-15D7E6A53E8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA1B2EFB-E566-4CF3-8A12-EC54D83831FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA1B2EFB-E566-4CF3-8A12-EC54D83831FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA1B2EFB-E566-4CF3-8A12-EC54D83831FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA1B2EFB-E566-4CF3-8A12-EC54D83831FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
