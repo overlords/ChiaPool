@@ -1,5 +1,6 @@
 ﻿using ChiaPool.Api;
 using CliFx;
+using Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -28,11 +29,11 @@ namespace ChiaPool
 
         private static IServiceProvider MakeServiceProvider()
         {
+            var chiaPoolNetAssembly = Assembly.GetAssembly(typeof(ClientApiAccessor));
             var services = new ServiceCollection();
 
             services.AddSingleton<HttpClient>();
-            services.AddTransient<ClientApiAccessor>();
-            services.AddTransient<ServerApiAccessor>();
+            services.AddApplicationServices(chiaPoolNetAssembly);
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null && !x.IsAbstract))
             {

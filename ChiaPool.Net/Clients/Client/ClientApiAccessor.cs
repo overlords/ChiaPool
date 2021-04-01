@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Api
 {
-    public class ClientApiAccessor : ApiAccessor
+    public sealed class ClientApiAccessor : ApiAccessor
     {
         private const string ApiUrl = "http://localhost:8888/";
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Api
 {
-    public class ServerApiAccessor : ApiAccessor
+    public sealed class ServerApiAccessor : ApiAccessor
     {
         private const string ApiUrl = "https://pool.playwo.de/";
 

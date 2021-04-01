@@ -1,4 +1,5 @@
 using Chia.NET.Clients;
+using ChiaPool.Api;
 using ChiaPool.Configuration;
 using ChiaPool.Models;
 using ChiaPool.Services;
@@ -28,6 +29,7 @@ namespace ChiaPool
         {
             services.AddApplication(Configuration, Assembly.GetExecutingAssembly());
             services.AddApplication(Configuration, Assembly.GetAssembly(typeof(HarvesterClient)));
+            services.AddApplication(Configuration, Assembly.GetAssembly(typeof(ServerApiAccessor)));
             services.AddSingleton<HttpClient>();
             services.AddScoped<PlotManager>();
 
