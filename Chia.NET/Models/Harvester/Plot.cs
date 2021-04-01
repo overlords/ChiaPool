@@ -7,6 +7,9 @@ namespace Chia.NET.Models
         [JsonPropertyName("file_size")]
         public ulong FileSize { get; init; }
 
+        [JsonPropertyName("plot-seed")]
+        public string Seed { get; init; }
+
         [JsonPropertyName("filename")]
         public string FileName { get; init; }
 
