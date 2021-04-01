@@ -79,7 +79,21 @@ namespace ChiaMiningManager
             var farmerApiClient = Application.Services.GetRequiredService<FarmerClient>();
 
             logger.LogInformation("Configuring farmer reward target");
-            await farmerApiClient.SetRewardTargets(Environment.GetEnvironmentVariable("wallet_address"));
+
+            for(int i = 0; i < 10; i++)
+            {
+                await Task.Delay(1500);
+                try
+                {
+                    await farmerApiClient.SetRewardTargets(Environment.GetEnvironmentVariable("wallet_address"));
+                }
+                catch 
+                {
+                    logger.LogWarning($"Connection failed. Trying again in 1.5 seconds. {9 - i} retries left");
+                }
+
+            }
+
             logger.LogInformation("Done");
         }
     }
