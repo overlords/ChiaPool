@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Services;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Api
 {
-    public abstract class ApiAccessor
+    public abstract class ApiAccessor : Service
     {
         protected readonly HttpClient Client;
 
