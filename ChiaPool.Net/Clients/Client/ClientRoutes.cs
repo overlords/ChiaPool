@@ -5,7 +5,7 @@ namespace ChiaPool.Api
     internal static class ClientRoutes
     {
         public static Uri Status(string apiUrl)
-            => new Uri(apiUrl + "Info/Status");
+            => new Uri(apiUrl + "Status");
 
 
         public static Uri ListPlots(string apiUrl)
