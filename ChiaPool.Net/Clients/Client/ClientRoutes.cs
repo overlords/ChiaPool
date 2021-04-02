@@ -15,6 +15,10 @@ namespace ChiaPool.Api
         public static Uri DeletePlotByFileName(string apiUrl)
             => new Uri(apiUrl + "Plot/DeleteFile");
 
+        public static Uri GetChiaLog(string apiUrl, ushort count)
+            => new Uri(apiUrl + $"Log/Chia/{count}");
+        public static Uri GetPoolLog(string apiUrl, ushort count)
+            => new Uri(apiUrl + $"Log/Pool/{count}");
 
         public static Uri GetCurrentWalletAsync(string apiUrl)
             => new Uri(apiUrl + "Server/Wallet/Get/Current");

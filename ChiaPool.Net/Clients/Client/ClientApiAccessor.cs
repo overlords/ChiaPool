@@ -33,6 +33,11 @@ namespace ChiaPool.Api
                 ["fileName"] = fileName,
             });
 
+        public Task<string[]> GetChiaLogAsync(ushort count)
+            => GetAsync<string[]>(ClientRoutes.GetChiaLog(ApiUrl, count));
+        public Task<string[]> GetPoolLogAsync(ushort count)
+            => GetAsync<string[]>(ClientRoutes.GetPoolLog(ApiUrl, count));
+
         public Task<Wallet> GetCurrentWalletAsync()
             => GetAsync<Wallet>(ClientRoutes.GetCurrentWalletAsync(ApiUrl));
         public Task<Wallet> GetPoolWalletAsync()

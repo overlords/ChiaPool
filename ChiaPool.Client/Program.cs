@@ -76,7 +76,7 @@ namespace ChiaPool
                     builder.AddFile(options =>
                     {
                         options.Extension = ".log";
-                        options.FileName = "ChiaPool.Client";
+                        options.FileName = "pool";
                         options.Periodicity = PeriodicityOptions.Daily;
                         options.IncludeScopes = true;
                         options.LogDirectory = "../.chia/mainnet/log";
