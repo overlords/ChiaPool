@@ -21,7 +21,7 @@ namespace ChiaPool.Controllers
         {
             var blockchainState = await FullNodeClient.GetBlockchainStateAsync();
 
-            var status = new ServerStatus(blockchainState.SyncState.TipHeight);
+            var status = new ServerStatus(blockchainState.SyncState.ProgressHeight, blockchainState.SyncState.TipHeight);
             return Ok(status);
         }
     }

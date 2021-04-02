@@ -52,6 +52,7 @@ namespace ChiaPool.Commands.Status
                 await SuccessLineAsync("Online");
                 await WriteLineAsync();
                 await InfoLineAsync($"Currently synced to block height {serverStatus.SyncHeight}");
+                await InfoLineAsync($"Peak block height {serverStatus.MaxSyncHeight}");
             }
         }
     }
