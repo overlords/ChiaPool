@@ -17,7 +17,15 @@ namespace ChiaPool.Services
         {
             var bytes = Encoding.UTF8.GetBytes(plain);
             var hashedBytes = HashAlgorithm.ComputeHash(bytes);
-            return Encoding.UTF8.GetString(hashedBytes);
+
+            var sb = new StringBuilder();
+
+            foreach(byte b in hashedBytes)
+            {
+                sb.Append(b.ToString("X2"));
+            }
+
+            return sb.ToString().ToLower();
         }
     }
 }
