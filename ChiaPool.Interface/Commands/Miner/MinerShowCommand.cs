@@ -3,7 +3,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands.Miner
+namespace ChiaPool.Commands
 {
     [Command("Miner Show", Description = "Retrieves information about a specific miner. Defaults to you")]
     public class MinerShowCommand : ChiaCommand

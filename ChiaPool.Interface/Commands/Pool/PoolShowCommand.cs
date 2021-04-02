@@ -3,7 +3,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands.Pool
+namespace ChiaPool.Commands
 {
     [Command("Pool Show", Description = "Retrieves some information about the pool")]
     public class PoolShowCommand : ChiaCommand

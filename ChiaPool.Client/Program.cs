@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NetEscapades.Extensions.Logging.RollingFile;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -68,6 +69,18 @@ namespace ChiaPool
                     webBuilder.ConfigureKestrel((context, options) =>
                     {
                         options.Listen(IPAddress.Any, ApplicationPort);
+                    });
+                })
+                .ConfigureLogging(builder =>
+                {
+                    builder.AddFile(options =>
+                    {
+                        options.Extension = ".log";
+                        options.FileName = "ChiaPool.Client";
+                        options.Periodicity = PeriodicityOptions.Daily;
+                        options.IncludeScopes = true;
+                        options.LogDirectory = "../.chia/mainnet/log";
+
                     });
                 })
                 .ConfigureAppConfiguration(config =>

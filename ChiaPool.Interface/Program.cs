@@ -1,8 +1,10 @@
 ﻿using ChiaPool.Api;
+using ChiaPool.Commands;
 using CliFx;
 using Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -37,10 +39,26 @@ namespace ChiaPool
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null && !x.IsAbstract))
             {
+                if (type == typeof(InstallCommand) && !SupportInstall())
+                {
+                    continue;
+                }
+
                 services.AddTransient(type);
             }
 
             return services.BuildServiceProvider();
+        }
+
+        private static bool SupportInstall()
+        {
+            if (!OperatingSystem.IsWindows())
+            {
+                return false;
+            }
+
+            string installationPath = InstallCommand.GetInstallationPath();
+            return !Directory.Exists(installationPath);
         }
     }
 }

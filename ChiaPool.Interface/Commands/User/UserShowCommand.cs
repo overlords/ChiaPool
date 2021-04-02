@@ -4,7 +4,7 @@ using CliFx.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands.User
+namespace ChiaPool.Commands
 {
     [Command("User Show", Description = "Shows information about a user")]
     public sealed class UserShowCommand : ChiaCommand

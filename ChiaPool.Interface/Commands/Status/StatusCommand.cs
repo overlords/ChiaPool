@@ -5,7 +5,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands.Status
+namespace ChiaPool.Commands
 {
     [Command("Status", Description = "Get miner status")]
     public class StatusCommand : ChiaCommand

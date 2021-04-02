@@ -1,6 +1,5 @@
 ﻿using ChiaPool.Api;
 using ChiaPool.Configuration;
-using ChiaPool.Configuration.Options;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

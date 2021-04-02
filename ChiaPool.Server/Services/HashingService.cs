@@ -20,7 +20,7 @@ namespace ChiaPool.Services
 
             var sb = new StringBuilder();
 
-            foreach(byte b in hashedBytes)
+            foreach (byte b in hashedBytes)
             {
                 sb.Append(b.ToString("X2"));
             }
