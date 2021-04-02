@@ -26,18 +26,18 @@ namespace ChiaPool.Commands
 
             if (Total)
             {
-                await InfoAsync("[Pool Wallet]");
+                await InfoLineAsync("[Pool Wallet]");
             }
             else
             {
-                await InfoAsync($"[Your Wallet : {wallet.Percentage}% of the pool wallet]");
+                await InfoLineAsync($"[Your Wallet : {wallet.Percentage}% of the pool wallet]");
             }
 
-            await InfoAsync($"Confirmed Balance   : {wallet.ConfirmedBalance}   XCH");
-            await InfoAsync($"Unconfirmed Balance : {wallet.UnconfirmedBalance} XCH");
-            await InfoAsync($"Spendable Balance   : {wallet.SpendableBalance}   XCH");
-            await InfoAsync($"Pending Change      : {wallet.PendingChange}      XCH");
-            await InfoAsync($"Maximum Send Amount : {wallet.MaxSendAmount}      XCH");
+            await InfoLineAsync($"Confirmed Balance   : {wallet.ConfirmedBalance} XCH");
+            await InfoLineAsync($"Unconfirmed Balance : {wallet.UnconfirmedBalance} XCH");
+            await InfoLineAsync($"Spendable Balance   : {wallet.SpendableBalance} XCH");
+            await InfoLineAsync($"Pending Change      : {wallet.PendingChange} XCH");
+            await InfoLineAsync($"Maximum Send Amount : {wallet.MaxSendAmount} XCH");
         }
     }
 }
