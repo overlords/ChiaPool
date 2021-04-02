@@ -1,4 +1,5 @@
-﻿using ChiaPool.Models;
+﻿using Chia.NET.Clients;
+using ChiaPool.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,10 +9,19 @@ namespace ChiaPool.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
+        private readonly FullNodeClient FullNodeClient;
+
+        public StatusController(FullNodeClient fullNodeClient)
+        {
+            FullNodeClient = fullNodeClient;
+        }
+
         [HttpGet("")]
         public async Task<IActionResult> GetStatusAsync()
         {
-            var status = new ServerStatus();
+            var blockchainState = await FullNodeClient.GetBlockchainStateAsync();
+
+            var status = new ServerStatus(blockchainState.SyncState.TipHeight);
             return Ok(status);
         }
     }

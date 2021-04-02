@@ -10,10 +10,11 @@ services:
     restart: always
     container_name: ChiaNode
     volumes:
-      - /yourplotspath:/plots #Add more plot directories here
+      - /externalplotpath:/internalplotpath #Add more plot directories here
       # /yoursecondplotpath:/plots2
-      - /yourlogspath:/root/.chia/mainnet/log
-      - /yourconfigpath:/root/.chia/mainnet/config
+      - /logpath:/root/.chia/mainnet/log
+      - /datapath/db:/root/.chia/mainnet/db
+      - /datapath/wallet:/root.chia/mainnet/wallet
     cap_add:
       - NET_ADMIN
     env_file:

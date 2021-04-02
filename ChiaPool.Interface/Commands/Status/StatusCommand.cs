@@ -38,9 +38,9 @@ namespace ChiaPool.Commands.Status
                 await SuccessLineAsync("Online");
                 await WriteLineAsync();
                 await InfoLineAsync($"Currently harvesting {clientStatus.PlotCount} plots");
-                await WriteLineAsync();
             }
 
+            await WriteLineAsync();
             await InfoAsync($"Server ");
 
             if (serverStatus == null)
@@ -50,9 +50,9 @@ namespace ChiaPool.Commands.Status
             else
             {
                 await SuccessLineAsync("Online");
+                await WriteLineAsync();
+                await InfoLineAsync($"Currently synced to block height {serverStatus.SyncHeight}");
             }
-
-            console.ResetColor();
         }
     }
 }
