@@ -16,11 +16,13 @@ namespace ChiaPool.Controllers
     {
         private readonly MinerContext DbContext;
         private readonly FirewallService FirewallService;
+        private readonly PlotService PlotService;
 
-        public MinerController(MinerContext dbContext, FirewallService firewallService)
+        public MinerController(MinerContext dbContext, FirewallService firewallService, PlotService plotService)
         {
             DbContext = dbContext;
             FirewallService = firewallService;
+            PlotService = plotService;
         }
 
         [HttpPost("Start")]
@@ -79,6 +81,7 @@ namespace ChiaPool.Controllers
             miner.NextIncrement = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(50); //10 second bufffer
 
             await DbContext.SaveChangesAsync();
+            PlotService.IncrementTotalPlotMinutes(activePlots);
 
             return Ok();
         }
