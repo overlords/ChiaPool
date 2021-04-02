@@ -22,7 +22,7 @@ namespace ChiaPool.Controllers
             HashService = hashService;
         }
 
-        [HttpGet("Get/{name}/{password}")]
+        [HttpGet("Get/User/{name}/{password}")]
         public async Task<IActionResult> GetWalletAsync([FromRoute] string name, [FromRoute] string password)
         {
             string passwordHash = HashService.HashString(password);

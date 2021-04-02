@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Pipes;
 
 namespace ChiaPool.Api
 {
@@ -21,8 +22,8 @@ namespace ChiaPool.Api
         public static Uri GetMinerByToken(string apiUrl, string token)
             => new Uri(apiUrl + $"Miner/Get/Token/{token}");
 
-        public static Uri GetWalletByToken(string apiUrl, string token)
-            => new Uri(apiUrl + $"Wallet/Get/Token/{token}");
+        public static Uri GetWalletByAccount(string apiUrl, string name, string password)
+            => new Uri(apiUrl + $"Wallet/Get/User/{name}/{password}");
         public static Uri GetPoolWallet(string apiUrl)
             => new Uri(apiUrl + $"Wallet/Get/Pool");
 

@@ -33,8 +33,8 @@ namespace ChiaPool.Api
         public Task<Miner> GetMinerByTokenAsync(string token)
             => GetAsync<Miner>(ServerRoutes.GetMinerByToken(ApiUrl, token));
 
-        public Task<Wallet> GetWalletByTokenAsync(string token)
-            => GetAsync<Wallet>(ServerRoutes.GetWalletByToken(ApiUrl, token));
+        public Task<Wallet> GetWalletByTokenAsync(string name, string password)
+            => GetAsync<Wallet>(ServerRoutes.GetWalletByAccount(ApiUrl, name, password));
         public Task<Wallet> GetPoolWalletAsync(string token)
             => GetAsync<Wallet>(ServerRoutes.GetPoolWallet(ApiUrl), token);
 
