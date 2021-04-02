@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ChiaPool.Migrations
 {
     [DbContext(typeof(MinerContext))]
-    [Migration("20210401211737_Initial")]
+    [Migration("20210402215511_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,9 @@ namespace ChiaPool.Migrations
                     b.Property<DateTimeOffset>("NextIncrement")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("PlotMinutes")
                         .HasColumnType("bigint");
 
@@ -51,10 +54,46 @@ namespace ChiaPool.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
+                    b.HasIndex("OwnerId");
+
                     b.HasIndex("Token")
                         .IsUnique();
 
                     b.ToTable("Miners");
+                });
+
+            modelBuilder.Entity("ChiaPool.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ChiaPool.Models.Miner", b =>
+                {
+                    b.HasOne("ChiaPool.Models.User", "Owner")
+                        .WithMany("Miners")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("ChiaPool.Models.User", b =>
+                {
+                    b.Navigation("Miners");
                 });
 #pragma warning restore 612, 618
         }
