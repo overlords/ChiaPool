@@ -3,6 +3,6 @@
     public enum ChiaWalletId
     {
         Farmer = 1,
-        Wallet = 2
+        Wallet = 1
     }
 }
