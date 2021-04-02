@@ -30,7 +30,7 @@ namespace ChiaPool.Commands.User
             await InfoLineAsync($"Id{Space(idLenght)}Name");
             foreach (var user in users)
             {
-                await InfoLineAsync($"{user.Id}    {user.Name}");
+                await WriteLineAsync($"{user.Id}    {user.Name}");
             }
         }
     }

@@ -71,9 +71,6 @@ namespace ChiaPool.Commands.User
             int idLength = miners.Max(x => x.Id.ToString().Length) + 2;
             int nameLength = miners.Max(x => x.Name.Length);
 
-            long totalPM = miners.Sum(x => x.PlotMinutes);
-            await InfoLineAsync($"Total PM mined by this user: {totalPM}");
-            await WriteLineAsync();
             await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
 
             foreach (var miner in miners)
