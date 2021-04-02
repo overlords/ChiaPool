@@ -22,6 +22,14 @@ namespace ChiaPool.Commands
         {
             var lines = await ClientAccessor.GetPoolLogAsync(LineCount);
 
+            if (lines.Length == 0)
+            {
+                await InfoAsync("--- No entries ---");
+            }
+
+            await InfoAsync($"Showing the last {lines.Length} lines:");
+            await WriteLineAsync();
+
             foreach (var line in lines)
             {
                 await WriteLineAsync(line);
