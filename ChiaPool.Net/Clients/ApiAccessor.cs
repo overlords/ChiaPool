@@ -1,6 +1,7 @@
 ﻿using Common.Services;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -25,10 +26,16 @@ namespace ChiaPool.Api
                 request.Headers.Authorization = new AuthenticationHeaderValue(authorization);
             }
 
-
             var response = await Client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>();
+
+            if (!response.IsSuccessStatusCode && !ShouldIgnoreStatusCode(response.StatusCode))
+            {
+                throw new Exception($"There was an error! The server responded with {response.StatusCode}");
+            }
+
+            return !response.IsSuccessStatusCode
+                ? default
+                : await response.Content.ReadFromJsonAsync<T>();
         }
 
         protected async Task GetAsync(Uri requestUri, string authorization = null)
@@ -45,13 +52,30 @@ namespace ChiaPool.Api
                 request.Headers.Authorization = new AuthenticationHeaderValue(authorization);
             }
 
-
             var response = await Client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>();
+
+            if (!response.IsSuccessStatusCode && !ShouldIgnoreStatusCode(response.StatusCode))
+            {
+                throw new Exception($"There was an error! The server responded with {response.StatusCode}");
+            }
+
+            return !response.IsSuccessStatusCode
+                ? default
+                : await response.Content.ReadFromJsonAsync<T>();
         }
 
         protected async Task PostAsync(Uri requestUri, IDictionary<string, string> parameters = null, string authorization = null)
             => await PostAsync<object>(requestUri, parameters, authorization);
+
+        private bool ShouldIgnoreStatusCode(HttpStatusCode statusCode)
+        {
+            return statusCode switch
+            {
+                HttpStatusCode.NotFound => true,
+                HttpStatusCode.Unauthorized => true,
+                HttpStatusCode.Conflict => true,
+                _ => false,
+            };
+        }
     }
 }

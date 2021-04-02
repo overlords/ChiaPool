@@ -7,7 +7,7 @@ namespace Chia.NET.Clients
     {
         private const string ApiUrl = "https://localhost:8555/";
 
-        public FullNodeClient() 
+        public FullNodeClient()
             : base("full_node", ApiUrl)
         {
         }

@@ -21,9 +21,15 @@ namespace ChiaPool.Controllers
             AuthOptions = authOptions;
         }
 
+        [HttpGet("User/Get/Current")]
+        public async Task<IActionResult> GetCurrentUserAsync()
+            => Ok(await ServerAccessor.GetUserByNameAsync(AuthOptions.Name));
         [HttpGet("Miner/Get/Current")]
         public async Task<IActionResult> GetCurrentMinerAsync()
             => Ok(await ServerAccessor.GetMinerByTokenAsync(AuthOptions.Token));
+        [HttpGet("Miner/List/Current")]
+        public async Task<IActionResult> ListOwnedMinersAsync()
+            => Ok(await ServerAccessor.ListMinersByNameAsync(AuthOptions.Name));
 
         [HttpGet("Wallet/Get/Current")]
         public async Task<IActionResult> GetCurrentWalletAsync()

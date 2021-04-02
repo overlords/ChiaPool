@@ -26,7 +26,7 @@ namespace ChiaPool.Services
         public double GetTotalPlotMinutes()
             => TotalPlotMinutes;
 
-        public double GetMinerPercentage(Miner miner)
-            => Math.Round(100d * miner.PlotMinutes / TotalPlotMinutes, 2);
+        public double GetPlotMinutePercentage(long plotMinutes)
+            => Math.Round(100d * plotMinutes / TotalPlotMinutes, 2);
     }
 }

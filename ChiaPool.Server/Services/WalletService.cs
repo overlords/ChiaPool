@@ -12,19 +12,19 @@ namespace ChiaPool.Services
         [Inject] private readonly WalletClient WalletClient;
         [Inject] private readonly PlotService PlotService;
 
-        public Task<Wallet> GetPoolWalletAsync()
+        public Task<Wallet> GetWalletAsync()
             => WalletClient.GetWalletBalance((int)ChiaWalletId.Wallet);
 
-        public async Task<Wallet> GetMinerWalletAsync(Miner miner)
+        public async Task<Wallet> GetWalletFractionAsync(long plotMinutes)
         {
-            if (miner.PlotMinutes <= 0)
+            if (plotMinutes <= 0)
             {
-                return new Wallet();
+                return Wallet.Empty;
             }
 
             var poolWallet = await WalletClient.GetWalletBalance((int)ChiaWalletId.Wallet);
-            var minerWallet = poolWallet.GetFraction(miner.PlotMinutes / PlotService.GetTotalPlotMinutes());
-            return minerWallet;
+            var userWallet = poolWallet.GetFraction(plotMinutes / PlotService.GetTotalPlotMinutes());
+            return userWallet;
         }
     }
 }

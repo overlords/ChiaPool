@@ -37,8 +37,12 @@ namespace ChiaPool.Api
             => GetAsync<Wallet>(ClientRoutes.GetCurrentWalletAsync(ApiUrl));
         public Task<Wallet> GetPoolWalletAsync()
             => GetAsync<Wallet>(ClientRoutes.GetPoolWalletAsync(ApiUrl));
+
+        public Task<User> GetCurrentUserAync()
+            => GetAsync<User>(ClientRoutes.GetCurrentUser(ApiUrl));
         public Task<Miner> GetCurrentMinerAsync()
             => GetAsync<Miner>(ClientRoutes.GetCurrentMiner(ApiUrl));
-
+        public Task<List<Miner>> ListOwnedMinersAsync()
+            => GetAsync<List<Miner>>(ClientRoutes.ListOwnedMiners(ApiUrl));
     }
 }

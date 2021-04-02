@@ -29,5 +29,7 @@ namespace Chia.NET.Models
         {
             Percentage = 100;
         }
+
+        public static Wallet Empty => new Wallet() { Percentage = 0 };
     }
 }

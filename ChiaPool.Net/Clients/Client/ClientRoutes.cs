@@ -15,11 +15,17 @@ namespace ChiaPool.Api
         public static Uri DeletePlotByFileName(string apiUrl)
             => new Uri(apiUrl + "Plot/DeleteFile");
 
-        public static Uri GetCurrentMiner(string apiUrl)
-            => new Uri(apiUrl + "Server/Miner/Get/Current");
+
         public static Uri GetCurrentWalletAsync(string apiUrl)
             => new Uri(apiUrl + "Server/Wallet/Get/Current");
         public static Uri GetPoolWalletAsync(string apiUrl)
             => new Uri(apiUrl + "Server/Wallet/Get/Pool");
+
+        public static Uri GetCurrentUser(string apiUrl)
+            => new Uri(apiUrl + "Server/User/Get/Current");
+        public static Uri GetCurrentMiner(string apiUrl)
+            => new Uri(apiUrl + "Server/Miner/Get/Current");
+        public static Uri ListOwnedMiners(string apiUrl)
+            => new Uri(apiUrl + "Server/Miner/List/Current");
     }
 }

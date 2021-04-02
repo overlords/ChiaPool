@@ -2,13 +2,13 @@
 {
     public sealed class PoolInfo
     {
-        public string Name { get; init; }
+        public string Name { get; set; }
 
-        public int TotalMinerCount { get; init; }
-        public int ActiveMinerCount { get; init; }
+        public int TotalMinerCount { get; set; }
+        public int ActiveMinerCount { get; set; }
 
-        public int TotalPlotCount { get; init; }
-        public int ActivePlotCount { get; init; }
+        public int TotalPlotCount { get; set; }
+        public int ActivePlotCount { get; set; }
 
         public PoolInfo()
         {

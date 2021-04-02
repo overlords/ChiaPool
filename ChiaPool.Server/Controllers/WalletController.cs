@@ -2,6 +2,7 @@
 using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -12,24 +13,31 @@ namespace ChiaPool.Controllers
     {
         private readonly MinerContext DbContext;
         private readonly WalletService WalletService;
+        private readonly HashingService HashService;
 
-        public WalletController(MinerContext dbContext, WalletService walletService)
+        public WalletController(MinerContext dbContext, WalletService walletService, HashingService hashService)
         {
             DbContext = dbContext;
             WalletService = walletService;
+            HashService = hashService;
         }
 
-        [HttpGet("Get/Token/{token}")]
-        public async Task<IActionResult> GetMinerWalletByTokenAsync([FromRoute] string token)
+        [HttpGet("Get/{name}/{password}")]
+        public async Task<IActionResult> GetWalletAsync([FromRoute] string name, [FromRoute] string password)
         {
-            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
+            string passwordHash = HashService.HashString(password);
+            var user = await DbContext.Users.FirstOrDefaultAsync(x => x.Name == name && x.PasswordHash == passwordHash);
 
-            if (miner == null)
+            if (user == null)
             {
                 return Unauthorized();
             }
 
-            var wallet = await WalletService.GetMinerWalletAsync(miner);
+            long totalPlotMinutes = await DbContext.Miners
+                .Where(x => x.OwnerId == user.Id)
+                .SumAsync(x => x.PlotMinutes);
+
+            var wallet = await WalletService.GetWalletFractionAsync(totalPlotMinutes);
             return Ok(wallet);
         }
 
@@ -41,7 +49,7 @@ namespace ChiaPool.Controllers
                 return Unauthorized();
             }
 
-            var wallet = await WalletService.GetPoolWalletAsync();
+            var wallet = await WalletService.GetWalletAsync();
             return Ok(wallet);
         }
     }

@@ -86,32 +86,6 @@ namespace ChiaPool.Controllers
             return Ok();
         }
 
-        [HttpGet("List")]
-        public async Task<IActionResult> GetAllMinersAsync()
-        {
-            var miners = await DbContext.Miners.ToListAsync();
-            miners = miners.Select(x => x.WithoutSecrets()).ToList();
-            return Ok(miners);
-        }
-
-        [HttpGet("Get/Id/{id}")]
-        public async Task<IActionResult> GetMinerInfoByIdAsync([FromRoute] Guid id)
-        {
-            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Id == id);
-
-            return miner == null
-                ? NotFound()
-                : Ok(miner.WithoutSecrets());
-        }
-        [HttpGet("Get/Name/{name}")]
-        public async Task<IActionResult> GetMinerInfoByNameAsync([FromRoute] string name)
-        {
-            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Name == name);
-
-            return miner == null
-                ? NotFound()
-                : Ok(miner.WithoutSecrets());
-        }
         [HttpGet("Get/Token/{token}")]
         public async Task<IActionResult> GetMinerInfoByTokenAsync([FromRoute] string token)
         {
@@ -122,9 +96,30 @@ namespace ChiaPool.Controllers
                 : Ok(miner.WithoutSecrets());
         }
 
+        [HttpGet("List/Name/{name}")]
+        public async Task<IActionResult> GetMinerListByNameAsync([FromRoute] string name)
+        {
+            var miners = await DbContext.Miners
+                .Where(x => x.Owner.Name == name)
+                .ToListAsync();
+
+            return miners == null
+                ? NotFound()
+                : Ok(miners.Select(x => x.WithoutSecrets()));
+        }
+        [HttpGet("List/Id/{id}")]
+        public async Task<IActionResult> GetMinerListByIdAsync([FromRoute] long id)
+        {
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Owner.Id == id);
+
+            return miner == null
+                ? NotFound()
+                : Ok(miner.WithoutSecrets());
+        }
+
         private IPAddress GetRequestIP()
-            => !Request.Headers.TryGetValue("HTTP_X-FORWARDED-FOR", out var value)
-                ? null
-                : IPAddress.Parse(value);
+                => !Request.Headers.TryGetValue("HTTP_X-FORWARDED-FOR", out var value)
+                    ? null
+                    : IPAddress.Parse(value);
     }
 }

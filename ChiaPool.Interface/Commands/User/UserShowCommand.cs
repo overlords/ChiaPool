@@ -4,15 +4,15 @@ using CliFx.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands
+namespace ChiaPool.Commands.User
 {
-    [Command("Miner List", Description = "Lists all miners of a specific user. Defaults to your miners")]
-    public class MinerListCommand : ChiaCommand
+    [Command("User Show", Description = "Shows information about a user")]
+    public sealed class UserShowCommand : ChiaCommand
     {
         private readonly ClientApiAccessor ClientAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public MinerListCommand(ClientApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        public UserShowCommand(ClientApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
         {
             ClientAccessor = clientAccessor;
             ServerAccessor = serverAccessor;
@@ -32,15 +32,39 @@ namespace ChiaPool.Commands
                 return;
             }
 
+            var user = Name != default
+                ? await ServerAccessor.GetUserByNameAsync(Name)
+                : Id != default
+                ? await ServerAccessor.GetUserByIdAsync(Id)
+                : await ClientAccessor.GetCurrentUserAync();
+
+            if (user == null)
+            {
+                await WarnLineAsync("User not found");
+                return;
+            }
+
             var miners = Name != default
                 ? await ServerAccessor.ListMinersByNameAsync(Name)
                 : Id != default
                 ? await ServerAccessor.ListMinersByIdAsync(Id)
                 : await ClientAccessor.ListOwnedMinersAsync();
 
+
+            await InfoLineAsync($" [ {user.Name}   |   User Info ] ");
+
+            await InfoLineAsync($"[ID]             |  {user.Id}");
+            await InfoLineAsync($"[Miner Count]    |  {user.MinerState.MinerCount}");
+            await InfoLineAsync($"[Plot Count]     |  {user.MinerState.PlotCount}");
+            await InfoLineAsync($"[Plot Minutes]   |  {user.MinerState.PlotMinutes}");
+
+            await WriteLineAsync();
+
+            await InfoLineAsync($" [ {user.Name}   |   Miner Info ] ");
+
             if (miners.Count == 0)
             {
-                await WarnLineAsync("No miners found");
+                await WarnLineAsync("None");
                 return;
             }
 

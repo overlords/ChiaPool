@@ -4,6 +4,7 @@ namespace ChiaPool.Models
 {
     public class MinerContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
         public DbSet<Miner> Miners { get; set; }
 
         public MinerContext(DbContextOptions options)
@@ -13,10 +14,28 @@ namespace ChiaPool.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
+                b.Property(x => x.Name);
+                b.Property(x => x.PasswordHash);
+
+                b.HasMany(x => x.Miners)
+                .WithOne(x => x.Owner)
+                .HasForeignKey(x => x.OwnerId);
+
+                b.Ignore(x => x.MinerState);
+
+                b.ToTable("Users");
+            });
+
             modelBuilder.Entity<Miner>(b =>
             {
-                b.Property(x => x.Id);
                 b.HasKey(x => x.Id);
+                b.Property(x => x.Id);
 
                 b.Property(x => x.Name);
                 b.HasIndex(x => x.Name)
@@ -31,6 +50,10 @@ namespace ChiaPool.Models
 
                 b.Property(x => x.PlotMinutes);
                 b.Property(x => x.NextIncrement);
+
+                b.Property(x => x.OwnerId);
+
+                b.ToTable("Miners");
             });
         }
     }

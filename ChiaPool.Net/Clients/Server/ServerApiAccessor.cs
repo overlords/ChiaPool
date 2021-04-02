@@ -1,7 +1,6 @@
 ﻿using Chia.NET.Models;
 using ChiaPool.Models;
 using ChiaPool.Models.Server;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,12 +19,17 @@ namespace ChiaPool.Api
         public Task<ServerStatus> GetStatusAsync()
             => GetAsync<ServerStatus>(ServerRoutes.Status(ApiUrl));
 
-        public Task<List<Miner>> GetMinersAsync()
-            => GetAsync<List<Miner>>(ServerRoutes.ListMiners(ApiUrl));
-        public Task<Miner> GetMinerByIdAsync(Guid id)
-            => GetAsync<Miner>(ServerRoutes.GetMinerById(ApiUrl, id));
-        public Task<Miner> GetMinerByNameAsync(string name)
-            => GetAsync<Miner>(ServerRoutes.GetMinerByName(ApiUrl, name));
+        public Task<List<User>> ListUsersAsync()
+            => GetAsync<List<User>>(ServerRoutes.ListUsers(ApiUrl));
+        public Task<User> GetUserByNameAsync(string name)
+            => GetAsync<User>(ServerRoutes.GetUserByName(ApiUrl, name));
+        public Task<User> GetUserByIdAsync(long id)
+            => GetAsync<User>(ServerRoutes.GetUserById(ApiUrl, id));
+
+        public Task<List<Miner>> ListMinersByNameAsync(string name)
+            => GetAsync<List<Miner>>(ServerRoutes.ListMinersByName(ApiUrl, name));
+        public Task<List<Miner>> ListMinersByIdAsync(long id)
+            => GetAsync<List<Miner>>(ServerRoutes.ListMinersById(ApiUrl, id));
         public Task<Miner> GetMinerByTokenAsync(string token)
             => GetAsync<Miner>(ServerRoutes.GetMinerByToken(ApiUrl, token));
 
