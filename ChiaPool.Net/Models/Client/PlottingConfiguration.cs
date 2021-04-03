@@ -8,6 +8,9 @@
         public int BucketCount { get; set; }
         public int BufferSize { get; set; }
 
+        public PlottingConfiguration()
+        {
+        }
         public PlottingConfiguration(int size, string path, string cachePath, int bucketCount, int bufferSize)
         {
             Size = size;
