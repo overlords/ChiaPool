@@ -131,8 +131,6 @@ namespace ChiaPool.Services
 
             process.OutputDataReceived += LogOutput;
 
-            await process.WaitForExitAsync();
-
             void LogOutput(object sender, DataReceivedEventArgs e)
             {
                 logger.LogInformation(e.Data);
