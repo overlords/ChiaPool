@@ -74,7 +74,12 @@ namespace ChiaPool
                 {
                     builder.AddFile(options =>
                     {
-                        options.BasePath = "../.chia/mainnet/log";
+                        options.Append = true;
+                        options.FormatterName = "simple";
+                        options.IncludeScopes = true;
+                        options.MaxFileSizeInMB = 5;
+                        options.MaxNumberFiles = 3;
+                        options.Path = "../.chia/mainnet/log/pool.log";
                     });
                 })
                 .ConfigureAppConfiguration(config =>
