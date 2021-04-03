@@ -25,6 +25,7 @@ namespace ChiaPool.Commands
             if (lines.Length == 0)
             {
                 await InfoAsync("--- No entries ---");
+                return;
             }
 
             await InfoAsync($"Showing the last {lines.Length} lines:");
