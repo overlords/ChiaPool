@@ -39,7 +39,7 @@ namespace ChiaPool.Commands
             await ClientAccessor.StartPlotGenerationAsync(config);
 
             await InfoLineAsync("Plot creation started");
-            await InfoLineAsync("Use the Log Generate command to see the progress");
+            await InfoLineAsync("Use the Log Pool command to see the progress");
         }
     }
 }
