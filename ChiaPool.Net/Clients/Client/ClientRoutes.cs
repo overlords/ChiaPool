@@ -10,6 +10,8 @@ namespace ChiaPool.Api
 
         public static Uri ListPlots(string apiUrl)
             => new Uri(apiUrl + "Plot/List");
+        public static Uri ReloadPlots(string apiUrl)
+            => new Uri(apiUrl + "Plot/Reload");
         public static Uri DeletePlotByPublicKey(string apiUrl)
             => new Uri(apiUrl + "Plot/DeleteKey");
         public static Uri DeletePlotByFileName(string apiUrl)

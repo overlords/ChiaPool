@@ -39,6 +39,12 @@ namespace ChiaPool.Services
             await DbContext.SaveChangesAsync();
         }
 
+        public async Task ReloadPlotsAsync()
+        {
+            await HarvesterClient.RefreshPlotsAsync();
+            await RefreshDataBase();
+        }
+
         public async Task<bool> DeletePlotByPubKeyAsync(string publicKey)
         {
             var plotInfo = await DbContext.Plots.FirstOrDefaultAsync(x => x.PublicKey == publicKey);

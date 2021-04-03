@@ -21,6 +21,10 @@ namespace ChiaPool.Controllers
         public Task<PlotInfo[]> GetPlotsAsync()
             => PlotManager.GetPlotsAsync();
 
+        [HttpPost("Reload")]
+        public Task ReloadPlotsAsync()
+            => PlotManager.ReloadPlotsAsync();
+
         [HttpPost("DeleteKey")]
         public Task<bool> DeletePlotByPubKeyAsync([FromForm] string pubKey)
             => PlotManager.DeletePlotByPubKeyAsync(pubKey);

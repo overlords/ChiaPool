@@ -20,6 +20,8 @@ namespace ChiaPool.Api
 
         public Task<PlotInfo[]> GetPlotsAsync()
             => GetAsync<PlotInfo[]>(ClientRoutes.ListPlots(ApiUrl));
+        public Task ReloadPlotsAsync()
+            => PostAsync(ClientRoutes.ReloadPlots(ApiUrl));
         public Task<bool> DeletePlotByPublicKeyAsync(string publicKey)
             => PostAsync<bool>(ClientRoutes.DeletePlotByPublicKey(ApiUrl), new Dictionary<string, string>()
             {
