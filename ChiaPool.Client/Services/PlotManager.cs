@@ -1,20 +1,25 @@
 ﻿using Chia.NET.Clients;
 using ChiaPool.Models;
+using Common.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
 {
-    public class PlotManager
+    public class PlotManager 
     {
         private readonly ConfigurationContext DbContext;
         private readonly HarvesterClient HarvesterClient;
+        private readonly ILoggerFactory LoggerFactory;
 
-        public PlotManager(ConfigurationContext dbContext, HarvesterClient harvesterClient)
+        public PlotManager(ConfigurationContext dbContext, HarvesterClient harvesterClient, ILoggerFactory loggerFactory)
         {
             DbContext = dbContext;
             HarvesterClient = harvesterClient;
+            LoggerFactory = loggerFactory;
         }
 
         public async Task<PlotInfo[]> GetPlotsAsync()
@@ -112,5 +117,28 @@ namespace ChiaPool.Services
             DbContext.RemoveRange(plotInfos);
             await DbContext.SaveChangesAsync();
         }
+
+        public async Task GeneratePlotAsync(PlottingConfiguration config)
+        {
+            var processInfo = new ProcessStartInfo()
+            {
+                FileName = "/bin/bash",
+                Arguments = $"generate.sh {config.Size} {config.Path} {config.CachePath} {config.BucketCount} {config.BufferSize}"
+            };
+
+            using var process = Process.Start(processInfo);
+            var logger = LoggerFactory.CreateLogger("Plotter");
+
+            process.OutputDataReceived += LogOutput;
+
+            await process.WaitForExitAsync();
+
+            void LogOutput(object sender, DataReceivedEventArgs e)
+            {
+                logger.LogInformation(e.Data);
+            }
+        }
+
+
     }
 }

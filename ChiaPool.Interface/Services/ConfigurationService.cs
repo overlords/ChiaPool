@@ -56,6 +56,6 @@ namespace ChiaPool.Services
         public static bool IsInstalled()
             => Directory.Exists(GetInstallationPath());
         public static string GetInstallationPath()
-            => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\ChiaPool";
+            => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\ChiaPool\\";
     }
 }

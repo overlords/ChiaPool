@@ -5,7 +5,6 @@ using CliFx;
 using Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -21,7 +20,6 @@ namespace ChiaPool
         public static async Task Main(string[] args)
         {
             Provider = MakeServiceProvider();
-
             Application = new CliApplicationBuilder()
                 .AddCommandsFromThisAssembly()
                 .UseTypeActivator(Provider.GetService)

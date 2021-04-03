@@ -1,8 +1,8 @@
 ﻿using ChiaPool.Api;
+using ChiaPool.Models;
 using ChiaPool.Services;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
@@ -35,12 +35,11 @@ namespace ChiaPool.Commands
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var volumes = await ConfigurationService.GetVolumesAsync();
+            var config = new PlottingConfiguration(Size, Path, CachePath, BucketCount, BufferSize);
+            await ClientAccessor.StartPlotGenerationAsync(config);
 
-
-
-
-            throw new NotImplementedException();
+            await InfoLineAsync("Plot creation started");
+            await InfoLineAsync("Use the Log Generate command to see the progress");
         }
     }
 }
