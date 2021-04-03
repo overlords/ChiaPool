@@ -1,6 +1,5 @@
 ﻿using Chia.NET.Models;
 using ChiaPool.Models;
-using ChiaPool.Models.Server;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;

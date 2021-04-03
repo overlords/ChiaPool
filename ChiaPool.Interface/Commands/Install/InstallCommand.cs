@@ -44,8 +44,5 @@ namespace ChiaPool.Commands
             await WriteLineAsync();
             return answer;
         }
-
-        public static string GetInstallationPath()
-            => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\ChiaPool";
     }
 }

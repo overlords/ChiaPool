@@ -1,6 +1,7 @@
 ﻿using ChiaPool.Models;
 using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -27,5 +28,11 @@ namespace ChiaPool.Controllers
         [HttpPost("DeleteFile")]
         public Task<bool> DeletePlotByFileNameAsync([FromForm] string fileName)
             => PlotManager.DeletePlotByFileNameAsync(fileName);
+
+        [HttpPost("Generate")]
+        public Task StartPlotGenerationAsync([FromForm] PlottingConfiguration configuration)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

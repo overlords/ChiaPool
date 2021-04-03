@@ -41,7 +41,7 @@ namespace ChiaPool.Api
         protected async Task GetAsync(Uri requestUri, string authorization = null)
             => await GetAsync<object>(requestUri, authorization);
 
-        protected async Task<T> PostAsync<T>(Uri requestUri, IDictionary<string, string> parameters = null, string authorization = null)
+        protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authorization = null)
         {
             using var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
@@ -64,7 +64,7 @@ namespace ChiaPool.Api
                 : await response.Content.ReadFromJsonAsync<T>();
         }
 
-        protected async Task PostAsync(Uri requestUri, IDictionary<string, string> parameters = null, string authorization = null)
+        protected async Task PostAsync(Uri requestUri, object parameters = null, string authorization = null)
             => await PostAsync<object>(requestUri, parameters, authorization);
 
         private bool ShouldIgnoreStatusCode(HttpStatusCode statusCode)

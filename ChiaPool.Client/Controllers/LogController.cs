@@ -15,7 +15,7 @@ namespace ChiaPool.Controllers
         [HttpGet("Chia/{lineCount}")]
         public async Task<IActionResult> GetChiaLogAsync([FromRoute] ushort lineCount)
         {
-            if (System.IO.File.Exists(ChiaLogFile))
+            if (!System.IO.File.Exists(ChiaLogFile))
             {
                 return Ok(Array.Empty<string>());
             }
@@ -27,7 +27,7 @@ namespace ChiaPool.Controllers
         [HttpGet("Pool/{lineCount}")]
         public async Task<IActionResult> GetPoolLogAsync([FromRoute] ushort lineCount)
         {
-            if (System.IO.File.Exists(PoolLogFile))
+            if (!System.IO.File.Exists(PoolLogFile))
             {
                 return Ok(Array.Empty<string>());
             }

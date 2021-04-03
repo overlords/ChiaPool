@@ -1,5 +1,6 @@
 ﻿using ChiaPool.Api;
 using ChiaPool.Commands;
+using ChiaPool.Services;
 using CliFx;
 using Common.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,7 @@ namespace ChiaPool
 
             services.AddSingleton<HttpClient>();
             services.AddApplicationServices(chiaPoolNetAssembly);
+            services.AddSingleton<ConfigurationService>();
 
             foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(x => x.GetInterface(nameof(ICommand)) != null && !x.IsAbstract))
             {
@@ -57,8 +59,7 @@ namespace ChiaPool
                 return false;
             }
 
-            string installationPath = InstallCommand.GetInstallationPath();
-            return !Directory.Exists(installationPath);
+            return !ConfigurationService.IsInstalled();
         }
     }
 }

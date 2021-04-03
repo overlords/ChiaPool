@@ -20,7 +20,7 @@ namespace ChiaPool.Commands
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var lines = await ClientAccessor.GetPoolLogAsync(LineCount);
+            var lines = await ClientAccessor.GetChiaLogAsync(LineCount);
 
             if (lines.Length == 0)
             {

@@ -1,6 +1,5 @@
 ﻿using ChiaPool.Configuration.Options;
 using ChiaPool.Models;
-using ChiaPool.Models.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;

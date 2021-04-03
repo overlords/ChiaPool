@@ -20,18 +20,18 @@ namespace ChiaPool.Api
 
         public Task<PlotInfo[]> GetPlotsAsync()
             => GetAsync<PlotInfo[]>(ClientRoutes.ListPlots(ApiUrl));
-
         public Task<bool> DeletePlotByPublicKeyAsync(string publicKey)
             => PostAsync<bool>(ClientRoutes.DeletePlotByPublicKey(ApiUrl), new Dictionary<string, string>()
             {
                 ["publicKey"] = publicKey.ToString(),
             });
-
         public Task<bool> DeletePlotByFileNameAsync(string fileName)
             => PostAsync<bool>(ClientRoutes.DeletePlotByFileName(ApiUrl), new Dictionary<string, string>()
             {
                 ["fileName"] = fileName,
             });
+        public Task StartPlotGenerationAsync(PlottingConfiguration configuration)
+            => PostAsync(ClientRoutes.StartPlotGeneration(ApiUrl), configuration);
 
         public Task<string[]> GetChiaLogAsync(ushort count)
             => GetAsync<string[]>(ClientRoutes.GetChiaLog(ApiUrl, count));

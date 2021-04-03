@@ -14,6 +14,8 @@ namespace ChiaPool.Api
             => new Uri(apiUrl + "Plot/DeleteKey");
         public static Uri DeletePlotByFileName(string apiUrl)
             => new Uri(apiUrl + "Plot/DeleteFile");
+        public static Uri StartPlotGeneration(string apiUrl)
+            => new Uri(apiUrl + "Plot/Generate");
 
         public static Uri GetChiaLog(string apiUrl, ushort count)
             => new Uri(apiUrl + $"Log/Chia/{count}");

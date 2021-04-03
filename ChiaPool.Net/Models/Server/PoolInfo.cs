@@ -1,4 +1,4 @@
-﻿namespace ChiaPool.Models.Server
+﻿namespace ChiaPool.Models
 {
     public sealed class PoolInfo
     {
