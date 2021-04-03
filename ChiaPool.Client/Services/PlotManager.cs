@@ -122,6 +122,7 @@ namespace ChiaPool.Services
         {
             var processInfo = new ProcessStartInfo()
             {
+                WorkingDirectory = "/root",
                 FileName = "/bin/bash",
                 Arguments = $"generate.sh {config.Size} {config.Path} {config.CachePath} {config.BucketCount} {config.BufferSize}"
             };
