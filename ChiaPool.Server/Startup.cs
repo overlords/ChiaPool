@@ -41,6 +41,8 @@ namespace ChiaPool
                 .AddScheme<PlotterAuthenticationOptions, PlotterAuthenticationHandler>("Plotter", null);
 
             services.AddSignalR();
+            services.AddSingleton<PlotterHub>();
+            services.AddSingleton<MinerHub>();
             services.AddControllers();
         }
 
