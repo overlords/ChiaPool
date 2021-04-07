@@ -22,9 +22,10 @@ namespace ChiaPool.Migrations
 
             modelBuilder.Entity("ChiaPool.Models.Miner", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<IPAddress>("LastAddress")
                         .HasColumnType("inet");
@@ -60,6 +61,70 @@ namespace ChiaPool.Migrations
                     b.ToTable("Miners");
                 });
 
+            modelBuilder.Entity("ChiaPool.Models.PlotTransfer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("Cost")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("Deadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DownloadAddress")
+                        .HasColumnType("text");
+
+                    b.Property<long>("MinerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PlotterId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlotTransfers");
+                });
+
+            modelBuilder.Entity("ChiaPool.Models.Plotter", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<short>("AvailablePlots")
+                        .HasColumnType("smallint");
+
+                    b.Property<short>("Capacity")
+                        .HasColumnType("smallint");
+
+                    b.Property<IPAddress>("LastAddress")
+                        .HasColumnType("inet");
+
+                    b.Property<DateTimeOffset>("LastTick")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PlotMinutes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("Plotters");
+                });
+
             modelBuilder.Entity("ChiaPool.Models.User", b =>
                 {
                     b.Property<long>("Id")
@@ -89,9 +154,22 @@ namespace ChiaPool.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("ChiaPool.Models.Plotter", b =>
+                {
+                    b.HasOne("ChiaPool.Models.User", "Owner")
+                        .WithMany("Plotters")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("ChiaPool.Models.User", b =>
                 {
                     b.Navigation("Miners");
+
+                    b.Navigation("Plotters");
                 });
 #pragma warning restore 612, 618
         }

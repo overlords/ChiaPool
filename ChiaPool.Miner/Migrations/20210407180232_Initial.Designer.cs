@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChiaPool.Migrations
 {
     [DbContext(typeof(ConfigurationContext))]
-    [Migration("20210331215200_Initial")]
+    [Migration("20210407180232_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,7 +17,7 @@ namespace ChiaPool.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.4");
 
-            modelBuilder.Entity("ChiaMiningManager.Models.PlotInfo", b =>
+            modelBuilder.Entity("ChiaPool.Models.PlotInfo", b =>
                 {
                     b.Property<string>("PublicKey")
                         .HasColumnType("TEXT");

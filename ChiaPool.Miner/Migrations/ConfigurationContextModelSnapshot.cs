@@ -15,7 +15,7 @@ namespace ChiaPool.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.4");
 
-            modelBuilder.Entity("ChiaMiningManager.Models.PlotInfo", b =>
+            modelBuilder.Entity("ChiaPool.Models.PlotInfo", b =>
                 {
                     b.Property<string>("PublicKey")
                         .HasColumnType("TEXT");

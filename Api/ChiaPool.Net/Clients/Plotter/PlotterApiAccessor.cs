@@ -6,10 +6,9 @@ namespace ChiaPool.Api
     {
         private string ApiUrl;
 
-        public PlotterApiAccessor(HttpClient client, string apiUrl)
+        public PlotterApiAccessor(HttpClient client)
             : base(client)
         {
-            ApiUrl = apiUrl;
         }
 
         public void SetApiUrl(string apiUrl)
