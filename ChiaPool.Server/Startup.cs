@@ -61,8 +61,8 @@ namespace ChiaPool
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<PlotterHub>("/PHub/");
-                endpoints.MapHub<MinerHub>("/MHub/");
+                endpoints.MapHub<PlotterHub>("PHub");
+                endpoints.MapHub<MinerHub>("MHub");
                 endpoints.MapControllers();
             });
         }
