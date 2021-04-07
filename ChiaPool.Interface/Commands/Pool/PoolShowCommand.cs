@@ -32,6 +32,7 @@ namespace ChiaPool.Commands
             await InfoLineAsync($"Downloadable Plots  |   {poolInfo.PlotterPlots}");
             await WriteLineAsync();
             await InfoLineAsync($"Total Pool Size     |   {106 * (poolInfo.PlotterPlots + poolInfo.MinerPlots)} GB");
+            await InfoLineAsync($"Total Mined PM       |   {poolInfo.TotalPlotMinutes} PM");
             await InfoLineAsync($"PM Mining Speed     |   {Math.Round(poolInfo.MinerPlots / 60d, 2)} PM / second");
         }
     }

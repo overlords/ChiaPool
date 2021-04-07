@@ -22,6 +22,12 @@ namespace ChiaPool.Commands
         {
             long cost = await ServerAccessor.GetPlotTransferCostAsync(DeadlineHours);
 
+            if (cost == -1)
+            {
+                await WarnLineAsync("There are no plots available at the moment!");
+                await WarnLineAsync("Try again later...");
+            }
+
             await InfoLineAsync("[Plot Cost]");
             await InfoAsync("Hours     |    ");
             await WriteLineAsync(DeadlineHours.ToString());

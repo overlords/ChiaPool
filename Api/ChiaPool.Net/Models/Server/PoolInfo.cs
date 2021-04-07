@@ -16,6 +16,8 @@
 
         public int PlotterPlots { get; set; }
 
+        public long TotalPlotMinutes { get; set; }
+
         public PoolInfo()
         {
         }

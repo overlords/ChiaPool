@@ -65,9 +65,15 @@ namespace ChiaPool.Services
 
         public long GetPlotPrice(int deadlineHours)
         {
-            int capacity = GetPlottingCapacity();
             int availablePlots = GetAvailablePlotCount();
 
+            if (availablePlots == 0)
+            {
+                return -1;
+            }
+
+            int capacity = GetPlottingCapacity();
+           
             return (PlotBaseCost * capacity / availablePlots) + (deadlineHours * PlotDeadLineHourCost);
         }
 
