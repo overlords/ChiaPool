@@ -13,6 +13,9 @@ namespace ChiaPool.Models
         public string DownloadAddress { get; init; }
         public DateTimeOffset Deadline { get; init; }
 
+        public PlotTransfer()
+        {
+        }
         public PlotTransfer(long plotterId, long minerId, long cost, string downloadAddress, int deadlineHours)
         {
             Id = Guid.NewGuid();
