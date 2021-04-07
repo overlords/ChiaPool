@@ -4,12 +4,12 @@ services:
   harvester:
     image: AddImageHere
     ports:
-      - 127.0.0.1:8888:8888
+      - 127.0.0.1:8555:8555
     restart: always
-    container_name: ChiaHarvester
+    container_name: ChiaPlotter
     volumes:
       - /yourplotspath:/plots #Add more plot directories here
       # /yoursecondplotpath:/plots2
       - /yourlogspath:/root/.chia/mainnet/log
     env_file:
-      - harvester.env
+      - plotter.env
