@@ -9,9 +9,9 @@ namespace ChiaPool.Commands
     [Command("Plot List", Description = "Lists all plots of your harvester")]
     public class PlotListCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
 
-        public PlotListCommand(ClientApiAccessor apiClient)
+        public PlotListCommand(MinerApiAccessor apiClient)
         {
             ClientAccessor = apiClient;
         }

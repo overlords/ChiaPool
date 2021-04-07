@@ -31,6 +31,7 @@ namespace ChiaPool
             if (!validationResult.IsSuccessful)
             {
                 logger.LogError($"Config Validation failed: {validationResult.Reason}");
+                return;
             }
 
             await MigrateDatabaseAsync();

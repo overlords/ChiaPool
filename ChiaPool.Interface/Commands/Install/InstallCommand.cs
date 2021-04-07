@@ -1,6 +1,5 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
-using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands

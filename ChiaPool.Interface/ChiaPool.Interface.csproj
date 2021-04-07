@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Chia.NET\Chia.NET.csproj" />
-    <ProjectReference Include="..\ChiaPool.Net\ChiaPool.Net.csproj" />
+    <ProjectReference Include="..\Api\Chia.NET\Chia.NET.csproj" />
+    <ProjectReference Include="..\Api\ChiaPool.Net\ChiaPool.Net.csproj" />
   </ItemGroup>
 
 </Project>

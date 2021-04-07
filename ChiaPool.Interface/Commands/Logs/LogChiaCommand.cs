@@ -8,9 +8,9 @@ namespace ChiaPool.Commands
     [Command("Log Chia", Description = "Retrieves the latest chia log output")]
     public sealed class LogChiaCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
 
-        public LogChiaCommand(ClientApiAccessor clientAccessor)
+        public LogChiaCommand(MinerApiAccessor clientAccessor)
         {
             ClientAccessor = clientAccessor;
         }

@@ -1,6 +1,7 @@
 ﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
@@ -21,12 +22,17 @@ namespace ChiaPool.Commands
 
             await InfoLineAsync($"[Info for Pool {poolInfo.Name}]");
 
-            await InfoLineAsync($"Total  Miners     |   {poolInfo.TotalMinerCount}");
-            await InfoLineAsync($"Active Miners     |   {poolInfo.ActiveMinerCount}");
-            await InfoLineAsync($"Total  Plots      |   {poolInfo.TotalPlotCount}");
-            await InfoLineAsync($"Active Plots      |   {poolInfo.ActivePlotCount}");
-            await InfoLineAsync($"Total Pool Size   |   {103 * poolInfo.TotalPlotCount} GB");
-            await InfoLineAsync($"PM Mining Speed   |   {poolInfo.ActivePlotCount / 60d} PM / second");
+            await InfoLineAsync($"Total  Miners       |   {poolInfo.TotalMinerCount}");
+            await InfoLineAsync($"Active Miners       |   {poolInfo.ActiveMinerCount}");
+            await WriteLineAsync();
+            await InfoLineAsync($"Total Plotters      |   {poolInfo.TotalPlotterCount}");
+            await InfoLineAsync($"Active Plotters     |   {poolInfo.ActivePlotterCount}");
+            await WriteLineAsync();
+            await InfoLineAsync($"Mined Plots         |   {poolInfo.MinerPlots}");
+            await InfoLineAsync($"Downloadable Plots  |   {poolInfo.PlotterPlots}");
+            await WriteLineAsync();
+            await InfoLineAsync($"Total Pool Size     |   {106 * (poolInfo.PlotterPlots + poolInfo.MinerPlots)} GB");
+            await InfoLineAsync($"PM Mining Speed     |   {Math.Round(poolInfo.MinerPlots / 60d, 2)} PM / second");
         }
     }
 }

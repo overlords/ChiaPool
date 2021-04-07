@@ -1,5 +1,6 @@
 ﻿using ChiaPool.Configuration.Options;
 using ChiaPool.Models;
+using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,11 +15,13 @@ namespace ChiaPool.Controllers
     {
         private readonly CustomizationOption CustomizationOptions;
         private readonly MinerContext DbContext;
+        private readonly PlotterService PlotterService;
 
-        public PoolController(CustomizationOption customizationOptions, MinerContext dbContext)
+        public PoolController(CustomizationOption customizationOptions, MinerContext dbContext, PlotterService plotterService)
         {
             CustomizationOptions = customizationOptions;
             DbContext = dbContext;
+            PlotterService = plotterService;
         }
 
         [HttpGet("Info")]
@@ -30,9 +33,15 @@ namespace ChiaPool.Controllers
             {
                 Name = CustomizationOptions.PoolName,
                 TotalMinerCount = await DbContext.Miners.CountAsync(),
-                TotalPlotCount = await DbContext.Miners.SumAsync(x => x.LastPlotCount),
+                TotalPlotterCount = await DbContext.Plotters.CountAsync(),
+
                 ActiveMinerCount = await DbContext.Miners.CountAsync(x => x.NextIncrement >= minimumActiveTime),
-                ActivePlotCount = await DbContext.Miners.Where(x => x.NextIncrement >= minimumActiveTime).SumAsync(x => x.LastPlotCount),
+                ActivePlotterCount = PlotterService.GetActivePlotterCount(),
+
+                PlotterCapactity = PlotterService.GetPlottingCapacity(),
+
+                PlotterPlots = PlotterService.GetAvailablePlotCount(),
+                MinerPlots = await DbContext.Miners.Where(x => x.NextIncrement >= minimumActiveTime).SumAsync(x => x.LastPlotCount),
             };
 
             return Ok(poolInfo);

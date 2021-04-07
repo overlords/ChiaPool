@@ -3,14 +3,14 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands.Plot
+namespace ChiaPool.Commands
 {
     [Command("Plot Reload")]
     public sealed class PlotReloadCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
 
-        public PlotReloadCommand(ClientApiAccessor clientAccessor)
+        public PlotReloadCommand(MinerApiAccessor clientAccessor)
         {
             ClientAccessor = clientAccessor;
         }

@@ -1,4 +1,5 @@
-﻿using ChiaPool.Models;
+﻿using ChiaPool.Api;
+using ChiaPool.Models;
 using Common.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,13 @@ namespace ChiaPool.Services
     public class PlotService : Service
     {
         private long TotalPlotMinutes;
+
+        [Inject]
+        private readonly PlotterApiAccessor PlotterAccessor;
+
+        public PlotService()
+        {
+        }
 
         protected override async ValueTask InitializeAsync()
         {
@@ -28,5 +36,7 @@ namespace ChiaPool.Services
 
         public double GetPlotMinutePercentage(long plotMinutes)
             => Math.Round(100d * plotMinutes / TotalPlotMinutes, 2);
+
+
     }
 }

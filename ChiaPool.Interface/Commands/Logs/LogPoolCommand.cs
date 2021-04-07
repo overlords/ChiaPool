@@ -1,5 +1,4 @@
 ﻿using ChiaPool.Api;
-using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
@@ -9,9 +8,9 @@ namespace ChiaPool.Commands
     [Command("Log Pool", Description = "Retrieves the latest pool log output")]
     public class LogPoolCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
 
-        public LogPoolCommand(ClientApiAccessor clientAccessor)
+        public LogPoolCommand(MinerApiAccessor clientAccessor)
         {
             ClientAccessor = clientAccessor;
         }

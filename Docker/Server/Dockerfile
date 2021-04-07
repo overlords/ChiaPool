@@ -41,12 +41,6 @@ RUN git clone --branch ${BRANCH} https://github.com/Chia-Network/chia-blockchain
 && /usr/bin/sh ./install.sh \
 && chmod +x activate
 
-RUN mkdir /plots
 WORKDIR /root
-ADD ./entrypoint.sh entrypoint.sh
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y dos2unix \
-&& dos2unix entrypoint.sh \
-&& apt-get autoremove -y
-
+RUN mv /root/ChiaPool/Docker/Server/entrypoint.sh .
 ENTRYPOINT ["bash", "./entrypoint.sh"]

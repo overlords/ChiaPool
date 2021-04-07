@@ -8,10 +8,10 @@ namespace ChiaPool.Commands
     [Command("Miner Show", Description = "Retrieves information about a specific miner. Defaults to you")]
     public class MinerShowCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public MinerShowCommand(ClientApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        public MinerShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
         {
             ClientAccessor = clientAccessor;
             ServerAccessor = serverAccessor;

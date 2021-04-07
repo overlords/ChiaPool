@@ -17,13 +17,17 @@ namespace ChiaPool.Controllers
         private readonly MinerContext DbContext;
         private readonly FirewallService FirewallService;
         private readonly PlotService PlotService;
+        private readonly PlotterService PlotterService;
 
-        public MinerController(MinerContext dbContext, FirewallService firewallService, PlotService plotService)
+        public MinerController(MinerContext dbContext, FirewallService firewallService, PlotService plotService, PlotterService plotterService)
         {
             DbContext = dbContext;
             FirewallService = firewallService;
             PlotService = plotService;
+            PlotterService = plotterService;
         }
+
+
 
         [HttpPost("Start")]
         public async Task<IActionResult> StartMinerSessionAsync([FromHeader(Name = "Authorization")] string token)

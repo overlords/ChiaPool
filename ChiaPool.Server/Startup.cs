@@ -1,5 +1,7 @@
 using Chia.NET.Clients;
+using ChiaPool.Authentication;
 using ChiaPool.Configuration;
+using ChiaPool.Hubs;
 using ChiaPool.Models;
 using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +36,11 @@ namespace ChiaPool
                 options.UseNpgsql(connectionString);
             });
 
+            services.AddAuthentication()
+                .AddScheme<MinerAuthenticationOptions, MinerAuthenticationHandler>("Miner", null)
+                .AddScheme<PlotterAuthenticationOptions, PlotterAuthenticationHandler>("Plotter", null);
+
+            services.AddSignalR();
             services.AddControllers();
         }
 
@@ -47,10 +54,13 @@ namespace ChiaPool
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<PlotterHub>("/PHub/");
+                endpoints.MapHub<MinerHub>("/MHub/");
                 endpoints.MapControllers();
             });
         }

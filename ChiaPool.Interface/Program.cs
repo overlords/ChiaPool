@@ -30,7 +30,7 @@ namespace ChiaPool
 
         private static IServiceProvider MakeServiceProvider()
         {
-            var chiaPoolNetAssembly = Assembly.GetAssembly(typeof(ClientApiAccessor));
+            var chiaPoolNetAssembly = Assembly.GetAssembly(typeof(MinerApiAccessor));
             var services = new ServiceCollection();
 
             services.AddSingleton<HttpClient>();

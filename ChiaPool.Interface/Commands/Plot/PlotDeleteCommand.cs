@@ -8,9 +8,9 @@ namespace ChiaPool.Commands
     [Command("Plot Delete", Description = "Deletes a plot file")]
     public class PlotDeleteCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
 
-        public PlotDeleteCommand(ClientApiAccessor clientAccessor)
+        public PlotDeleteCommand(MinerApiAccessor clientAccessor)
         {
             ClientAccessor = clientAccessor;
         }

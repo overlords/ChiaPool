@@ -7,8 +7,9 @@ namespace ChiaPool.Commands
     [Command("Log")]
     public class LogCommand : ChiaCommand
     {
-        protected override async Task ExecuteAsync(IConsole console)
+        protected override Task ExecuteAsync(IConsole console)
         {
+            return Task.CompletedTask;
         }
     }
 

@@ -10,10 +10,10 @@ namespace ChiaPool.Commands
     [Command("Plot Generate", Description = "Generates a new plot")]
     public class PlotGenerateCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
         private readonly ConfigurationService ConfigurationService;
 
-        public PlotGenerateCommand(ClientApiAccessor clientAccessor, ConfigurationService configurationService)
+        public PlotGenerateCommand(MinerApiAccessor clientAccessor, ConfigurationService configurationService)
         {
             ClientAccessor = clientAccessor;
             ConfigurationService = configurationService;

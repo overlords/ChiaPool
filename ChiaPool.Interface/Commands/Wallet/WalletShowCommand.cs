@@ -8,9 +8,9 @@ namespace ChiaPool.Commands
     [Command("Wallet Show", Description = "Retrieves information about a your or the pools wallet")]
     public class WalletShowCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
 
-        public WalletShowCommand(ClientApiAccessor clientAccessor)
+        public WalletShowCommand(MinerApiAccessor clientAccessor)
         {
             ClientAccessor = clientAccessor;
         }

@@ -1,5 +1,4 @@
-﻿using Common.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Services
 {
-    public sealed class ConfigurationService 
+    public sealed class ConfigurationService
     {
         public async Task InstallAsync(string username, string password, string minerToken)
         {
@@ -29,7 +28,7 @@ namespace ChiaPool.Services
 
             var volumes = new Dictionary<string, string>();
 
-            foreach(string volume in volumeDefinitions)
+            foreach (string volume in volumeDefinitions)
             {
                 int splitIndex = volume.LastIndexOf(':');
 

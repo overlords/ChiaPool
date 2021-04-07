@@ -9,10 +9,10 @@ namespace ChiaPool.Commands
     [Command("User Show", Description = "Shows information about a user")]
     public sealed class UserShowCommand : ChiaCommand
     {
-        private readonly ClientApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor ClientAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public UserShowCommand(ClientApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        public UserShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
         {
             ClientAccessor = clientAccessor;
             ServerAccessor = serverAccessor;
