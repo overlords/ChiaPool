@@ -13,9 +13,6 @@ namespace ChiaPool.Services
     {
         private long TotalPlotMinutes;
 
-        [Inject]
-        private readonly PlotterApiAccessor PlotterAccessor;
-
         public PlotService()
         {
         }
