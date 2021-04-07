@@ -22,7 +22,7 @@ RUN echo "Cloning ChiaPool"
 RUN git clone https://github.com/Playwo/ChiaPool.git \
 && cd ChiaPool/ChiaPool.Miner \
 && dotnet publish --runtime linux-x64 --self-contained -o /root/manager \
-&& chmod +x /root/manager/ChiaPool.Client 
+&& chmod +x /root/manager/ChiaPool.Miner 
 
 
 #Only required for build
