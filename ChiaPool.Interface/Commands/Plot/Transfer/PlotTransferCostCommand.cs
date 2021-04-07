@@ -15,7 +15,7 @@ namespace ChiaPool.Commands
             ServerAccessor = serverAccessor;
         }
 
-        [CommandOption("hours", 'h', Description = "Amount of deadline hours you want to pay for")]
+        [CommandOption("time", 't', Description = "Amount of hours you want to pay for until the download expires")]
         public int DeadlineHours { get; set; } = 12;
 
         protected override async Task ExecuteAsync(IConsole console)
@@ -26,6 +26,7 @@ namespace ChiaPool.Commands
             {
                 await WarnLineAsync("There are no plots available at the moment!");
                 await WarnLineAsync("Try again later...");
+                return;
             }
 
             await InfoLineAsync("[Plot Cost]");
