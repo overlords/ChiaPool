@@ -41,6 +41,7 @@ namespace ChiaPool
                 }
                 else
                 {
+                    logger.LogError($"Command `{command}` failed with exit code `{process.ExitCode}`");
                     source.SetException(new Exception($"Command `{command}` failed with exit code `{process.ExitCode}`"));
                 }
 
