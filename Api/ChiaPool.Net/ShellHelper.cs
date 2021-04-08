@@ -35,16 +35,7 @@ namespace ChiaPool
             };
             process.Exited += (sender, args) =>
             {
-                if (process.ExitCode == 0)
-                {
-                    source.SetResult(0);
-                }
-                else
-                {
-                    logger.LogError($"Command `{command}` failed with exit code `{process.ExitCode}`");
-                    source.SetException(new Exception($"Command `{command}` failed with exit code `{process.ExitCode}`"));
-                }
-
+                source.SetResult(process.ExitCode);
                 process.Dispose();
             };
 
@@ -52,10 +43,9 @@ namespace ChiaPool
             {
                 process.Start();
             }
-            catch (Exception e)
+            catch 
             {
-                logger.LogError(e, $"Command `{command}` failed");
-                source.SetException(e);
+                source.SetResult(-1);
             }
 
             return source.Task;
