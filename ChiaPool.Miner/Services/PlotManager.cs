@@ -119,33 +119,26 @@ namespace ChiaPool.Services
 
         public async Task GeneratePlotAsync(PlottingConfiguration config)
         {
-            //var args = new Collection<string>();
-            //args.Add("generate.sh");
-            //args.Add(config.Size);
-            //args.Add(config.Path);
-            //args.Add(config.CachePath);
-            //args.Add(config.BucketCount);
-            //args.Add(config.BufferSize);
+            var logger = LoggerFactory.CreateLogger("Plotting");
+            var sw = new Stopwatch();
+            sw.Start();
 
-            //var processInfo = new ProcessStartInfo()
-            //{
-            //    WorkingDirectory = "/root",
-            //    FileName = "/bin/bash",
-            //    Arguments = "generate.sh"
-            //    ArgumentList = args,
-            //};
+            string command = "cd chia-blockchain " +
+                          "&& . ./activate " +
+                          $"&& chia plots create -k {config.Size} -d {config.Path} -t {config.CachePath} -u {config.BucketCount} -b {config.BufferSize}";
 
-            //using var process = Process.Start(processInfo);
-            var logger = LoggerFactory.CreateLogger("Plotter");
+            int exitCode = await ShellHelper.RunBashAsync(command, logger);
 
-            //process.OutputDataReceived += LogOutput;
+            sw.Stop();
 
-            void LogOutput(object sender, DataReceivedEventArgs e)
+            if (exitCode == 0)
             {
-                logger.LogInformation(e.Data);
+                logger.LogInformation($"Finished plotting process after {sw.Elapsed.TotalMinutes} minutes");
+            }
+            else
+            {
+                logger.LogError($"Plotting failed after {sw.Elapsed.TotalMinutes} minutes");
             }
         }
-
-
     }
 }

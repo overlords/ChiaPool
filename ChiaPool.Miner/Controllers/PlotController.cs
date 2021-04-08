@@ -35,7 +35,7 @@ namespace ChiaPool.Controllers
         [HttpPost("Generate")]
         public async Task<IActionResult> StartPlotGenerationAsync([FromForm] PlottingConfiguration configuration)
         {
-            await PlotManager.GeneratePlotAsync(configuration);
+            _ = Task.Run(() => PlotManager.GeneratePlotAsync(configuration));
             return Ok();
         }
     }
