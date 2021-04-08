@@ -33,7 +33,7 @@ namespace ChiaPool.Controllers
             => PlotManager.DeletePlotByFileNameAsync(fileName);
 
         [HttpPost("Generate")]
-        public async Task<IActionResult> StartPlotGenerationAsync([FromForm] PlottingConfiguration configuration)
+        public async Task<IActionResult> StartPlotGenerationAsync([FromBody] PlottingConfiguration configuration)
         {
             _ = Task.Run(() => PlotManager.GeneratePlotAsync(configuration));
             return Ok();

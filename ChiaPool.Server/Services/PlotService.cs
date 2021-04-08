@@ -1,5 +1,4 @@
-﻿using ChiaPool.Api;
-using ChiaPool.Models;
+﻿using ChiaPool.Models;
 using Common.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

@@ -73,7 +73,7 @@ namespace ChiaPool.Services
             }
 
             int capacity = GetPlottingCapacity();
-           
+
             return (PlotBaseCost * capacity / availablePlots) + (deadlineHours * PlotDeadLineHourCost);
         }
 

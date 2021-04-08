@@ -2,7 +2,6 @@
 using ChiaPool.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -120,23 +119,7 @@ namespace ChiaPool.Services
         public async Task GeneratePlotAsync(PlottingConfiguration config)
         {
             var logger = LoggerFactory.CreateLogger("Plotting");
-            var sw = new Stopwatch();
-            sw.Start();
-
-            string command = $"cd chia-blockchain && . ./activate && chia plots create -k {config.Size} -d {config.Path} -t {config.CachePath} -u {config.BucketCount} -b {config.BufferSize}";
-            logger.LogInformation(command);
-            int exitCode = await ShellHelper.RunBashAsync(command, logger);
-
-            sw.Stop();
-
-            if (exitCode == 0)
-            {
-                logger.LogInformation($"Finished plotting process after {sw.Elapsed.TotalMinutes} minutes");
-            }
-            else
-            {
-                logger.LogError($"Plotting failed after {sw.Elapsed.TotalMinutes} minutes");
-            }
+            await ShellHelper.RunPlotGenerationAsync(config, logger);
         }
     }
 }
