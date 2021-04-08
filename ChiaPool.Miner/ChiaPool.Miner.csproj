@@ -10,6 +10,10 @@
   <PropertyGroup>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Services\PlotManager.cs~RF1cb74fba.TMP" />
+  </ItemGroup>
     
   <ItemGroup>
     <Folder Include="Properties\" />

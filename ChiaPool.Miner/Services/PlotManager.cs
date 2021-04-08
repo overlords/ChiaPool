@@ -123,10 +123,8 @@ namespace ChiaPool.Services
             var sw = new Stopwatch();
             sw.Start();
 
-            string command = "cd chia-blockchain " +
-                          "&& . ./activate " +
-                          $"&& chia plots create -k {config.Size} -d {config.Path} -t {config.CachePath} -u {config.BucketCount} -b {config.BufferSize}";
-
+            string command = $"cd chia-blockchain && . ./activate && chia plots create -k {config.Size} -d {config.Path} -t {config.CachePath} -u {config.BucketCount} -b {config.BufferSize}";
+            logger.LogInformation(command);
             int exitCode = await ShellHelper.RunBashAsync(command, logger);
 
             sw.Stop();
