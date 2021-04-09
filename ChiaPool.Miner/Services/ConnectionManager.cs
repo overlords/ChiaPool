@@ -1,4 +1,5 @@
 ﻿using ChiaPool.Clients;
+using ChiaPool.Configuration;
 using ChiaPool.Configuration.Options;
 using Common.Services;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -14,12 +15,17 @@ namespace ChiaPool.Services
         [Inject]
         private readonly ServerOption ServerOptions;
         [Inject]
+        private readonly AuthOption AuthOptions;
+        [Inject]
         private readonly StatusService StatusService;
 
         protected override async ValueTask InitializeAsync()
         {
             Connection = new HubConnectionBuilder()
-                .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/MHub")
+                .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/MHub", x =>
+                {
+                    x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
+                })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
                 .Build();
 

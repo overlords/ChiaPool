@@ -11,19 +11,23 @@ namespace ChiaPool.Services
     {
         [Inject]
         private readonly ServerOption ServerOptions;
-
         [Inject]
         private readonly StatusService StatusService;
-
         [Inject]
         private readonly PlotService PlotService;
+        [Inject]
+        private readonly AuthOption AuthOptions;
+
 
         private HubConnection Connection;
 
         protected override async ValueTask InitializeAsync()
         {
             Connection = new HubConnectionBuilder()
-                .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/PHub")
+                .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/PHub", x =>
+                {
+                    x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
+                })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
                 .Build();
 
