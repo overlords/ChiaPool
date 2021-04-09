@@ -1,6 +1,7 @@
 ﻿using ChiaPool.Clients;
 using ChiaPool.Configuration;
 using ChiaPool.Configuration.Options;
+using ChiaPool.Models;
 using Common.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
@@ -27,6 +28,10 @@ namespace ChiaPool.Services
                     x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
                 })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
+                .ConfigureLogging(x =>
+                {
+                    x.AddProvider(new ExistingLoggerProvider(Logger));
+                })
                 .Build();
 
             await Connection.StartAsync();
