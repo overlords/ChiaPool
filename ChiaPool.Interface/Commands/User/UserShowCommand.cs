@@ -45,37 +45,63 @@ namespace ChiaPool.Commands
             }
 
             var miners = Name != default
-                ? await ServerAccessor.ListMinersByNameAsync(Name)
+                ? await ServerAccessor.ListMinersByOwnerNameAsync(Name)
                 : Id != default
-                ? await ServerAccessor.ListMinersByIdAsync(Id)
+                ? await ServerAccessor.ListMinersByOwnerIdAsync(Id)
                 : await ClientAccessor.ListOwnedMinersAsync();
 
+            var plotters = Name != default
+                ? await ServerAccessor.ListPlottersByOwnerNameAsync(Name)
+                : Id != default
+                ? await ServerAccessor.ListPlottersByOwnerIdAsync(Id)
+                : await ClientAccessor.ListOwnedPlottersAsync();
 
-            await InfoLineAsync($" [ {user.Name}   |   User Info ] ");
+            await InfoLineAsync($"[ {user.Name}   |   User Info ] ");
 
             await InfoLineAsync($"[ID]             |  {user.Id}");
-            await InfoLineAsync($"[Miner Count]    |  {user.MinerState.MinerCount}");
-            await InfoLineAsync($"[Plot Count]     |  {user.MinerState.PlotCount}");
-            await InfoLineAsync($"[Plot Minutes]   |  {user.MinerState.PlotMinutes}");
+            await InfoLineAsync($"[Miner Count]    |  {miners.Count}");
+            await InfoLineAsync($"[Miner PM]       |  {miners.Sum(x => x.PlotMinutes)}");
+            await InfoLineAsync($"[Plotter Count]  |  {plotters.Count}");
+            await InfoLineAsync($"[Plotter PM]     |  {plotters.Sum(x => x.PlotMinutes)}");
 
             await WriteLineAsync();
-
-            await InfoLineAsync($" [ {user.Name}   |   Miner Info ] ");
+            await InfoLineAsync($"[ {user.Name}   |   Miners ] ");
 
             if (miners.Count == 0)
             {
-                await WarnLineAsync("None");
-                return;
+                await WarnLineAsync("--- No Entries ---");
+            }
+            else
+            {
+                int idLength = miners.Max(x => x.Id.ToString().Length) + 2;
+                int nameLength = miners.Max(x => x.Name.Length);
+
+                await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
+
+                foreach (var miner in miners)
+                {
+                    await WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
+                }
             }
 
-            int idLength = miners.Max(x => x.Id.ToString().Length) + 2;
-            int nameLength = miners.Max(x => x.Name.Length);
+            await WriteLineAsync();
+            await InfoLineAsync($"[ {user.Name}   |   Plotters ]");
 
-            await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
-
-            foreach (var miner in miners)
+            if (plotters.Count == 0)
             {
-                await WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
+                await WarnLineAsync("--- No Entries ---");
+            }
+            else
+            {
+                int idLength = plotters.Max(x => x.Id.ToString().Length) + 2;
+                int nameLength = plotters.Max(x => x.Name.Length);
+
+                await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
+
+                foreach (var plotter in plotters)
+                {
+                    await WriteLineAsync($"{plotter.Id}    {plotter.Name}    {plotter.PlotMinutes}");
+                }
             }
         }
     }

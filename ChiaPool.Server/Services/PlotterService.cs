@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -21,10 +20,9 @@ namespace ChiaPool.Services
         private const int PlotDeadLineHourCost = 2 * 60;
 
         [Inject]
-        private readonly PlotterHub Hub;
+        private readonly IHubContext<PlotterHub> HubContext;
 
         private readonly ConcurrentDictionary<long, PlotterStatus> ActivePlotters;
-        private readonly SemaphoreSlim PlotRequestLock;
 
         private TaskCompletionSource<RemotePlot> PlotOfferCallback;
         private long PlotOfferPlotterId;
@@ -32,7 +30,6 @@ namespace ChiaPool.Services
         public PlotterService()
         {
             ActivePlotters = new ConcurrentDictionary<long, PlotterStatus>();
-            PlotRequestLock = new SemaphoreSlim(1, 1);
         }
 
         public async Task<int> GetPlotterCount()
@@ -49,6 +46,11 @@ namespace ChiaPool.Services
             => ActivePlotters.Sum(x => x.Value.Capacity);
         public int GetAvailablePlotCount()
             => ActivePlotters.Sum(x => x.Value.PlotsAvailable);
+
+        public bool IsPlotterActive(long plotterId)
+            => ActivePlotters.TryGetValue(plotterId, out _);
+        public PlotterInfo GetPlotterInfo(Plotter plotter)
+            => new PlotterInfo(plotter.Id, IsPlotterActive(plotter.Id), plotter.Name, plotter.LastCapacity, plotter.PlotMinutes, plotter.OwnerId);
 
         public Task ActivatePlotterAsync(long plotterId, PlotterStatus status)
             => !ActivePlotters.TryAdd(plotterId, status)
@@ -89,7 +91,7 @@ namespace ChiaPool.Services
             PlotOfferCallback = new TaskCompletionSource<RemotePlot>();
             PlotOfferPlotterId = plotterId;
 
-            await Hub.Clients.User($"{plotterId}")
+            await HubContext.Clients.User($"{plotterId}")
                 .SendAsync(PlotterMethods.RequestPlot);
 
             var result = await Task.WhenAny(PlotOfferCallback.Task, Task.Delay(PlotResponseTimeout));
@@ -100,7 +102,7 @@ namespace ChiaPool.Services
             }
 
             var remotePlot = await PlotOfferCallback.Task;
-            return new PlotTransfer(plotterId, minerId, GetPlotPrice(deadlineHours), remotePlot.DownloadAddress, deadlineHours);
+            return new PlotTransfer(plotterId, remotePlot.PlotId, minerId, GetPlotPrice(deadlineHours), remotePlot.DownloadAddress, deadlineHours);
         }
 
         ValueTask IPlotOfferHandler.HandlePlotOfferAsync(RemotePlot plot, long plotterId)

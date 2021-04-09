@@ -38,7 +38,6 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            user.MinerState = MinerState.FromMiners(user.Miners);
             return Ok(user.WithoutSecrets());
         }
         [HttpGet("Get/Id/{id}")]
@@ -53,7 +52,6 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            user.MinerState = MinerState.FromMiners(user.Miners);
             return Ok(user.WithoutSecrets());
         }
     }

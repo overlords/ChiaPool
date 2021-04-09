@@ -33,8 +33,6 @@ namespace ChiaPool.Models
                 .WithOne(x => x.Owner)
                 .HasForeignKey(x => x.OwnerId);
 
-                b.Ignore(x => x.MinerState);
-
                 b.ToTable("Users");
             });
 
@@ -52,11 +50,9 @@ namespace ChiaPool.Models
                 b.HasIndex(x => x.Token)
                 .IsUnique();
 
-                b.Property(x => x.LastAddress);
-                b.Property(x => x.LastPlotCount);
-
                 b.Property(x => x.PlotMinutes);
-                b.Property(x => x.NextIncrement);
+
+                b.Property(x => x.LastPlotCount);
 
                 b.Property(x => x.OwnerId);
 
@@ -72,12 +68,11 @@ namespace ChiaPool.Models
                 b.Property(x => x.Name);
 
                 b.Property(x => x.Token);
-                b.Property(x => x.LastAddress);
 
-                b.Property(x => x.Capacity);
-                b.Property(x => x.AvailablePlots);
                 b.Property(x => x.PlotMinutes);
-                b.Property(x => x.LastAddress);
+
+                b.Property(x => x.LastCapacity);
+                b.Property(x => x.LastAvailablePlots);
 
                 b.Property(x => x.OwnerId);
 

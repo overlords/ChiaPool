@@ -1,5 +1,4 @@
-﻿using ChiaPool.Models;
-using ChiaPool.Services;
+﻿using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,19 +8,17 @@ namespace ChiaPool.Controllers
     [ApiController]
     public class StatusController : ControllerBase
     {
-        private readonly PlotManager PlotManager;
+        private readonly StatusService StatusService;
 
-        public StatusController(PlotManager plotManager)
+        public StatusController(StatusService statusService)
         {
-            PlotManager = plotManager;
+            StatusService = statusService;
         }
 
         [HttpGet("")]
         public async Task<IActionResult> GetStatusAsync()
         {
-            int plotCount = await PlotManager.GetPlotCountAsync();
-            var status = new MinerStatus(plotCount);
-
+            var status = await StatusService.GetStatusAsync();
             return Ok(status);
         }
     }

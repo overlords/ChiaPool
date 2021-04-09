@@ -32,13 +32,12 @@ namespace ChiaPool.Models
         [JsonIgnore]
         public List<Plotter> Plotters { get; set; }
 
-        public MinerState MinerState { get; set; }
-
         public User(string name, string passwordHash)
         {
             Name = name;
             PasswordHash = passwordHash;
             Miners = new List<Miner>();
+            Plotters = new List<Plotter>();
         }
     }
 }

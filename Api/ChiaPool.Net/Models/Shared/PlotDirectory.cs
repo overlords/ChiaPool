@@ -3,7 +3,8 @@
     public class PlotDirectory
     {
         public string Path { get; init; }
-        public int PlotCount { get; init; }
+        public int Size { get; init; }
+        public int Parallelism { get; init; }
 
         public PlotDirectory()
         {
@@ -18,22 +19,27 @@
                 return false;
             }
 
-            string[] parts = input.Split(':', 2);
+            string[] parts = input.Split(':', 3);
 
-            if (parts.Length == 0)
+            if (parts.Length != 3)
             {
                 return false;
             }
 
-            if (!int.TryParse(parts[0], out int plotCount))
+            if (!int.TryParse(parts[0], out int sizeInGB))
+            {
+                return false;
+            }
+            if (!int.TryParse(parts[1], out int parallelism))
             {
                 return false;
             }
 
             plotDirectory = new PlotDirectory()
             {
-                Path = parts[1],
-                PlotCount = plotCount
+                Path = parts[2],
+                Size = sizeInGB,
+                Parallelism = parallelism,
             };
             return true;
         }

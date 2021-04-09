@@ -47,9 +47,12 @@ namespace ChiaPool.Api
 
         public Task<User> GetCurrentUserAync()
             => GetAsync<User>(MinerRoutes.GetCurrentUser(ApiUrl));
-        public Task<Miner> GetCurrentMinerAsync()
-            => GetAsync<Miner>(MinerRoutes.GetCurrentMiner(ApiUrl));
-        public Task<List<Miner>> ListOwnedMinersAsync()
-            => GetAsync<List<Miner>>(MinerRoutes.ListOwnedMiners(ApiUrl));
+
+        public Task<MinerInfo> GetCurrentMinerAsync()
+            => GetAsync<MinerInfo>(MinerRoutes.GetCurrentMiner(ApiUrl));
+        public Task<List<MinerInfo>> ListOwnedMinersAsync()
+            => GetAsync<List<MinerInfo>>(MinerRoutes.ListOwnedMiners(ApiUrl));
+        public Task<List<PlotterInfo>> ListOwnedPlottersAsync()
+            => GetAsync<List<PlotterInfo>>(MinerRoutes.ListOwnedPlotters(ApiUrl));
     }
 }

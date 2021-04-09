@@ -25,12 +25,25 @@ namespace ChiaPool.Api
         public Task<User> GetUserByIdAsync(long id)
             => GetAsync<User>(ServerRoutes.GetUserById(ApiUrl, id));
 
-        public Task<List<Miner>> ListMinersByNameAsync(string name)
-            => GetAsync<List<Miner>>(ServerRoutes.ListMinersByName(ApiUrl, name));
-        public Task<List<Miner>> ListMinersByIdAsync(long id)
-            => GetAsync<List<Miner>>(ServerRoutes.ListMinersById(ApiUrl, id));
-        public Task<Miner> GetMinerByTokenAsync(string token)
-            => GetAsync<Miner>(ServerRoutes.GetMinerByToken(ApiUrl, token));
+        public Task<List<MinerInfo>> ListMinersByOwnerNameAsync(string name)
+            => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerName(ApiUrl, name));
+        public Task<List<PlotterInfo>> ListPlottersByOwnerNameAsync(string name)
+            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerName(ApiUrl, name));
+
+        public Task<List<MinerInfo>> ListMinersByOwnerIdAsync(long id)
+            => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerId(ApiUrl, id));
+        public Task<List<PlotterInfo>> ListPlottersByOwnerIdAsync(long id)
+            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerId(ApiUrl, id));
+
+        public Task<MinerInfo> GetMinerByIdAsync(long id)
+            => GetAsync<MinerInfo>(ServerRoutes.GetMinerById(ApiUrl, id));
+        public Task<PlotterInfo> GetPlotterByIdAsync(long id)
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterById(ApiUrl, id));
+
+        public Task<MinerInfo> GetMinerByTokenAsync(string token)
+            => GetAsync<MinerInfo>(ServerRoutes.GetMinerByToken(ApiUrl, token));
+        public Task<PlotterInfo> GetPlotterByTokenAsync(string token)
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByToken(ApiUrl, token));
 
         public Task<Wallet> GetWalletByTokenAsync(string name, string password)
             => GetAsync<Wallet>(ServerRoutes.GetWalletByAccount(ApiUrl, name, password));
@@ -42,7 +55,6 @@ namespace ChiaPool.Api
 
         public Task<long> GetPlotTransferCostAsync(int deadlineHours)
             => GetAsync<long>(ServerRoutes.GetPlotTransferPrice(ApiUrl, deadlineHours));
-
         public Task<PlotTransfer> BuyPlotTransferAsync(string token, int deadlineHours)
             => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(ApiUrl, deadlineHours), token);
     }

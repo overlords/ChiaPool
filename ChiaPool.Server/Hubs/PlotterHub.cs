@@ -19,20 +19,20 @@ namespace ChiaPool.Hubs
             PlotterService = plotterService;
         }
 
-        [HubMethodName(ServerMethods.Activate)]
+        [HubMethodName(PlotterHubMethods.Activate)]
         public void Activate(PlotterStatus status)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
             PlotterService.ActivatePlotterAsync(plotterId, status);
         }
-        [HubMethodName(ServerMethods.Update)]
+        [HubMethodName(PlotterHubMethods.Update)]
         public async Task UpdateAsync(PlotterStatus status)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
             await PlotterService.UpdatePlotterAsync(plotterId, status);
         }
 
-        [HubMethodName(ServerMethods.OfferPlot)]
+        [HubMethodName(PlotterHubMethods.OfferPlot)]
         public async Task OfferPlotAsync(RemotePlot plot)
         {
             long plotterId = long.Parse(Context.UserIdentifier);

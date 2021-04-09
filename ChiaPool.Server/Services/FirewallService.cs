@@ -38,55 +38,16 @@ namespace ChiaPool.Services
 
         protected override async ValueTask InitializeAsync()
         {
-            await RefreshIPWhiteListAsync();
-        }
-
-        protected override async ValueTask RunAsync()
-        {
-            while (true)
-            {
-                await Task.Delay(IPRefreshDelay);
-                await RefreshIPWhiteListAsync();
-            }
-        }
-
-        private async Task RefreshIPWhiteListAsync()
-        {
             await AccessSemaphore.WaitAsync();
-            Logger.LogInformation("Refreshing iptables whitelist...");
-            FlushIPsInternal();
-
             try
             {
-                using var scope = Provider.CreateScope();
-                var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
-                using var adapter = System.GetTableAdapter(4);
-                var miners = await dbContext.Miners.ToListAsync();
-
-                var rules = new List<string>();
-
-                foreach (var miner in miners.Where(x => x.LastAddress != null && //Has an IP
-                                                   x.NextIncrement >= DateTimeOffset.UtcNow - TimeSpan.FromHours(1))) //Has updated 
-                {
-                    rules.Add(GetAcceptRule(miner.LastAddress));
-                }
-
-                var ruleSet = new IpTablesRuleSet(4, rules, System);
-
-                var sync = new DefaultNetfilterSync<IpTablesRule>();
-                (System.GetChain(adapter, IpTable, IpChain) as IpTablesChain).Sync(adapter, ruleSet.Rules, sync);
-                Logger.LogInformation("Finished refreshing iptables whitelist");
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "There was an error while refreshing iptables whitelist");
+                FlushIPsInternal();
             }
             finally
             {
                 AccessSemaphore.Release();
             }
         }
-
         public async Task AcceptIPAsync(IPAddress address)
         {
             await AccessSemaphore.WaitAsync();

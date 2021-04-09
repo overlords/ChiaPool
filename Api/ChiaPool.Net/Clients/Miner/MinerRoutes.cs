@@ -35,5 +35,7 @@ namespace ChiaPool.Api
             => new Uri(apiUrl + "Server/Miner/Get/Current");
         public static Uri ListOwnedMiners(string apiUrl)
             => new Uri(apiUrl + "Server/Miner/List/Current");
+        public static Uri ListOwnedPlotters(string apiUrl)
+            => new Uri(apiUrl + "Server/Plotter/List/Current");
     }
 }

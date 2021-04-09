@@ -4,18 +4,17 @@ using System.Text.Json.Serialization;
 
 namespace ChiaPool.Models
 {
-    public class Plotter : IPoolNode
+    public class Plotter : INode
     {
         public long Id { get; set; }
         public string Name { get; set; }
 
         public string Token { get; set; }
-        public IPAddress LastAddress { get; set; }
-
-        public short Capacity { get; set; }
-        public short AvailablePlots { get; set; }
         public long PlotMinutes { get; set; }
-        public DateTimeOffset LastTick { get; set; }
+
+        public short LastCapacity { get; set; }
+        public short LastAvailablePlots { get; set; }
+
 
         [JsonIgnore]
         public User Owner { get; set; }
@@ -28,10 +27,9 @@ namespace ChiaPool.Models
         {
             Name = name;
             Token = Guid.NewGuid().ToString();
-            Capacity = 0;
-            AvailablePlots = 0;
+            LastCapacity = 0;
+            LastAvailablePlots = 0;
             PlotMinutes = 0;
-            LastTick = DateTimeOffset.MinValue;
             OwnerId = ownerId;
         }
     }

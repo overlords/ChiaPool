@@ -17,13 +17,15 @@ namespace ChiaPool.Controllers
         private readonly MinerContext DbContext;
         private readonly PlotService PlotService;
         private readonly PlotterService PlotterService;
+        private readonly MinerService MinerService;
 
-        public PoolController(CustomizationOption customizationOptions, MinerContext dbContext, PlotService plotService, PlotterService plotterService)
+        public PoolController(CustomizationOption customizationOptions, MinerContext dbContext, PlotService plotService, PlotterService plotterService, MinerService minerService)
         {
             CustomizationOptions = customizationOptions;
             DbContext = dbContext;
             PlotService = plotService;
             PlotterService = plotterService;
+            MinerService = minerService;
         }
 
         [HttpGet("Info")]
@@ -37,13 +39,13 @@ namespace ChiaPool.Controllers
                 TotalMinerCount = await DbContext.Miners.CountAsync(),
                 TotalPlotterCount = await DbContext.Plotters.CountAsync(),
 
-                ActiveMinerCount = await DbContext.Miners.CountAsync(x => x.NextIncrement >= minimumActiveTime),
+                ActiveMinerCount = MinerService.GetActiveMinerCount(),
                 ActivePlotterCount = PlotterService.GetActivePlotterCount(),
 
                 PlotterCapactity = PlotterService.GetPlottingCapacity(),
 
                 PlotterPlots = PlotterService.GetAvailablePlotCount(),
-                MinerPlots = await DbContext.Miners.Where(x => x.NextIncrement >= minimumActiveTime).SumAsync(x => x.LastPlotCount),
+                MinerPlots = MinerService.GetActivePlotCount(),
 
                 TotalPlotMinutes = PlotService.GetTotalPlotMinutes(),
             };

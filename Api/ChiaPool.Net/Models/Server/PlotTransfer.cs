@@ -6,6 +6,7 @@ namespace ChiaPool.Models
     {
         public Guid Id { get; init; }
         public long PlotterId { get; init; }
+        public long PlotId { get; init; }
         public long MinerId { get; init; }
 
         public long Cost { get; init; }
@@ -16,10 +17,11 @@ namespace ChiaPool.Models
         public PlotTransfer()
         {
         }
-        public PlotTransfer(long plotterId, long minerId, long cost, string downloadAddress, int deadlineHours)
+        public PlotTransfer(long plotterId, long plotId, long minerId, long cost, string downloadAddress, int deadlineHours)
         {
             Id = Guid.NewGuid();
             PlotterId = plotterId;
+            PlotId = plotId;
             MinerId = minerId;
             Cost = cost;
 

@@ -14,12 +14,25 @@ namespace ChiaPool.Api
         public static Uri GetUserById(string apiUrl, long id)
             => new Uri(apiUrl + $"User/Get/Id/{id}");
 
-        public static Uri ListMinersByName(string apiUrl, string name)
+        public static Uri ListMinersByOwnerName(string apiUrl, string name)
             => new Uri(apiUrl + $"Miner/List/Name/{name}");
-        public static Uri ListMinersById(string apiUrl, long id)
+        public static Uri ListPlottersByOwnerName(string apiUrl, string name)
+            => new Uri(apiUrl + $"Plotter/List/Name/{name}");
+
+        public static Uri ListMinersByOwnerId(string apiUrl, long id)
             => new Uri(apiUrl + $"Miner/List/Id/{id}");
+        public static Uri ListPlottersByOwnerId(string apiUrl, long id)
+            => new Uri(apiUrl + $"Plotter/List/Id/{id}");
+
+        public static Uri GetMinerById(string apiUrl, long id)
+            => new Uri(apiUrl + $"Miner/Get/Id/{id}");
+        public static Uri GetPlotterById(string apiUrl, long id)
+            => new Uri(apiUrl + $"Plotter/Get/Id/{id}");
+
         public static Uri GetMinerByToken(string apiUrl, string token)
             => new Uri(apiUrl + $"Miner/Get/Token/{token}");
+        public static Uri GetPlotterByToken(string apiUrl, string token)
+            => new Uri(apiUrl + $"Plotter/Get/Token/{token}");
 
         public static Uri GetWalletByAccount(string apiUrl, string name, string password)
             => new Uri(apiUrl + $"Wallet/Get/User/{name}/{password}");
