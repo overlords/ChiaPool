@@ -2,6 +2,7 @@
 using ChiaPool.Configuration;
 using Common.Services;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace ChiaPool.Services
                     x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
                 })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
+                .AddJsonProtocol()
                 .Build();
 
             Connection.On(PlotterMethods.RequestPlot, () => HandlePlotRequestAsync());

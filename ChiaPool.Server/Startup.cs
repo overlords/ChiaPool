@@ -40,7 +40,8 @@ namespace ChiaPool
                 .AddScheme<MinerAuthenticationOptions, MinerAuthenticationHandler>("Miner", null)
                 .AddScheme<PlotterAuthenticationOptions, PlotterAuthenticationHandler>("Plotter", null);
 
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddJsonProtocol();
             services.AddSingleton<PlotterHub>();
             services.AddSingleton<MinerHub>();
             services.AddControllers();
@@ -61,8 +62,8 @@ namespace ChiaPool
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<PlotterHub>("PHub");
-                endpoints.MapHub<MinerHub>("MHub");
+                endpoints.MapHub<PlotterHub>("/PHub");
+                endpoints.MapHub<MinerHub>("/MHub");
                 endpoints.MapControllers();
             });
         }
