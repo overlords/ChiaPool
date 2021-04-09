@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
-using System.Net;
 
 namespace ChiaPool.Migrations
 {
@@ -15,6 +14,7 @@ namespace ChiaPool.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PlotterId = table.Column<long>(type: "bigint", nullable: false),
+                    PlotId = table.Column<long>(type: "bigint", nullable: false),
                     MinerId = table.Column<long>(type: "bigint", nullable: false),
                     Cost = table.Column<long>(type: "bigint", nullable: false),
                     DownloadAddress = table.Column<string>(type: "text", nullable: true),
@@ -47,10 +47,8 @@ namespace ChiaPool.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: true),
-                    LastAddress = table.Column<IPAddress>(type: "inet", nullable: true),
-                    LastPlotCount = table.Column<short>(type: "smallint", nullable: false),
                     PlotMinutes = table.Column<long>(type: "bigint", nullable: false),
-                    NextIncrement = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastPlotCount = table.Column<short>(type: "smallint", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -72,11 +70,9 @@ namespace ChiaPool.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: true),
-                    LastAddress = table.Column<IPAddress>(type: "inet", nullable: true),
-                    Capacity = table.Column<short>(type: "smallint", nullable: false),
-                    AvailablePlots = table.Column<short>(type: "smallint", nullable: false),
                     PlotMinutes = table.Column<long>(type: "bigint", nullable: false),
-                    LastTick = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastCapacity = table.Column<short>(type: "smallint", nullable: false),
+                    LastAvailablePlots = table.Column<short>(type: "smallint", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
