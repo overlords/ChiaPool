@@ -7,7 +7,7 @@ cd ../chia-blockchain
 
 chia init
 sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
-curl https://${pool_host}:${manager_port}/Cert/Keys -H "Authorization: ${token}" | chia keys add
+curl https://${pool_host}:${manager_port}/Cert/Keys -H "Authorization: Plotter ${token}" | chia keys add
 
 cd ../manager
 ./ChiaPool.Plotter
