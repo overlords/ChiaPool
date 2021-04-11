@@ -38,8 +38,6 @@ namespace ChiaPool.Services
                 })
                 .Build();
 
-            await Connection.StartAsync();
-
             Connection.Closed += OnConnectionClosed;
             Connection.Reconnecting += OnReconnecting;
             Connection.Reconnected += OnReconnected;
@@ -76,6 +74,7 @@ namespace ChiaPool.Services
 
         protected override async ValueTask RunAsync()
         {
+            await Connection.StartAsync();
             await SendActivateRequestAsync();
         }
     }

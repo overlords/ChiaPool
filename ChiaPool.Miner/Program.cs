@@ -37,6 +37,7 @@ namespace ChiaPool
             }
 
             await MigrateDatabaseAsync();
+            await Application.Services.InitializeApplicationServicesAsync(assembly);
 
             if (args.Length == 1 && args[0] == "init")
             {
@@ -45,7 +46,6 @@ namespace ChiaPool
                 return;
             }
 
-            await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 

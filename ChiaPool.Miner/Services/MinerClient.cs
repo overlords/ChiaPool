@@ -16,10 +16,8 @@ namespace ChiaPool.Services
     {
         [Inject]
         private readonly HttpClient Client;
-
         [Inject]
         private readonly AuthOption AuthOptions;
-
         [Inject]
         private readonly ServerOption ServerOptions;
 
