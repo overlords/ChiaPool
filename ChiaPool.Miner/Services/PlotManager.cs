@@ -19,15 +19,8 @@ namespace ChiaPool.Services
             LoggerFactory = loggerFactory;
         }
 
-        public async Task<Plot[]> GetPlotsAsync()
-        {
-            var plots = await HarvesterClient.GetPlotsAsync();
-            foreach(var plot in plots)
-            {
-                plot.FileName = plot.FileName.Split('/').Last();
-            }
-            return plots;
-        }
+        public async Task<Plot[]> GetPlotsAsync() 
+            => await HarvesterClient.GetPlotsAsync();
 
         public async Task<int> GetPlotCountAsync()
             => (await HarvesterClient.GetPlotsAsync()).Length;

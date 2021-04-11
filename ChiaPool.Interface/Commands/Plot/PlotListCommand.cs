@@ -33,7 +33,7 @@ namespace ChiaPool.Commands
 
             foreach (var plot in plots)
             {
-                await WriteLineAsync($"{plot.PublicKey}    {plot.FileName}");
+                await WriteLineAsync($"{plot.PublicKey}    {plot.FileName.Split('/').Last()}");
             }
         }
     }
