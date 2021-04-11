@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace ChiaPool.Models
+namespace ChiaPool.Utils
 {
     public class ExistingLoggerProvider : ILoggerProvider
     {

@@ -1,14 +1,17 @@
 using Chia.NET.Clients;
 using ChiaPool.Api;
+using ChiaPool.Configuration;
 using ChiaPool.Models;
 using ChiaPool.Services;
 using Common.Extensions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.IO.Compression;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -98,14 +101,15 @@ namespace ChiaPool
 
         private static async Task RunInitAsync()
         {
-            var client = Application.Services.GetRequiredService<MinerClient>();
+            var client = Application.Services.GetRequiredService<ServerApiAccessor>();
+            var authOptions = Application.Services.GetRequiredService<AuthOption>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
-            logger.LogInformation("Downloading private keys...");
-            if (!await client.RefreshCAKeysAsync())
-            {
-                return;
-            }
+            logger.LogInformation("Downloading ca certificate...");
+            using var zipArchive = await client.GetCACertificateArchiveAsync(authOptions.Token);
+            logger.LogInformation("Extracting ca certificate...");
+            zipArchive.ExtractToDirectory("/root/chia-blockchain/ca/", true);
+            logger.LogInformation("Finished updating ca!");
         }
     }
 }

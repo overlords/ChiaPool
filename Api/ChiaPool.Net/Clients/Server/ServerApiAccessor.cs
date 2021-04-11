@@ -1,6 +1,7 @@
 ﻿using Chia.NET.Models;
 using ChiaPool.Models;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,6 +18,13 @@ namespace ChiaPool.Api
 
         public Task<ServerStatus> GetStatusAsync()
             => GetAsync<ServerStatus>(ServerRoutes.Status(ApiUrl));
+
+        public async Task<ZipArchive> GetCACertificateArchiveAsync(string token)
+        {
+            var zipStream = await GetStreamAsync(ServerRoutes.GetCACertificate(ApiUrl), "Miner", token);
+            return new ZipArchive(zipStream);
+
+        }
 
         public Task<List<User>> ListUsersAsync()
             => GetAsync<List<User>>(ServerRoutes.ListUsers(ApiUrl));
@@ -56,6 +64,6 @@ namespace ChiaPool.Api
         public Task<long> GetPlotTransferCostAsync(int deadlineHours)
             => GetAsync<long>(ServerRoutes.GetPlotTransferPrice(ApiUrl, deadlineHours));
         public Task<PlotTransfer> BuyPlotTransferAsync(string token, int deadlineHours)
-            => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(ApiUrl, deadlineHours), token);
+            => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(ApiUrl, deadlineHours), "Miner", token);
     }
 }

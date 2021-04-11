@@ -1,6 +1,6 @@
 ﻿namespace ChiaPool.Models
 {
-    public sealed class ServerStatus
+    public sealed class ServerStatus : IStatus
     {
         public long SyncHeight { get; set; }
         public long MaxSyncHeight { get; set; }

@@ -30,6 +30,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Api\Chia.NET\Chia.NET.csproj" />
     <ProjectReference Include="..\Api\ChiaPool.Net\ChiaPool.Net.csproj" />
+    <ProjectReference Include="..\NodeShare\NodeShare.csproj" />
   </ItemGroup>
 
 </Project>

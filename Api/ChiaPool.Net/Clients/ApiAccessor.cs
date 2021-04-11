@@ -1,6 +1,7 @@
 ﻿using Common.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -18,12 +19,12 @@ namespace ChiaPool.Api
             Client = client;
         }
 
-        protected async Task<T> GetAsync<T>(Uri requestUri, string authorization = null)
+        protected async Task<T> GetAsync<T>(Uri requestUri, string authScheme = null, string authValue = null)
         {
             using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-            if (authorization != null)
+            if (authScheme != default || authValue != default)
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue(authorization);
+                request.Headers.Authorization = new AuthenticationHeaderValue(authScheme, authValue);
             }
 
             var response = await Client.SendAsync(request);
@@ -32,7 +33,6 @@ namespace ChiaPool.Api
             {
                 throw new Exception($"There was an error! The server responded with {response.StatusCode}");
             }
-
             if (typeof(T) == typeof(object) || !response.IsSuccessStatusCode)
             {
                 return default;
@@ -41,18 +41,33 @@ namespace ChiaPool.Api
             return await response.Content.ReadFromJsonAsync<T>();
         }
 
-        protected async Task GetAsync(Uri requestUri, string authorization = null)
-            => await GetAsync<object>(requestUri, authorization);
+        protected async Task GetAsync(Uri requestUri, string authScheme = null, string authValue = null)
+            => await GetAsync<object>(requestUri, authScheme, authValue);
 
-        protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authorization = null)
+        protected async Task<Stream> GetStreamAsync(Uri requestUri, string authScheme = null, string authValue = null)
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            if (authScheme != default || authValue != default)
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue(authScheme, authValue);
+            }
+
+            var response = await Client.SendAsync(request);
+
+            return !response.IsSuccessStatusCode && !ShouldIgnoreStatusCode(response.StatusCode)
+                ? throw new Exception($"There was an error! The server responded with {response.StatusCode}")
+                : await response.Content.ReadAsStreamAsync();
+        }
+
+        protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
         {
             using var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
                 Content = JsonContent.Create(parameters ?? new Dictionary<string, string>())
             };
-            if (authorization != null)
+            if (authScheme != default || authValue != default)
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue(authorization);
+                request.Headers.Authorization = new AuthenticationHeaderValue(authScheme, authValue);
             }
 
             var response = await Client.SendAsync(request);
@@ -61,7 +76,6 @@ namespace ChiaPool.Api
             {
                 throw new Exception($"There was an error! The server responded with {response.StatusCode}");
             }
-
             if (typeof(T) == typeof(object) || !response.IsSuccessStatusCode)
             {
                 return default;
@@ -70,8 +84,8 @@ namespace ChiaPool.Api
             return await response.Content.ReadFromJsonAsync<T>();
         }
 
-        protected async Task PostAsync(Uri requestUri, object parameters = null, string authorization = null)
-            => await PostAsync<object>(requestUri, parameters, authorization);
+        protected async Task PostAsync(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
+            => await PostAsync<object>(requestUri, parameters, authScheme, authValue);
 
         private bool ShouldIgnoreStatusCode(HttpStatusCode statusCode)
         {

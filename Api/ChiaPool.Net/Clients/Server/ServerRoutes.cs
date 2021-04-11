@@ -7,6 +7,9 @@ namespace ChiaPool.Api
         public static Uri Status(string apiUrl)
             => new Uri(apiUrl + "Status");
 
+        public static Uri GetCACertificate(string apiUrl)
+            => new Uri(apiUrl + "Cert/CA");
+
         public static Uri ListUsers(string apiUrl)
             => new Uri(apiUrl + "User/List");
         public static Uri GetUserByName(string apiUrl, string name)

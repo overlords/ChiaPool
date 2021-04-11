@@ -16,9 +16,9 @@ namespace ChiaPool.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> GetStatusAsync()
+        public IActionResult GetCurrentStatus()
         {
-            var status = await StatusService.GetStatusAsync();
+            var status = StatusService.GetCurrentStatus();
             return Ok(status);
         }
     }

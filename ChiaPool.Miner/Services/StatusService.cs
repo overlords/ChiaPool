@@ -1,14 +1,53 @@
 ﻿using ChiaPool.Models;
 using Common.Services;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
 {
-    public class StatusService : Service
+    [InitializationPriority(-10)] //Init after everything else 
+    public class StatusService : Service, IStatusService<MinerStatus>
     {
-        public async Task<MinerStatus> GetStatusAsync()
+        private const int StatusRefreshDelay = 30 * 1000;
+
+        [Inject]
+        private readonly ConnectionManager ConnectionManager;
+        [Inject]
+        private readonly PlotManager PlotManager;
+
+        private MinerStatus CurrentStatus;
+
+        protected override async ValueTask InitializeAsync() 
+            => CurrentStatus = await LoadCurrentStatusAsync();
+
+        protected override async ValueTask RunAsync()
         {
-            return new MinerStatus();
+            while (true)
+            {
+                await Task.Delay(StatusRefreshDelay);
+                await RefreshStatusAsync();
+            }
         }
+
+        public MinerStatus GetCurrentStatus()
+            => CurrentStatus;
+
+        public async Task RefreshStatusAsync()
+        {
+            var newStatus = await LoadCurrentStatusAsync();
+
+            if (CurrentStatus.Equals(newStatus))
+            {
+                return;
+            }
+
+            CurrentStatus = newStatus;
+            await ConnectionManager.SendStatusUpdateAsync();
+        }
+
+        private async Task<MinerStatus> LoadCurrentStatusAsync()
+            => new MinerStatus(
+                await PlotManager.GetPlotCountAsync()
+            );
     }
 }
