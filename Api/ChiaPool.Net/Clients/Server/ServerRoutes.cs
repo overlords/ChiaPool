@@ -37,8 +37,10 @@ namespace ChiaPool.Api
         public static Uri GetPlotterByToken(string apiUrl, string token)
             => new Uri(apiUrl + $"Plotter/Get/Token/{token}");
 
-        public static Uri GetWalletByAccount(string apiUrl, string name, string password)
-            => new Uri(apiUrl + $"Wallet/Get/User/{name}/{password}");
+        public static Uri GetWalletByOwnerId(string apiUrl, long userId)
+            => new Uri(apiUrl + $"Wallet/Get/Id/{userId}");
+        public static Uri GetWalletByOwnerName(string apiUrl, string name)
+            => new Uri(apiUrl + $"Wallet/Get/Name/{name}"); 
         public static Uri GetPoolWallet(string apiUrl)
             => new Uri(apiUrl + $"Wallet/Get/Pool");
 

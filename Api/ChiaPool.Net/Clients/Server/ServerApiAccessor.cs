@@ -52,10 +52,12 @@ namespace ChiaPool.Api
         public Task<PlotterInfo> GetPlotterByTokenAsync(string token)
             => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByToken(ApiUrl, token));
 
-        public Task<Wallet> GetWalletByTokenAsync(string name, string password)
-            => GetAsync<Wallet>(ServerRoutes.GetWalletByAccount(ApiUrl, name, password));
-        public Task<Wallet> GetPoolWalletAsync(string token)
-            => GetAsync<Wallet>(ServerRoutes.GetPoolWallet(ApiUrl), token);
+        public Task<Wallet> GetWalletByOwnerIdAsync(long userId)
+            => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerId(ApiUrl, userId));
+        public Task<Wallet> GetWalletByOwnerNameAsync(string name)
+            => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerName(ApiUrl, name));
+        public Task<Wallet> GetPoolWalletAsync()
+            => GetAsync<Wallet>(ServerRoutes.GetPoolWallet(ApiUrl));
 
         public Task<PoolInfo> GetPoolInfoAsync()
             => GetAsync<PoolInfo>(ServerRoutes.GetPoolInfo(ApiUrl));

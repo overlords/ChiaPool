@@ -9,10 +9,12 @@ namespace ChiaPool.Commands
     public class WalletShowCommand : ChiaCommand
     {
         private readonly MinerApiAccessor ClientAccessor;
+        private readonly ServerApiAccessor ServerAccessor;
 
-        public WalletShowCommand(MinerApiAccessor clientAccessor)
+        public WalletShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
         {
             ClientAccessor = clientAccessor;
+            ServerAccessor = serverAccessor;
         }
 
         [CommandOption("pool", 'p', Description = "Show wallet of the entire pool")]
@@ -21,7 +23,7 @@ namespace ChiaPool.Commands
         protected override async Task ExecuteAsync(IConsole console)
         {
             var wallet = Total
-                ? await ClientAccessor.GetPoolWalletAsync()
+                ? await ServerAccessor.GetPoolWalletAsync()
                 : await ClientAccessor.GetCurrentWalletAsync();
 
             if (Total)

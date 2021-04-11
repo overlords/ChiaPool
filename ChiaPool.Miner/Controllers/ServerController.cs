@@ -30,9 +30,6 @@ namespace ChiaPool.Controllers
 
         [HttpGet("Wallet/Get/Current")]
         public async Task<IActionResult> GetCurrentWalletAsync()
-            => Ok(await ServerAccessor.GetWalletByTokenAsync(AuthOptions.Name, AuthOptions.Password));
-        [HttpGet("Wallet/Get/Pool")]
-        public async Task<IActionResult> GetPoolWalletAsync()
-            => Ok(await ServerAccessor.GetPoolWalletAsync(AuthOptions.Token));
+            => Ok(await ServerAccessor.GetWalletByOwnerNameAsync(AuthOptions.Name));
     }
 }
