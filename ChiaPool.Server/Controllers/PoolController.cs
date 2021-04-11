@@ -30,8 +30,6 @@ namespace ChiaPool.Controllers
         [HttpGet("Info")]
         public async Task<IActionResult> GetPoolInfoAsync()
         {
-            var minimumActiveTime = DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1);
-
             var poolInfo = new PoolInfo()
             {
                 Name = CustomizationOptions.PoolName,

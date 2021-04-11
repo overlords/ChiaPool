@@ -1,5 +1,6 @@
 ﻿using ChiaPool.Models;
 using ChiaPool.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -13,42 +14,40 @@ namespace ChiaPool.Controllers
     {
         private readonly MinerContext DbContext;
         private readonly WalletService WalletService;
-        private readonly HashingService HashService;
 
-        public WalletController(MinerContext dbContext, WalletService walletService, HashingService hashService)
+        public WalletController(MinerContext dbContext, WalletService walletService)
         {
             DbContext = dbContext;
             WalletService = walletService;
-            HashService = hashService;
         }
 
-        [HttpGet("Get/User/{name}/{password}")]
-        public async Task<IActionResult> GetWalletAsync([FromRoute] string name, [FromRoute] string password)
+        [HttpGet("Get/User/Id/{id}")]
+        public async Task<IActionResult> GetWalletByOwnerIdAsync(long userId)
         {
-            string passwordHash = HashService.HashString(password);
-            var user = await DbContext.Users.FirstOrDefaultAsync(x => x.Name == name && x.PasswordHash == passwordHash);
+            long totalPlotMinutes = await DbContext.Users
+                .Where(x => x.Id == userId)
+                .Select(x => x.Miners.Sum(z => z.PlotMinutes) + x.Plotters.Sum(z => z.PlotMinutes))
+                .FirstOrDefaultAsync();
 
-            if (user == null)
-            {
-                return Unauthorized();
-            }
+            var wallet = await WalletService.GetWalletFractionAsync(totalPlotMinutes);
+            return Ok(wallet);
+        }
 
-            long totalPlotMinutes = await DbContext.Miners
-                .Where(x => x.OwnerId == user.Id)
-                .SumAsync(x => x.PlotMinutes);
+        [HttpGet("Get/User/Name/{name}")]
+        public async Task<IActionResult> GetWalletByOwnerNameAsync(string name)
+        {
+            long totalPlotMinutes = await DbContext.Users
+                .Where(x => x.Name == name)
+                .Select(x => x.Miners.Sum(z => z.PlotMinutes) + x.Plotters.Sum(z => z.PlotMinutes))
+                .FirstOrDefaultAsync();
 
             var wallet = await WalletService.GetWalletFractionAsync(totalPlotMinutes);
             return Ok(wallet);
         }
 
         [HttpGet("Get/Pool")]
-        public async Task<IActionResult> GetPoolWalletAsync([FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> GetPoolWalletAsync()
         {
-            if (!await DbContext.Miners.AnyAsync(x => x.Token == token))
-            {
-                return Unauthorized();
-            }
-
             var wallet = await WalletService.GetWalletAsync();
             return Ok(wallet);
         }

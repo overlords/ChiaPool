@@ -70,10 +70,5 @@ namespace ChiaPool.Controllers
 
             return Ok(minerInfos);
         }
-
-        private IPAddress GetRequestIP()
-                => !Request.Headers.TryGetValue("HTTP_X-FORWARDED-FOR", out var value)
-                    ? null
-                    : IPAddress.Parse(value);
     }
 }

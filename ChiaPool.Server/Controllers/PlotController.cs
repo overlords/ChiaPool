@@ -1,7 +1,10 @@
 ﻿using ChiaPool.Models;
 using ChiaPool.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -25,16 +28,15 @@ namespace ChiaPool.Controllers
            => PlotterService.GetPlotPrice(deadlineHours);
 
         [HttpGet("Transfer/Buy/{deadlineHours}")]
-        public async Task<IActionResult> BuyPlotTranferAsync([FromHeader(Name = "Authorization")] string token, [FromRoute] int deadlineHours = 12)
+        [Authorize(AuthenticationSchemes = "Miner")]
+        public async Task<IActionResult> BuyPlotTranferAsync([FromRoute] int deadlineHours = 12)
         {
-            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
-            if (miner == null)
-            {
-                return Unauthorized();
-            }
+            long minerId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var miner = DbContext.Miners.Local.FirstOrDefault(x => x.Id == minerId);
+
             if (miner.PlotMinutes < 0)
             {
-                return Forbid();
+                return Conflict();
             }
 
             long? plotterId = PlotterService.GetSuitablePlotterId();

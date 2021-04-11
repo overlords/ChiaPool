@@ -23,7 +23,6 @@ namespace ChiaPool.Api
         {
             var zipStream = await GetStreamAsync(ServerRoutes.GetCACertificate(ApiUrl), "Miner", token);
             return new ZipArchive(zipStream);
-
         }
 
         public Task<List<User>> ListUsersAsync()

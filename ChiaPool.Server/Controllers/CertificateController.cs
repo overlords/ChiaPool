@@ -1,8 +1,6 @@
-﻿using ChiaPool.Models;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
 {
@@ -10,23 +8,17 @@ namespace ChiaPool.Controllers
     [ApiController]
     public class CertificateController : ControllerBase
     {
-        private readonly MinerContext DbContext;
-
-        public CertificateController(MinerContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-
         [HttpGet("Ca")]
-        public async Task<IActionResult> GetCAKeysAsync([FromHeader(Name = "Authorization")] string token)
-            => !await DbContext.Miners.AnyAsync(x => x.Token == token)
-                ? Unauthorized()
-                : PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
+        [Authorize(AuthenticationSchemes = "Miner")]
+        public IActionResult GetCAKeys() 
+            => PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
 
         [HttpGet("Keys")]
-        public async Task<IActionResult> GetKeysAsync([FromHeader(Name = "Authorization")] string token)
-                    => !await DbContext.Miners.AnyAsync(x => x.Token == token)
-                ? Unauthorized()
-                : Ok(Environment.GetEnvironmentVariable("farmer_keys"));
+        [Authorize]
+        public IActionResult GetKeys()
+        {
+            string farmerKeys = Environment.GetEnvironmentVariable("farmer_keys");
+            return Ok(farmerKeys);
+        }
     }
 }
