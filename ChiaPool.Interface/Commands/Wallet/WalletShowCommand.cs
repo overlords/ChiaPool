@@ -8,12 +8,12 @@ namespace ChiaPool.Commands
     [Command("Wallet Show", Description = "Retrieves information about a your or the pools wallet")]
     public class WalletShowCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public WalletShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        public WalletShowCommand(MinerApiAccessor minerAccessor, ServerApiAccessor serverAccessor)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
             ServerAccessor = serverAccessor;
         }
 
@@ -24,7 +24,7 @@ namespace ChiaPool.Commands
         {
             var wallet = Total
                 ? await ServerAccessor.GetPoolWalletAsync()
-                : await ClientAccessor.GetCurrentWalletAsync();
+                : await MinerAccessor.GetCurrentWalletAsync();
 
             if (Total)
             {

@@ -9,12 +9,12 @@ namespace ChiaPool.Commands
     [Command("User Show", Description = "Shows information about a user")]
     public sealed class UserShowCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public UserShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        public UserShowCommand(MinerApiAccessor minerAccessor, ServerApiAccessor serverAccessor)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
             ServerAccessor = serverAccessor;
         }
 
@@ -36,7 +36,7 @@ namespace ChiaPool.Commands
                 ? await ServerAccessor.GetUserByNameAsync(Name)
                 : Id != default
                 ? await ServerAccessor.GetUserByIdAsync(Id)
-                : await ClientAccessor.GetCurrentUserAync();
+                : await MinerAccessor.GetCurrentUserAync();
 
             if (user == null)
             {
@@ -48,13 +48,13 @@ namespace ChiaPool.Commands
                 ? await ServerAccessor.ListMinersByOwnerNameAsync(Name)
                 : Id != default
                 ? await ServerAccessor.ListMinersByOwnerIdAsync(Id)
-                : await ClientAccessor.ListOwnedMinersAsync();
+                : await MinerAccessor.ListOwnedMinersAsync();
 
             var plotters = Name != default
                 ? await ServerAccessor.ListPlottersByOwnerNameAsync(Name)
                 : Id != default
                 ? await ServerAccessor.ListPlottersByOwnerIdAsync(Id)
-                : await ClientAccessor.ListOwnedPlottersAsync();
+                : await MinerAccessor.ListOwnedPlottersAsync();
 
             await InfoLineAsync($"[ {user.Name}   |   User Info ] ");
 

@@ -8,17 +8,17 @@ namespace ChiaPool.Commands
     [Command("Plot Reload")]
     public sealed class PlotReloadCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
 
-        public PlotReloadCommand(MinerApiAccessor clientAccessor)
+        public PlotReloadCommand(MinerApiAccessor minerAccessor)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
         }
 
         protected override async Task ExecuteAsync(IConsole console)
         {
             await InfoLineAsync("Reloading plots...");
-            await ClientAccessor.ReloadPlotsAsync();
+            await MinerAccessor.ReloadPlotsAsync();
             await InfoLineAsync("Done");
         }
     }

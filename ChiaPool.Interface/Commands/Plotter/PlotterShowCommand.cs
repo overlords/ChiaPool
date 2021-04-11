@@ -8,7 +8,7 @@ namespace ChiaPool.Commands.Plotter
     [Command("Plotter Show", Description = "Retrieves information about a specific plotter")]
     public sealed class PlotterShowCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
         [CommandOption("id", 'i', Description = "The Id of the plotter")]
@@ -17,9 +17,9 @@ namespace ChiaPool.Commands.Plotter
         [CommandOption("name", 'n', Description = "The name of the plotter")]
         public string Name { get; set; }
 
-        public PlotterShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAcccessor)
+        public PlotterShowCommand(MinerApiAccessor minerAccessor, ServerApiAccessor serverAcccessor)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
             ServerAccessor = serverAcccessor;
         }
 

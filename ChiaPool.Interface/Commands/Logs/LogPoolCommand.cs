@@ -8,11 +8,11 @@ namespace ChiaPool.Commands
     [Command("Log Pool", Description = "Retrieves the latest pool log output")]
     public class LogPoolCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
 
-        public LogPoolCommand(MinerApiAccessor clientAccessor)
+        public LogPoolCommand(MinerApiAccessor minerAccessor)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
         }
 
         [CommandOption("lines", 'n', Description = "Amount of log lines. Default is 100")]
@@ -20,7 +20,7 @@ namespace ChiaPool.Commands
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var lines = await ClientAccessor.GetPoolLogAsync(LineCount);
+            var lines = await MinerAccessor.GetPoolLogAsync(LineCount);
 
             if (lines.Length == 0)
             {

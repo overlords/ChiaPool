@@ -9,16 +9,16 @@ namespace ChiaPool.Commands
     [Command("Plot List", Description = "Lists all plots of your harvester")]
     public class PlotListCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
 
         public PlotListCommand(MinerApiAccessor apiClient)
         {
-            ClientAccessor = apiClient;
+            MinerAccessor = apiClient;
         }
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var plots = await ClientAccessor.GetPlotsAsync();
+            var plots = await MinerAccessor.GetPlotsAsync();
 
             if (plots.Length == 0)
             {

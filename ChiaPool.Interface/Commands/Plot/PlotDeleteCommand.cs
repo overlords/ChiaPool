@@ -8,11 +8,11 @@ namespace ChiaPool.Commands
     [Command("Plot Delete", Description = "Deletes a plot file")]
     public class PlotDeleteCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
 
-        public PlotDeleteCommand(MinerApiAccessor clientAccessor)
+        public PlotDeleteCommand(MinerApiAccessor minerAccessor)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
         }
 
         [CommandOption("pubkey", 'p', Description = "The public key of the plot file")]
@@ -37,11 +37,11 @@ namespace ChiaPool.Commands
 
             if (PublicKey != default)
             {
-                success = await ClientAccessor.DeletePlotByPublicKeyAsync(PublicKey);
+                success = await MinerAccessor.DeletePlotByPublicKeyAsync(PublicKey);
             }
             if (FileName != default)
             {
-                success = await ClientAccessor.DeletePlotByFileNameAsync(FileName);
+                success = await MinerAccessor.DeletePlotByFileNameAsync(FileName);
             }
 
             if (!success)

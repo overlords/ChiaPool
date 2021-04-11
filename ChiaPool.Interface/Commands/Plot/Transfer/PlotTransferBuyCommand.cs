@@ -9,6 +9,7 @@ namespace ChiaPool.Commands
     public sealed class PlotTransferBuyCommand : ChiaCommand
     {
         private readonly MinerApiAccessor MinerAccessor;
+        private readonly ServerApiAccessor ServerAccessor;
 
         public PlotTransferBuyCommand(MinerApiAccessor minerAccessor)
         {

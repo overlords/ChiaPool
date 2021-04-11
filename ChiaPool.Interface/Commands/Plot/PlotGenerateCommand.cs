@@ -10,12 +10,12 @@ namespace ChiaPool.Commands
     [Command("Plot Generate", Description = "Generates a new plot")]
     public class PlotGenerateCommand : ChiaCommand
     {
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
         private readonly ConfigurationService ConfigurationService;
 
-        public PlotGenerateCommand(MinerApiAccessor clientAccessor, ConfigurationService configurationService)
+        public PlotGenerateCommand(MinerApiAccessor minerAccessor, ConfigurationService configurationService)
         {
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
             ConfigurationService = configurationService;
         }
 
@@ -36,7 +36,7 @@ namespace ChiaPool.Commands
         protected override async Task ExecuteAsync(IConsole console)
         {
             var config = new PlottingConfiguration(Size, Path, CachePath, BucketCount, BufferSize);
-            await ClientAccessor.StartPlotGenerationAsync(config);
+            await MinerAccessor.StartPlotGenerationAsync(config);
 
             await InfoLineAsync("Plot creation started");
             await InfoLineAsync("Use the Log Pool command to see the progress");

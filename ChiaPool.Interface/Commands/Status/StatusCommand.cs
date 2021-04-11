@@ -11,17 +11,17 @@ namespace ChiaPool.Commands
     public class StatusCommand : ChiaCommand
     {
         private readonly ServerApiAccessor ServerAccessor;
-        private readonly MinerApiAccessor ClientAccessor;
+        private readonly MinerApiAccessor MinerAccessor;
 
-        public StatusCommand(ServerApiAccessor serverAccessor, MinerApiAccessor clientAccessor)
+        public StatusCommand(ServerApiAccessor serverAccessor, MinerApiAccessor minerAccessor)
         {
             ServerAccessor = serverAccessor;
-            ClientAccessor = clientAccessor;
+            MinerAccessor = minerAccessor;
         }
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var clientStatusTask = ClientAccessor.GetStatusAsync().Try();
+            var clientStatusTask = MinerAccessor.GetStatusAsync().Try();
             var serverStatusTask = ServerAccessor.GetStatusAsync().Try();
 
             MinerStatus clientStatus = await clientStatusTask;
