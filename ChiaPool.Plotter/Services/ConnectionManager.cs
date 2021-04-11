@@ -1,6 +1,7 @@
 ﻿using ChiaPool.Clients;
 using ChiaPool.Configuration;
 using Common.Services;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,9 +29,14 @@ namespace ChiaPool.Services
                 .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/PHub", x =>
                 {
                     x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
+                    x.Transports = HttpTransportType.WebSockets;
                 })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
                 .AddJsonProtocol()
+                .ConfigureLogging(x =>
+                {
+                    x.AddProvider(new ExistingLoggerProvider(Logger));
+                })
                 .Build();
 
             Connection.On(PlotterMethods.RequestPlot, () => HandlePlotRequestAsync());

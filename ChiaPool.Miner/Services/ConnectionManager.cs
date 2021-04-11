@@ -3,7 +3,9 @@ using ChiaPool.Configuration;
 using ChiaPool.Configuration.Options;
 using ChiaPool.Models;
 using Common.Services;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
@@ -26,8 +28,10 @@ namespace ChiaPool.Services
                 .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/MHub", x =>
                 {
                     x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
+                    x.Transports = HttpTransportType.WebSockets;
                 })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
+                .AddJsonProtocol()
                 .ConfigureLogging(x =>
                 {
                     x.AddProvider(new ExistingLoggerProvider(Logger));

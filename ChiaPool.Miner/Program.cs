@@ -101,12 +101,6 @@ namespace ChiaPool
             var client = Application.Services.GetRequiredService<MinerClient>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
-            logger.LogInformation("Starting mining session...");
-            if (!await client.SendStartRequest())
-            {
-                return;
-            }
-
             logger.LogInformation("Downloading private keys...");
             if (!await client.RefreshCAKeysAsync())
             {

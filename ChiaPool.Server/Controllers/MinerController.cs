@@ -13,81 +13,12 @@ namespace ChiaPool.Controllers
     public class MinerController : ControllerBase
     {
         private readonly MinerContext DbContext;
-        private readonly FirewallService FirewallService;
-        private readonly PlotService PlotService;
-        private readonly PlotterService PlotterService;
         private readonly MinerService MinerService;
 
-        public MinerController(MinerContext dbContext, FirewallService firewallService, PlotService plotService, PlotterService plotterService, MinerService minerService)
+        public MinerController(MinerContext dbContext, MinerService minerService)
         {
             DbContext = dbContext;
-            FirewallService = firewallService;
-            PlotService = plotService;
-            PlotterService = plotterService;
             MinerService = minerService;
-        }
-
-
-
-        [HttpPost("Start")]
-        public async Task<IActionResult> StartMinerSessionAsync([FromHeader(Name = "Authorization")] string token)
-        {
-            //var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
-
-            //if (miner == null)
-            //{
-            //    return Unauthorized();
-            //}
-
-            //var minerAddress = GetRequestIP();
-            //if (minerAddress == null)
-            //{
-            //    return NotFound();
-            //}
-            //if (!minerAddress.Equals(miner.LastAddress))
-            //{
-            //    await FirewallService.SwapMinerIP(miner.LastAddress, minerAddress);
-            //    miner.LastAddress = minerAddress;
-            //}
-
-            //await DbContext.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpPost("Claim")] //Called once every minute by each miner
-        public async Task<IActionResult> ClaimMiningTimeAsync([FromHeader(Name = "Authorization")] string token, [FromForm] short activePlots)
-        {
-            //var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
-
-            //if (miner == null)
-            //{
-            //    return Unauthorized();
-            //}
-
-            //if (miner.NextIncrement > DateTimeOffset.UtcNow)
-            //{
-            //    return Conflict();
-            //}
-
-            //var minerAddress = GetRequestIP();
-            //if (minerAddress == null)
-            //{
-            //    return NotFound();
-            //}
-            //if (!minerAddress.Equals(miner.LastAddress))
-            //{
-            //    await FirewallService.SwapMinerIP(miner.LastAddress, minerAddress);
-            //    miner.LastAddress = minerAddress;
-            //}
-
-            //miner.LastPlotCount = activePlots;
-            //miner.PlotMinutes += activePlots;
-            //miner.NextIncrement = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(50); //10 second bufffer
-
-            //await DbContext.SaveChangesAsync();
-            //PlotService.IncrementTotalPlotMinutes(activePlots);
-
-            return Ok();
         }
 
         [HttpGet("Get/Token/{token}")]
