@@ -14,7 +14,7 @@ namespace ChiaPool.Controllers
             => PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
 
         [HttpGet("Keys")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Miner, Plotter")]
         public IActionResult GetKeys()
         {
             string farmerKeys = Environment.GetEnvironmentVariable("farmer_keys");

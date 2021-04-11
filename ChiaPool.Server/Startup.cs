@@ -37,7 +37,7 @@ namespace ChiaPool
                 options.UseNpgsql(connectionString);
             });
 
-            services.AddAuthentication()
+            services.AddAuthentication("Miner")
                 .AddScheme<MinerAuthenticationOptions, MinerAuthenticationHandler>("Miner", null)
                 .AddScheme<PlotterAuthenticationOptions, PlotterAuthenticationHandler>("Plotter", null);
 
