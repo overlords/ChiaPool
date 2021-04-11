@@ -1,6 +1,5 @@
 ﻿using ChiaPool.Models;
 using Common.Services;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -17,7 +16,7 @@ namespace ChiaPool.Services
 
         private MinerStatus CurrentStatus;
 
-        protected override async ValueTask InitializeAsync() 
+        protected override async ValueTask InitializeAsync()
             => CurrentStatus = await LoadCurrentStatusAsync();
 
         protected override async ValueTask RunAsync()

@@ -20,25 +20,31 @@ namespace ChiaPool.Controllers
             PlotterService = plotterService;
         }
 
-        [HttpGet("List/Name/{name}")]
-        public async Task<IActionResult> GetPlotterListByOwnerNameAsync([FromRoute] string name)
+        [HttpGet("Get/Id/{id}")]
+        public async Task<IActionResult> GetPlotterByIdAsync([FromRoute] long id)
         {
-            var plotters = await DbContext.Plotters
-                .Where(x => x.Owner.Name == name)
-                .ToListAsync();
-            var plotterInfos = plotters.Select(x => PlotterService.GetPlotterInfo(x));
+            var plotter = await DbContext.Plotters.FirstOrDefaultAsync(x => x.Id == id);
 
-            return Ok(plotterInfos);
+            if (plotter == null)
+            {
+                return NotFound();
+            }
+
+            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            return Ok(plotterInfo);
         }
-        [HttpGet("List/Id/{id}")]
-        public async Task<IActionResult> GetPlotterListByOwnerIdAsync([FromRoute] long id)
+        [HttpGet("Get/Name/{name}")]
+        public async Task<IActionResult> GetPlotterByNameAsync([FromRoute] string name)
         {
-            var plotters = await DbContext.Plotters
-                .Where(x => x.Owner.Id == id)
-                .ToListAsync();
-            var plotterInfos = plotters.Select(x => PlotterService.GetPlotterInfo(x));
+            var plotter = await DbContext.Plotters.FirstOrDefaultAsync(x => x.Name == name);
 
-            return Ok(plotterInfos);
+            if (plotter == null)
+            {
+                return NotFound();
+            }
+
+            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            return Ok(plotterInfo);
         }
         [HttpGet("Get/Token/{token}")]
         public async Task<IActionResult> GetPlotterByTokenAsync([FromRoute] string token)
@@ -53,18 +59,26 @@ namespace ChiaPool.Controllers
             var plotterInfo = PlotterService.GetPlotterInfo(plotter);
             return Ok(plotterInfo);
         }
-        [HttpGet("Get/Id/{id}")]
-        public async Task<IActionResult> GetPlotterByIdAsync([FromRoute] long id)
+
+        [HttpGet("List/Id/{id}")]
+        public async Task<IActionResult> GetPlotterListByOwnerIdAsync([FromRoute] long id)
         {
-            var plotter = await DbContext.Plotters.FirstOrDefaultAsync(x => x.Id == id);
+            var plotters = await DbContext.Plotters
+                .Where(x => x.Owner.Id == id)
+                .ToListAsync();
+            var plotterInfos = plotters.Select(x => PlotterService.GetPlotterInfo(x));
 
-            if (plotter == null)
-            {
-                return NotFound();
-            }
+            return Ok(plotterInfos);
+        }
+        [HttpGet("List/Name/{name}")]
+        public async Task<IActionResult> GetPlotterListByOwnerNameAsync([FromRoute] string name)
+        {
+            var plotters = await DbContext.Plotters
+                .Where(x => x.Owner.Name == name)
+                .ToListAsync();
+            var plotterInfos = plotters.Select(x => PlotterService.GetPlotterInfo(x));
 
-            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
-            return Ok(plotterInfo);
+            return Ok(plotterInfos);
         }
     }
 }

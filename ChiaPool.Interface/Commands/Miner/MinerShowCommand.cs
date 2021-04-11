@@ -11,19 +11,36 @@ namespace ChiaPool.Commands
         private readonly MinerApiAccessor ClientAccessor;
         private readonly ServerApiAccessor ServerAccessor;
 
-        public MinerShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAccessor)
+        [CommandOption("id", 'i', Description = "The Id of the miner")]
+        public long Id { get; set; }
+
+        [CommandOption("name", 'n', Description = "The name of the miner")]
+        public string Name { get; set; }
+
+        public MinerShowCommand(MinerApiAccessor clientAccessor, ServerApiAccessor serverAcccessor)
         {
             ClientAccessor = clientAccessor;
-            ServerAccessor = serverAccessor;
+            ServerAccessor = serverAcccessor;
         }
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var miner = await ClientAccessor.GetCurrentMinerAsync();
+            if (Name != default && Id != default)
+            {
+                await ErrorAsync("Please specify either name or id, not both");
+                return;
+            }
+
+            var miner = Name != default
+                ? await ServerAccessor.GetMinerByNameAsync(Name)
+                : Id != default
+                ? await ServerAccessor.GetMinerByIdAsync(Id)
+                : await ClientAccessor.GetCurrentMinerAsync();
 
             await InfoLineAsync($"[ID]      |   {miner.Id}");
             await InfoLineAsync($"[Name]    |   {miner.Name}");
             await InfoLineAsync($"[PM]      |   {miner.PlotMinutes}");
+            await InfoLineAsync($"[Online]  |   {miner.Online}");
         }
     }
 }

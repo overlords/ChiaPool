@@ -3,7 +3,6 @@ using ChiaPool.Models;
 using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers

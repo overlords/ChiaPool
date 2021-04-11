@@ -16,7 +16,7 @@ namespace ChiaPool.Models
                status.Capacity == Capacity &&
                status.PlotsAvailable == PlotsAvailable;
 
-        public override int GetHashCode() 
+        public override int GetHashCode()
             => HashCode.Combine(Capacity, PlotsAvailable);
     }
 }

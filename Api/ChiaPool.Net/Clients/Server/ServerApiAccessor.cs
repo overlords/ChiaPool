@@ -44,11 +44,15 @@ namespace ChiaPool.Api
 
         public Task<MinerInfo> GetMinerByIdAsync(long id)
             => GetAsync<MinerInfo>(ServerRoutes.GetMinerById(ApiUrl, id));
-        public Task<PlotterInfo> GetPlotterByIdAsync(long id)
-            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterById(ApiUrl, id));
-
+        public Task<MinerInfo> GetMinerByNameAsync(string name)
+            => GetAsync<MinerInfo>(ServerRoutes.GetMinerByName(ApiUrl, name));
         public Task<MinerInfo> GetMinerByTokenAsync(string token)
             => GetAsync<MinerInfo>(ServerRoutes.GetMinerByToken(ApiUrl, token));
+
+        public Task<PlotterInfo> GetPlotterByIdAsync(long id)
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterById(ApiUrl, id));
+        public Task<PlotterInfo> GetPlotterByNameAsync(string name)
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByName(ApiUrl, name));
         public Task<PlotterInfo> GetPlotterByTokenAsync(string token)
             => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByToken(ApiUrl, token));
 

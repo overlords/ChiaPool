@@ -29,18 +29,22 @@ namespace ChiaPool.Api
 
         public static Uri GetMinerById(string apiUrl, long id)
             => new Uri(apiUrl + $"Miner/Get/Id/{id}");
-        public static Uri GetPlotterById(string apiUrl, long id)
-            => new Uri(apiUrl + $"Plotter/Get/Id/{id}");
-
+        public static Uri GetMinerByName(string apiUrl, string name)
+            => new Uri(apiUrl + $"Miner/Get/Name/{name}");
         public static Uri GetMinerByToken(string apiUrl, string token)
             => new Uri(apiUrl + $"Miner/Get/Token/{token}");
+
+        public static Uri GetPlotterById(string apiUrl, long id)
+            => new Uri(apiUrl + $"Plotter/Get/Id/{id}");
+        public static Uri GetPlotterByName(string apiUrl, string name)
+            => new Uri(apiUrl + $"Plotter/Get/Name/{name}");
         public static Uri GetPlotterByToken(string apiUrl, string token)
             => new Uri(apiUrl + $"Plotter/Get/Token/{token}");
 
         public static Uri GetWalletByOwnerId(string apiUrl, long userId)
             => new Uri(apiUrl + $"Wallet/Get/Id/{userId}");
         public static Uri GetWalletByOwnerName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Wallet/Get/Name/{name}"); 
+            => new Uri(apiUrl + $"Wallet/Get/Name/{name}");
         public static Uri GetPoolWallet(string apiUrl)
             => new Uri(apiUrl + $"Wallet/Get/Pool");
 

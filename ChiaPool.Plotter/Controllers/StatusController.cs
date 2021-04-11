@@ -1,6 +1,5 @@
 ﻿using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
 {

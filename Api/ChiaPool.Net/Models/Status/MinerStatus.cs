@@ -15,11 +15,11 @@ namespace ChiaPool.Models
         {
         }
 
-        public override bool Equals(object obj) 
+        public override bool Equals(object obj)
             => obj is MinerStatus status &&
                PlotCount == status.PlotCount;
 
-        public override int GetHashCode() 
+        public override int GetHashCode()
             => HashCode.Combine(PlotCount);
     }
 }

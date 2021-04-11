@@ -1,7 +1,6 @@
 ﻿using ChiaPool.Clients;
 using ChiaPool.Configuration;
 using ChiaPool.Configuration.Options;
-using ChiaPool.Models;
 using ChiaPool.Utils;
 using Common.Services;
 using Microsoft.AspNetCore.Http.Connections;
@@ -44,7 +43,7 @@ namespace ChiaPool.Services
             Connection.Reconnecting += OnReconnecting;
             Connection.Reconnected += OnReconnected;
 
-       
+
             return ValueTask.CompletedTask;
         }
         protected override async ValueTask RunAsync()

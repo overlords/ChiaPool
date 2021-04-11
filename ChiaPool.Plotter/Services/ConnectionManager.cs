@@ -1,6 +1,5 @@
 ﻿using ChiaPool.Clients;
 using ChiaPool.Configuration;
-using ChiaPool.Models;
 using ChiaPool.Utils;
 using Common.Services;
 using Microsoft.AspNetCore.Http.Connections;

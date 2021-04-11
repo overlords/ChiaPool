@@ -10,7 +10,7 @@ namespace ChiaPool.Controllers
     {
         [HttpGet("Ca")]
         [Authorize(AuthenticationSchemes = "Miner")]
-        public IActionResult GetCAKeys() 
+        public IActionResult GetCAKeys()
             => PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
 
         [HttpGet("Keys")]

@@ -3,7 +3,6 @@ using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -21,19 +20,6 @@ namespace ChiaPool.Controllers
             MinerService = minerService;
         }
 
-        [HttpGet("Get/Token/{token}")]
-        public async Task<IActionResult> GetMinerByTokenAsync([FromRoute] string token)
-        {
-            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
-
-            if (miner == null)
-            {
-                return NotFound();
-            }
-
-            var minerInfo = MinerService.GetMinerInfo(miner);
-            return Ok(minerInfo);
-        }
         [HttpGet("Get/Id/{id}")]
         public async Task<IActionResult> GetMinerListByIdAsync([FromRoute] long id)
         {
@@ -47,23 +33,49 @@ namespace ChiaPool.Controllers
             var minerInfo = MinerService.GetMinerInfo(miner);
             return Ok(minerInfo);
         }
+        [HttpGet("Get/Name/{name}")]
+        public async Task<IActionResult> GetMinerByNameAsync([FromRoute] string name)
+        {
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Name == name);
 
-        [HttpGet("List/Name/{name}")]
-        public async Task<IActionResult> ListMinersByOwnerNameAsync([FromRoute] string name)
+            if (miner == null)
+            {
+                return NotFound();
+            }
+
+            var minerInfo = MinerService.GetMinerInfo(miner);
+            return Ok(minerInfo);
+        }
+        [HttpGet("Get/Token/{token}")]
+        public async Task<IActionResult> GetMinerByTokenAsync([FromRoute] string token)
+        {
+            var miner = await DbContext.Miners.FirstOrDefaultAsync(x => x.Token == token);
+
+            if (miner == null)
+            {
+                return NotFound();
+            }
+
+            var minerInfo = MinerService.GetMinerInfo(miner);
+            return Ok(minerInfo);
+        }
+
+        [HttpGet("List/Id/{id}")]
+        public async Task<IActionResult> ListMinersByOwnerIdAsync([FromRoute] long id)
         {
             var miners = await DbContext.Miners
-                .Where(x => x.Owner.Name == name)
+                .Where(x => x.Owner.Id == id)
                 .ToListAsync();
 
             var minerInfos = miners.Select(x => MinerService.GetMinerInfo(x));
 
             return Ok(minerInfos);
         }
-        [HttpGet("List/Id/{id}")]
-        public async Task<IActionResult> ListMinersByOwnerIdAsync([FromRoute] long id)
+        [HttpGet("List/Name/{name}")]
+        public async Task<IActionResult> ListMinersByOwnerNameAsync([FromRoute] string name)
         {
             var miners = await DbContext.Miners
-                .Where(x => x.Owner.Id == id)
+                .Where(x => x.Owner.Name == name)
                 .ToListAsync();
 
             var minerInfos = miners.Select(x => MinerService.GetMinerInfo(x));
