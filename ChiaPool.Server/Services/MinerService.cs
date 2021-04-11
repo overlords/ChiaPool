@@ -25,6 +25,10 @@ namespace ChiaPool.Services
 
         private readonly ConcurrentDictionary<long, (MinerStatus Status, IPAddress Address)> ActiveMiners;
 
+        public MinerService()
+        {
+            ActiveMiners = new ConcurrentDictionary<long, (MinerStatus Status, IPAddress Address)>();
+        }
 
         protected override async ValueTask RunAsync()
         {
@@ -86,11 +90,11 @@ namespace ChiaPool.Services
         }
         public async Task UpdateMinerAsync(long minerId, MinerStatus status, IPAddress address)
         {
-            if(!ActiveMiners.TryGetValue(minerId, out var oldValue))
+            if (!ActiveMiners.TryGetValue(minerId, out var oldValue))
             {
                 throw new InvalidOperationException("Cannot update inactive plotter");
             }
-            if(!ActiveMiners.TryUpdate(minerId, (status, address), (status, address)))
+            if (!ActiveMiners.TryUpdate(minerId, (status, address), (status, address)))
             {
                 throw new InvalidOperationException("Cannot update inactive plotter");
             }

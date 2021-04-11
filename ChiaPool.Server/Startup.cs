@@ -6,6 +6,7 @@ using ChiaPool.Models;
 using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,8 +43,7 @@ namespace ChiaPool
 
             services.AddSignalR()
                 .AddJsonProtocol();
-            services.AddSingleton<PlotterHub>();
-            services.AddSingleton<MinerHub>();
+
             services.AddControllers();
         }
 
@@ -62,8 +62,8 @@ namespace ChiaPool
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<PlotterHub>("/PHub");
-                endpoints.MapHub<MinerHub>("/MHub");
+                endpoints.MapHub<PlotterHub>("/PHub", x => x.Transports = HttpTransportType.WebSockets);
+                endpoints.MapHub<MinerHub>("/MHub", x => x.Transports = HttpTransportType.WebSockets);
                 endpoints.MapControllers();
             });
         }

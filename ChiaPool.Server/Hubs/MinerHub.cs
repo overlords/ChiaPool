@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ChiaPool.Hubs
 {
     [Authorize(AuthenticationSchemes = "Miner")]
-    public class MinerHub : Hub<IMinerClient>
+    public class MinerHub : Hub
     {
         private readonly MinerService MinerService;
 

@@ -1,14 +1,9 @@
-﻿using ChiaPool.Models;
-using Common.Services;
+﻿using Common.Services;
 using IPTables.Net;
 using IPTables.Net.Iptables;
 using IPTables.Net.Iptables.Adapter;
 using IPTables.Net.Netfilter.TableSync;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
