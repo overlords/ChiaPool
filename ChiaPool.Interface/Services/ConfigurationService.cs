@@ -8,9 +8,9 @@ namespace ChiaPool.Services
 {
     public sealed class ConfigurationService
     {
-        public async Task InstallAsync(string username, string password, string minerToken)
+        public Task InstallAsync(string username, string password, string minerToken)
         {
-
+            throw new NotImplementedException();
         }
 
         public async Task<Dictionary<string, string>> GetVolumesAsync()

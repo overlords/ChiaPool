@@ -38,10 +38,6 @@ namespace ChiaPool
                 logger.LogError($"Config Validation failed: {validationResult.Reason}");
                 return;
             }
-
-            await MigrateDatabaseAsync();
-            await Application.Services.InitializeApplicationServicesAsync(assembly);
-
             if (args.Length == 1 && args[0] == "init")
             {
                 await RunInitAsync();
@@ -49,6 +45,9 @@ namespace ChiaPool
                 return;
             }
 
+            await MigrateDatabaseAsync();
+
+            await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 

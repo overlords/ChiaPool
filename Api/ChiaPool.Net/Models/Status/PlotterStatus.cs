@@ -1,4 +1,6 @@
-﻿namespace ChiaPool.Models
+﻿using System;
+
+namespace ChiaPool.Models
 {
     public class PlotterStatus : IStatus
     {
@@ -8,5 +10,13 @@
         public PlotterStatus()
         {
         }
+
+        public override bool Equals(object obj)
+            => obj is PlotterStatus status &&
+               status.Capacity == Capacity &&
+               status.PlotsAvailable == PlotsAvailable;
+
+        public override int GetHashCode() 
+            => HashCode.Combine(Capacity, PlotsAvailable);
     }
 }

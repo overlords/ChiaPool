@@ -85,12 +85,12 @@ namespace ChiaPool.Services
 
         public async Task SendStatusUpdateAsync()
         {
-            var status = await StatusService.GetStatusAsync();
+            var status = StatusService.GetCurrentStatus();
             await Connection.SendAsync(PlotterHubMethods.Update, status);
         }
         public async Task SendActivateRequestAsync()
         {
-            var status = await StatusService.GetStatusAsync();
+            var status = StatusService.GetCurrentStatus();
             await Connection.SendAsync(PlotterHubMethods.Activate, status);
         }
     }
