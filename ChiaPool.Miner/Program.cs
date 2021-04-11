@@ -1,10 +1,8 @@
 using Chia.NET.Clients;
 using ChiaPool.Api;
 using ChiaPool.Configuration;
-using ChiaPool.Models;
 using Common.Extensions;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,8 +40,6 @@ namespace ChiaPool
                 Application.Dispose();
                 return;
             }
-
-            await MigrateDatabaseAsync();
 
             await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
@@ -87,14 +83,6 @@ namespace ChiaPool
                     config.Sources.Clear();
                     config.AddJsonFile("appsettings.json", false);
                 });
-
-        private static async Task MigrateDatabaseAsync()
-        {
-            using var scope = Application.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ConfigurationContext>();
-
-            await dbContext.Database.MigrateAsync();
-        }
 
         private static async Task RunInitAsync()
         {

@@ -1,4 +1,5 @@
-﻿using ChiaPool.Models;
+﻿using Chia.NET.Models;
+using ChiaPool.Models;
 using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace ChiaPool.Controllers
         }
 
         [HttpGet("List")]
-        public Task<PlotInfo[]> GetPlotsAsync()
+        public Task<Plot[]> GetPlotsAsync()
             => PlotManager.GetPlotsAsync();
 
         [HttpPost("Reload")]

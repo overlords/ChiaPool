@@ -1,6 +1,7 @@
 ﻿using Chia.NET.Clients;
+using Chia.NET.Models;
 using ChiaPool.Models;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,113 +10,57 @@ namespace ChiaPool.Services
 {
     public class PlotManager
     {
-        private readonly ConfigurationContext DbContext;
         private readonly HarvesterClient HarvesterClient;
         private readonly ILoggerFactory LoggerFactory;
 
-        public PlotManager(ConfigurationContext dbContext, HarvesterClient harvesterClient, ILoggerFactory loggerFactory)
+        public PlotManager(HarvesterClient harvesterClient, ILoggerFactory loggerFactory)
         {
-            DbContext = dbContext;
             HarvesterClient = harvesterClient;
             LoggerFactory = loggerFactory;
         }
 
-        public async Task<PlotInfo[]> GetPlotsAsync()
+        public async Task<Plot[]> GetPlotsAsync()
         {
-            await RefreshDataBase();
-            return await DbContext.Plots.ToArrayAsync();
+            var plots = await HarvesterClient.GetPlotsAsync();
+            foreach(var plot in plots)
+            {
+                plot.FileName = plot.FileName.Split('/').Last();
+            }
+            return plots;
         }
 
         public async Task<int> GetPlotCountAsync()
             => (await HarvesterClient.GetPlotsAsync()).Length;
 
-        public async Task IncrementPlots()
-        {
-            await RefreshDataBase();
-            var plots = await DbContext.Plots.ToListAsync();
-
-            foreach (var plot in plots)
-            {
-                plot.Minutes++;
-            }
-
-            await DbContext.SaveChangesAsync();
-        }
-
-        public async Task ReloadPlotsAsync()
-        {
-            await HarvesterClient.RefreshPlotsAsync();
-            await RefreshDataBase();
-        }
+        public async Task ReloadPlotsAsync() 
+            => await HarvesterClient.RefreshPlotsAsync();
 
         public async Task<bool> DeletePlotByPubKeyAsync(string publicKey)
         {
-            var plotInfo = await DbContext.Plots.FirstOrDefaultAsync(x => x.PublicKey == publicKey);
+            var plots = await GetPlotsAsync();
+            var plotToDelete = plots.FirstOrDefault(x => x.PublicKey == publicKey);
 
-            if (plotInfo == null)
+            if (plotToDelete == null)
             {
                 return false;
             }
 
-            try
-            {
-                await HarvesterClient.DeletePlotAsync(plotInfo.FileName);
-                DbContext.Remove(plotInfo);
-                await DbContext.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            await HarvesterClient.DeletePlotAsync(plotToDelete.FileName);
+            return true;
         }
         public async Task<bool> DeletePlotByFileNameAsync(string fileName)
         {
-            var plotInfo = await DbContext.Plots.FirstOrDefaultAsync(x => x.FileName.EndsWith(fileName));
+            var plots = await GetPlotsAsync();
+            var plotToDelete = plots.FirstOrDefault(x => x.FileName.EndsWith(fileName));
 
-            if (plotInfo == null)
+            if (plotToDelete == null)
             {
                 return false;
             }
 
-            try
-            {
-                await HarvesterClient.DeletePlotAsync(plotInfo.FileName);
-                DbContext.Remove(plotInfo);
-                await DbContext.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            await HarvesterClient.DeletePlotAsync(plotToDelete.FileName);
+            return true;
         }
-
-        private async Task RefreshDataBase()
-        {
-            var plots = await HarvesterClient.GetPlotsAsync();
-            var plotInfos = await DbContext.Plots.ToListAsync();
-
-            foreach (var plot in plots)
-            {
-                var plotInfo = plotInfos.FirstOrDefault(x => x.PublicKey == plot.PublicKey);
-
-                if (plotInfo == null)
-                {
-                    plotInfo = new PlotInfo(plot.PublicKey, plot.FileName);
-                    DbContext.Plots.Add(plotInfo);
-                }
-                else
-                {
-                    plotInfo.FileName = plot.FileName;
-                    plotInfos.Remove(plotInfo);
-                }
-            }
-
-            DbContext.RemoveRange(plotInfos);
-            await DbContext.SaveChangesAsync();
-        }
-
         public async Task GeneratePlotAsync(PlottingConfiguration config)
         {
             var logger = LoggerFactory.CreateLogger("Plotting");

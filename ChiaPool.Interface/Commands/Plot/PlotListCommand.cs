@@ -29,11 +29,11 @@ namespace ChiaPool.Commands
             int publicKeyLength = plots.Max(x => x.PublicKey.Length) - 6;
             int fileNameLength = plots.Max(x => x.FileName.Length) - 5;
 
-            await InfoLineAsync($"Public Key{Space(publicKeyLength)}File Name{Space(fileNameLength)}Minutes");
+            await InfoLineAsync($"Public Key{Space(publicKeyLength)}File Name");
 
             foreach (var plot in plots)
             {
-                await WriteLineAsync($"{plot.PublicKey}    {plot.FileName}    {plot.Minutes}");
+                await WriteLineAsync($"{plot.PublicKey}    {plot.FileName}");
             }
         }
     }

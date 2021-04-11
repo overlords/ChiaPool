@@ -1,11 +1,9 @@
 using Chia.NET.Clients;
 using ChiaPool.Api;
-using ChiaPool.Models;
 using ChiaPool.Services;
 using Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,11 +29,6 @@ namespace ChiaPool
             services.AddApplication(Configuration, Assembly.GetAssembly(typeof(ServerApiAccessor)));
             services.AddSingleton<HttpClient>();
             services.AddScoped<PlotManager>();
-
-            services.AddDbContext<ConfigurationContext>(options =>
-            {
-                options.UseSqlite(@$"Data Source=data.db");
-            });
 
             services.AddControllers();
         }

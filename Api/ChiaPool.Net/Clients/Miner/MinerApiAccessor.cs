@@ -18,8 +18,8 @@ namespace ChiaPool.Api
         public Task<MinerStatus> GetStatusAsync()
             => GetAsync<MinerStatus>(MinerRoutes.Status(ApiUrl));
 
-        public Task<PlotInfo[]> GetPlotsAsync()
-            => GetAsync<PlotInfo[]>(MinerRoutes.ListPlots(ApiUrl));
+        public Task<Plot[]> GetPlotsAsync()
+            => GetAsync<Plot[]>(MinerRoutes.ListPlots(ApiUrl));
         public Task ReloadPlotsAsync()
             => PostAsync(MinerRoutes.ReloadPlots(ApiUrl));
         public Task<bool> DeletePlotByPublicKeyAsync(string publicKey)
