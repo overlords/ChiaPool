@@ -40,7 +40,11 @@ namespace ChiaPool.Commands
             await InfoLineAsync($"[ID]      |   {miner.Id}");
             await InfoLineAsync($"[Name]    |   {miner.Name}");
             await InfoLineAsync($"[PM]      |   {miner.PlotMinutes}");
-            await InfoLineAsync($"[Online]  |   {miner.Online}");
+            await InfoAsync($"[Online]  |   ");
+
+            await (miner.Online
+                ? SuccessLineAsync("Online")
+                : ErrorLineAsync("Offline"));
         }
     }
 }

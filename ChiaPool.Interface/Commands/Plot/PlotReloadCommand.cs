@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
 {
-    [Command("Plot Reload")]
+    [Command("Plot Reload", Description = "Reloads all plot files")]
     public sealed class PlotReloadCommand : ChiaCommand
     {
         private readonly MinerApiAccessor MinerAccessor;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
 {
-    [Command("Status", Description = "Get miner status")]
+    [Command("Status", Description = "Get connectivity status")]
     public class StatusCommand : ChiaCommand
     {
         private readonly ServerApiAccessor ServerAccessor;

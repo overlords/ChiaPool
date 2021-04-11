@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
 {
-    [Command("Plot Transfer Cost")]
+    [Command("Plot Transfer Cost", Description = "Get the current cost of a plot transfer")]
     public sealed class PlotTransferCostCommand : ChiaCommand
     {
         private readonly ServerApiAccessor ServerAccessor;

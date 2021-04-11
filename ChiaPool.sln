@@ -3,20 +3,27 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30223.230
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Server", "ChiaPool.Server\ChiaPool.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Miner", "ChiaPool.Miner\ChiaPool.Miner.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Interface", "ChiaPool.Interface\ChiaPool.Interface.csproj", "{4262F84B-1B32-46B7-9604-E8130EDB2FCB}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{32D83479-5A96-4305-8488-C6CC9314FD2C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{95CE4548-832D-41A7-A08B-B4510B774C91}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{39F89ED5-E98A-4B75-8B63-494D862216E9}"
+EndProject
+
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Miner", "Miner", "{09F0F1A7-FC6D-4B75-859D-836C639B011F}"
 	ProjectSection(SolutionItems) = preProject
 		Docker\Miner\docker-compose.yml = Docker\Miner\docker-compose.yml
 		Docker\Miner\Dockerfile = Docker\Miner\Dockerfile
 		Docker\Miner\entrypoint.sh = Docker\Miner\entrypoint.sh
 		Docker\Miner\miner.env = Docker\Miner\miner.env
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plotter", "Plotter", "{952AA2F0-2051-4C4F-8E78-51F831546B94}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\Plotter\docker-compose.yml = Docker\Plotter\docker-compose.yml
+		Docker\Plotter\Dockerfile = Docker\Plotter\Dockerfile
+		Docker\Plotter\entrypoint.sh = Docker\Plotter\entrypoint.sh
+		Docker\Plotter\plotter.env = Docker\Plotter\plotter.env
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{58F4BB16-9A0E-4EC5-95CB-5F85908D5580}"
@@ -32,26 +39,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
+
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chia.NET", "Api\Chia.NET\Chia.NET.csproj", "{6E0F4B05-E4CF-44D3-A4AC-9D77FC71596E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Net", "Api\ChiaPool.Net\ChiaPool.Net.csproj", "{AA1B2EFB-E566-4CF3-8A12-EC54D83831FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Plotter", "ChiaPool.Plotter\ChiaPool.Plotter.csproj", "{812416A6-7A63-45AC-BFE6-F6FD8860A268}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plotter", "Plotter", "{952AA2F0-2051-4C4F-8E78-51F831546B94}"
-	ProjectSection(SolutionItems) = preProject
-		Docker\Plotter\docker-compose.yml = Docker\Plotter\docker-compose.yml
-		Docker\Plotter\Dockerfile = Docker\Plotter\Dockerfile
-		Docker\Plotter\entrypoint.sh = Docker\Plotter\entrypoint.sh
-		Docker\Plotter\plotter.env = Docker\Plotter\plotter.env
-	EndProjectSection
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeShare", "Shared\NodeShare\NodeShare.csproj", "{D69BB2B0-D83E-48E7-B8E6-3EF0ED2F67F4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{95CE4548-832D-41A7-A08B-B4510B774C91}"
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Server", "ChiaPool.Server\ChiaPool.Server.csproj", "{3F56DF82-2E45-4776-81FD-43DF369FC911}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{39F89ED5-E98A-4B75-8B63-494D862216E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Miner", "ChiaPool.Miner\ChiaPool.Miner.csproj", "{EB4DF2A1-C8A6-4811-A24D-01ABD78F07B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NodeShare", "NodeShare\NodeShare.csproj", "{D69BB2B0-D83E-48E7-B8E6-3EF0ED2F67F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiaPool.Interface", "ChiaPool.Interface\ChiaPool.Interface.csproj", "{4262F84B-1B32-46B7-9604-E8130EDB2FCB}"
 EndProject
+
+
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

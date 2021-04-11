@@ -75,6 +75,15 @@ namespace ChiaPool.Commands
             await WriteLineAsync(message);
         }
 
+        protected async Task<string> ReadLineAsync()
+            => await TargetConsole.Input.ReadLineAsync();
+        protected async Task<char> ReadKeyAsync()
+        {
+            Memory<char> buffer = new char[1];
+            await TargetConsole.Input.ReadAsync(buffer);
+            return buffer.Span[0];
+        }
+
         protected string Space(int length)
             => new string(' ', length);
     }

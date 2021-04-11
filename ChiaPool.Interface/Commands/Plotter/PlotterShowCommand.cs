@@ -3,7 +3,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Commands.Plotter
+namespace ChiaPool.Commands
 {
     [Command("Plotter Show", Description = "Retrieves information about a specific plotter")]
     public sealed class PlotterShowCommand : ChiaCommand
@@ -44,7 +44,11 @@ namespace ChiaPool.Commands.Plotter
             await InfoLineAsync($"[ID]      |   {plotter.Id}");
             await InfoLineAsync($"[Name]    |   {plotter.Name}");
             await InfoLineAsync($"[PM]      |   {plotter.PlotMinutes}");
-            await InfoLineAsync($"[Online]  |   {plotter.Online}");
+            await InfoAsync($"[Online]  |   ");
+
+            await (plotter.Online
+                ? SuccessLineAsync("Online")
+                : ErrorLineAsync("Offline"));    
         }
     }
 }

@@ -23,6 +23,9 @@ namespace ChiaPool
             Application = new CliApplicationBuilder()
                 .AddCommandsFromThisAssembly()
                 .UseTypeActivator(Provider.GetService)
+                .SetVersion("v0.8.0")
+                .SetExecutableName("ChiaPool")
+                .SetTitle("ChiaPool CLI")
                 .Build();
 
             await Application.RunAsync();
