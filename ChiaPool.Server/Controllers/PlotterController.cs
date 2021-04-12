@@ -66,7 +66,10 @@ namespace ChiaPool.Controllers
             var plotters = await DbContext.Plotters
                 .Where(x => x.Owner.Id == id)
                 .ToListAsync();
-            var plotterInfos = plotters.Select(x => PlotterService.GetPlotterInfo(x));
+
+            var plotterInfos = plotters
+                .Select(x => PlotterService.GetPlotterInfo(x))
+                .ToList();
 
             return Ok(plotterInfos);
         }
@@ -76,7 +79,10 @@ namespace ChiaPool.Controllers
             var plotters = await DbContext.Plotters
                 .Where(x => x.Owner.Name == name)
                 .ToListAsync();
-            var plotterInfos = plotters.Select(x => PlotterService.GetPlotterInfo(x));
+
+            var plotterInfos = plotters
+                .Select(x => PlotterService.GetPlotterInfo(x))
+                .ToList();
 
             return Ok(plotterInfos);
         }

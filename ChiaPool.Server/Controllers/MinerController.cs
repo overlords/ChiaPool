@@ -67,7 +67,9 @@ namespace ChiaPool.Controllers
                 .Where(x => x.Owner.Id == id)
                 .ToListAsync();
 
-            var minerInfos = miners.Select(x => MinerService.GetMinerInfo(x));
+            var minerInfos = miners
+                .Select(x => MinerService.GetMinerInfo(x))
+                .ToList();
 
             return Ok(minerInfos);
         }
@@ -78,7 +80,9 @@ namespace ChiaPool.Controllers
                 .Where(x => x.Owner.Name == name)
                 .ToListAsync();
 
-            var minerInfos = miners.Select(x => MinerService.GetMinerInfo(x));
+            var minerInfos = miners
+                .Select(x => MinerService.GetMinerInfo(x))
+                .ToList();
 
             return Ok(minerInfos);
         }

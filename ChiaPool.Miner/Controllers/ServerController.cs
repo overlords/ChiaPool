@@ -27,6 +27,9 @@ namespace ChiaPool.Controllers
         [HttpGet("Miner/List/Current")]
         public async Task<IActionResult> ListOwnedMinersAsync()
             => Ok(await ServerAccessor.ListMinersByOwnerNameAsync(AuthOptions.Name));
+        [HttpGet("Plotter/List/Current")]
+        public async Task<IActionResult> ListOwnedPlottersAsync()
+            => Ok(await ServerAccessor.ListPlottersByOwnerNameAsync(AuthOptions.Name));
 
         [HttpGet("Wallet/Get/Current")]
         public async Task<IActionResult> GetCurrentWalletAsync()
