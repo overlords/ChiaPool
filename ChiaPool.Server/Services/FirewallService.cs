@@ -69,6 +69,11 @@ namespace ChiaPool.Services
         }
         public async Task SwapMinerIP(IPAddress oldAddress, IPAddress newAddress)
         {
+            if (newAddress.Equals(oldAddress))
+            {
+                return;
+            }
+
             await AccessSemaphore.WaitAsync();
             try
             {
