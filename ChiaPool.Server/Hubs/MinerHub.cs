@@ -15,9 +15,10 @@ namespace ChiaPool.Hubs
         private readonly MinerService MinerService;
         private readonly UserService UserService;
 
-        public MinerHub(MinerService minerService)
+        public MinerHub(MinerService minerService, UserService userService)
         {
             MinerService = minerService;
+            UserService = userService;
         }
 
         [HubMethodName(MinerHubMethods.Activate)]
