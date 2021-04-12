@@ -13,6 +13,7 @@ namespace ChiaPool.Hubs
     public class MinerHub : Hub
     {
         private readonly MinerService MinerService;
+        private readonly UserService UserService;
 
         public MinerHub(MinerService minerService)
         {
@@ -20,11 +21,12 @@ namespace ChiaPool.Hubs
         }
 
         [HubMethodName(MinerHubMethods.Activate)]
-        public async Task ActivateMinerAsync(MinerStatus status)
+        public async Task<long> ActivateMinerAsync(MinerStatus status)
         {
             long minerId = long.Parse(Context.UserIdentifier);
             var address = GetRequestIP();
             await MinerService.ActivateMinerAsync(minerId, status, address);
+            return await UserService.GetOwnerIdFromMinerId(minerId);
         }
 
         [HubMethodName(MinerHubMethods.Update)]
