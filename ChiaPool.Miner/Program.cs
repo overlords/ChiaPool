@@ -42,6 +42,7 @@ namespace ChiaPool
             }
 
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
+            await WaitForHarvesterAsync();
             await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
 
@@ -95,6 +96,29 @@ namespace ChiaPool
             logger.LogInformation("Extracting ca certificate...");
             zipArchive.ExtractToDirectory("/root/chia-blockchain/ca/", true);
             logger.LogInformation("Finished updating ca!");
+        }
+        private static async Task WaitForHarvesterAsync()
+        {
+            var client = Application.Services.GetRequiredService<HarvesterClient>();
+            var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
+
+            logger.LogInformation("Waiting for harvester to spin up");
+  
+            for (int i = 0; i < 10; i++)
+            {
+                await Task.Delay(5000);
+                try
+                {
+                    await client.GetConnections();
+                    logger.LogInformation("Done");
+                    return;
+                }
+                catch
+                {
+                    logger.LogWarning($"Connection failed. Trying again in 5 seconds. {9 - i} retries left");
+                }
+            }
+
         }
     }
 }
