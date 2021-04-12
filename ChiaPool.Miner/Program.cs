@@ -103,7 +103,7 @@ namespace ChiaPool
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
             logger.LogInformation("Waiting for harvester to spin up");
-  
+
             for (int i = 0; i < 10; i++)
             {
                 await Task.Delay(5000);

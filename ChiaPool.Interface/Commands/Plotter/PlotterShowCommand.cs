@@ -48,7 +48,7 @@ namespace ChiaPool.Commands
 
             await (plotter.Online
                 ? SuccessLineAsync("Online")
-                : ErrorLineAsync("Offline"));    
+                : ErrorLineAsync("Offline"));
         }
     }
 }

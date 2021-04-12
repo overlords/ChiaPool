@@ -1,7 +1,6 @@
 ﻿using Chia.NET.Clients;
 using Chia.NET.Models;
 using ChiaPool.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,13 +18,13 @@ namespace ChiaPool.Services
             LoggerFactory = loggerFactory;
         }
 
-        public async Task<Plot[]> GetPlotsAsync() 
+        public async Task<Plot[]> GetPlotsAsync()
             => await HarvesterClient.GetPlotsAsync();
 
         public async Task<int> GetPlotCountAsync()
             => (await HarvesterClient.GetPlotsAsync()).Length;
 
-        public async Task ReloadPlotsAsync() 
+        public async Task ReloadPlotsAsync()
             => await HarvesterClient.RefreshPlotsAsync();
 
         public async Task<bool> DeletePlotByPubKeyAsync(string publicKey)

@@ -75,12 +75,16 @@ namespace ChiaPool.Commands
             {
                 int idLength = miners.Max(x => x.Id.ToString().Length) + 2;
                 int nameLength = miners.Max(x => x.Name.Length);
+                int pmLength = miners.Max(x => x.PlotMinutes.ToString().Length + 2);
 
-                await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
+                await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM{Space(pmLength)}Status");
 
                 foreach (var miner in miners)
                 {
-                    await WriteLineAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}");
+                    await WriteAsync($"{miner.Id}    {miner.Name}    {miner.PlotMinutes}    ");
+                    await (miner.Online
+                        ? SuccessLineAsync("Online")
+                        : ErrorLineAsync("Offline"));
                 }
             }
 
@@ -95,12 +99,16 @@ namespace ChiaPool.Commands
             {
                 int idLength = plotters.Max(x => x.Id.ToString().Length) + 2;
                 int nameLength = plotters.Max(x => x.Name.Length);
+                int pmLength = plotters.Max(x => x.PlotMinutes.ToString().Length + 2);
 
-                await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM");
+                await InfoLineAsync($"Id{Space(idLength)}Name{Space(nameLength)}PM{Space(pmLength)}Status");
 
                 foreach (var plotter in plotters)
                 {
-                    await WriteLineAsync($"{plotter.Id}    {plotter.Name}    {plotter.PlotMinutes}");
+                    await WriteAsync($"{plotter.Id}    {plotter.Name}    {plotter.PlotMinutes}    ");
+                    await (plotter.Online
+                        ? SuccessLineAsync("Online")
+                        : ErrorLineAsync("Offline"));
                 }
             }
         }

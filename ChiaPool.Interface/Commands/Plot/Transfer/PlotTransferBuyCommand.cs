@@ -1,7 +1,6 @@
 ﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
@@ -36,7 +35,7 @@ namespace ChiaPool.Commands
             await WarnLineAsync($"You are about to buy a plot tranfer for {cost} PM.");
             await WarnLineAsync("Do you want to proceed? (y/n)");
 
-            if(await ReadKeyAsync() != 'y')
+            if (await ReadKeyAsync() != 'y')
             {
                 await WriteLineAsync("Aborted!");
                 return;

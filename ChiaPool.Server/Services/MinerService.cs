@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -46,7 +45,7 @@ namespace ChiaPool.Services
                 await claimDelay;
                 claimDelay = Task.Delay(PlotMinuteClaimInterval);
                 await RewardMiners(activeMinersAtStart);
-                activeMinersAtStart = ActiveMiners.ToDictionary(x => x.Key, x => x.Value); 
+                activeMinersAtStart = ActiveMiners.ToDictionary(x => x.Key, x => x.Value);
             }
         }
 
