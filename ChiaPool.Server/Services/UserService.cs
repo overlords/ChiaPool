@@ -11,12 +11,12 @@ namespace ChiaPool.Services
 {
     public sealed class UserService : Service
     {
-        public Task<long> GetOwnerIdFromMinerId(long minerId)
+        public async Task<long> GetOwnerIdFromMinerId(long minerId)
         {
             using var scope = Provider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
 
-            return dbContext.Miners
+            return await dbContext.Miners
                 .Where(x => x.Id == minerId)
                 .Select(x => x.OwnerId)
                 .FirstOrDefaultAsync();
