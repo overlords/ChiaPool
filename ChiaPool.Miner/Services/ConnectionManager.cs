@@ -15,6 +15,7 @@ namespace ChiaPool.Services
     public class ConnectionManager : Service, IConnectionManager
     {
         private HubConnection Connection;
+        private long UserId;
 
         [Inject]
         private readonly ServerOption ServerOptions;
@@ -77,7 +78,10 @@ namespace ChiaPool.Services
         public async Task SendActivateRequestAsync()
         {
             var status = StatusService.GetCurrentStatus();
-            await Connection.SendAsync(MinerHubMethods.Activate, status);
+            UserId = await Connection.InvokeAsync<long>(MinerHubMethods.Activate, status);
         }
+
+        public long GetCurrentUserId()
+            => UserId;
     }
 }

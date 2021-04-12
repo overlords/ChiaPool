@@ -29,7 +29,7 @@ namespace ChiaPool.Services
             Connection = new HubConnectionBuilder()
                 .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/PHub", x =>
                 {
-                    x.Headers.Add("Authorization", $"Miner {AuthOptions.Token}");
+                    x.Headers.Add("Authorization", $"Plotter {AuthOptions.Token}");
                     x.Transports = HttpTransportType.WebSockets;
                 })
                 .WithAutomaticReconnect(new PersistentRetryPolicy())
