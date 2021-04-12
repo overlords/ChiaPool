@@ -4,11 +4,13 @@ using Common.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -23,23 +25,26 @@ namespace ChiaPool.Services
         [Inject]
         private readonly FirewallService FirewallService;
 
-        private readonly ConcurrentDictionary<long, (MinerStatus Status, IPAddress Address)> ActiveMiners;
+        private readonly Dictionary<long, (MinerStatus Status, IPAddress Address)> ActiveMiners;
+        private readonly SemaphoreSlim ActiveMinerLock;
 
         public MinerService()
         {
-            ActiveMiners = new ConcurrentDictionary<long, (MinerStatus Status, IPAddress Address)>();
+            ActiveMiners = new Dictionary<long, (MinerStatus Status, IPAddress Address)>();
+            ActiveMinerLock = new SemaphoreSlim(1, 1);
         }
 
         protected override async ValueTask RunAsync()
         {
             var claimDelay = Task.Delay(PlotMinuteClaimInterval);
-            var activeMinersAtStart = ActiveMiners; //This does not change when the dictionary changes!
+            var activeMinersAtStart = ActiveMiners.ToDictionary(x => x.Key, x => x.Value); //This does not change when the dictionary changes!
+
             while (true)
             {
                 await claimDelay;
                 claimDelay = Task.Delay(PlotMinuteClaimInterval);
                 await RewardMiners(activeMinersAtStart);
-                activeMinersAtStart = ActiveMiners;
+                activeMinersAtStart = ActiveMiners.ToDictionary(x => x.Key, x => x.Value); ;
             }
         }
 
@@ -81,35 +86,60 @@ namespace ChiaPool.Services
 
         public async Task ActivateMinerAsync(long minerId, MinerStatus status, IPAddress address)
         {
-            if (!ActiveMiners.TryAdd(minerId, (status, address)))
+            await ActiveMinerLock.WaitAsync();
+            try
             {
-                throw new InvalidOperationException("Cannot activate active miner");
-            }
+                if (!ActiveMiners.TryAdd(minerId, (status, address)))
+                {
+                    throw new InvalidOperationException("Cannot activate active miner");
+                }
 
-            await FirewallService.AcceptIPAsync(address);
+                await FirewallService.AcceptIPAsync(address);
+                Logger.LogInformation($"Activated miner [{minerId}]");
+            }
+            finally
+            {
+                ActiveMinerLock.Release();
+            }
         }
         public async Task UpdateMinerAsync(long minerId, MinerStatus status, IPAddress address)
         {
-            if (!ActiveMiners.TryGetValue(minerId, out var oldValue))
-            {
-                throw new InvalidOperationException("Cannot update inactive plotter");
-            }
-            if (!ActiveMiners.TryUpdate(minerId, (status, address), (status, address)))
-            {
-                throw new InvalidOperationException("Cannot update inactive plotter");
-            }
+            await ActiveMinerLock.WaitAsync();
 
-            await FirewallService.SwapMinerIP(oldValue.Address, address);
+            try
+            {
+                if (!ActiveMiners.TryGetValue(minerId, out var oldValue))
+                {
+                    throw new InvalidOperationException("Cannot update inactive miner");
+                }
+                ActiveMiners[minerId] = (status, address);
+
+                await FirewallService.SwapMinerIP(oldValue.Address, address);
+                Logger.LogInformation($"Updated miner [{minerId}]");
+            }
+            finally
+            {
+                ActiveMinerLock.Release();
+            }
         }
-
         public async Task DeactivateMinerAsync(long minerId)
         {
-            if (!ActiveMiners.TryRemove(minerId, out var value))
-            {
-                throw new InvalidOperationException("Cannot deactivate inactive plotter");
-            }
+            await ActiveMinerLock.WaitAsync();
 
-            await FirewallService.DropIPAsync(value.Address);
+            try
+            {
+                if (!ActiveMiners.Remove(minerId, out var oldValue))
+                {
+                    throw new InvalidOperationException("Cannot deactivate inactive miner");
+                }
+
+                await FirewallService.DropIPAsync(oldValue.Address);
+                Logger.LogInformation($"Deactivated miner [{minerId}]");
+            }
+            finally
+            {
+                ActiveMinerLock.Release();
+            }
         }
     }
 }
