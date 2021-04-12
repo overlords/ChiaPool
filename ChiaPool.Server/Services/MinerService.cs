@@ -17,7 +17,7 @@ namespace ChiaPool.Services
 {
     public class MinerService : Service
     {
-        public const int PlotMinutesPerInterval = 5;
+        public const int PlotMinutesPerInterval = 3;
         public const int PlotMinuteClaimInterval = PlotMinutesPerInterval * 60 * 1000;
 
         [Inject]
@@ -44,7 +44,7 @@ namespace ChiaPool.Services
                 await claimDelay;
                 claimDelay = Task.Delay(PlotMinuteClaimInterval);
                 await RewardMiners(activeMinersAtStart);
-                activeMinersAtStart = ActiveMiners.ToDictionary(x => x.Key, x => x.Value); ;
+                activeMinersAtStart = ActiveMiners.ToDictionary(x => x.Key, x => x.Value); 
             }
         }
 
@@ -61,7 +61,7 @@ namespace ChiaPool.Services
             foreach (var miner in miners)
             {
                 var status = activeMiners[miner.Id];
-                miner.PlotMinutes += status.Status.PlotCount;
+                miner.PlotMinutes += status.Status.PlotCount * PlotMinutesPerInterval;
             }
             await dbContext.SaveChangesAsync();
         }
