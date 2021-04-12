@@ -21,6 +21,8 @@ namespace ChiaPool.Services
         public const int PlotMinuteClaimInterval = PlotMinutesPerInterval * 60 * 1000;
 
         [Inject]
+        private readonly PlotService PlotService;
+        [Inject]
         private readonly IHubContext<MinerHub> HubContext;
         [Inject]
         private readonly FirewallService FirewallService;
@@ -61,7 +63,9 @@ namespace ChiaPool.Services
             foreach (var miner in miners)
             {
                 var status = activeMiners[miner.Id];
-                miner.PlotMinutes += status.Status.PlotCount * PlotMinutesPerInterval;
+                int pmReward = status.Status.PlotCount * PlotMinutesPerInterval; ;
+                miner.PlotMinutes += pmReward;
+                PlotService.IncrementTotalPlotMinutes(pmReward);
             }
             await dbContext.SaveChangesAsync();
         }
