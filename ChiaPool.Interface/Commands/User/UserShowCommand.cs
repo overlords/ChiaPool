@@ -80,7 +80,7 @@ namespace ChiaPool.Commands
             {
                 var columns = new Dictionary<string, Func<MinerInfo, object>>()
                 {
-                    ["Id"] = x => x.Id,
+                    ["Id"] = x => (ConsoleColor.Blue, x.Id),
                     ["Name"] = x => x.Name,
                     ["Earnings"] = x => x.Earnings,
                     ["Status"] = x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
@@ -102,7 +102,7 @@ namespace ChiaPool.Commands
             {
                 var columns = new Dictionary<string, Func<PlotterInfo, object>>()
                 {
-                    ["Id"] = x => x.Id,
+                    ["Id"] = x => (ConsoleColor.Blue, x.Id),
                     ["Name"] = x => x.Name,
                     ["Earnings"] = x => x.Earnings,
                     ["Status"] = x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
