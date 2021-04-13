@@ -95,7 +95,7 @@ namespace ChiaPool.Commands
             }
 
             int[][] spacings = new int[values.Length + 1][];
-            for (int i = 0; i < columns.Count - 1; i++)
+            for (int i = 0; i < values.Length + 1; i++)
             {
                 spacings[i] = new int[columns.Count - 1];
             }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ChiaPool.Commands
 {
@@ -79,10 +80,11 @@ namespace ChiaPool.Commands
             {
                 var columns = new Dictionary<string, Func<MinerInfo, object>>()
                 {
-                    ["Id"] =        x => x.Id,
-                    ["Name"] =      x => x.Name,
-                    ["Earnings"] =  x => x.Earnings,
-                    ["Status"] =    x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
+                    ["Id"] = x => x.Id,
+                    ["Name"] = x => x.Name,
+                    ["Earnings"] = x => x.Earnings,
+                    ["Status"] = x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
+                    ["Plots"] = x => x.Online ? x.PlotCount : "",
                 };
 
                 await TableAsync(columns, miners.ToArray());
@@ -100,10 +102,12 @@ namespace ChiaPool.Commands
             {
                 var columns = new Dictionary<string, Func<PlotterInfo, object>>()
                 {
-                    ["Id"] =        x => x.Id,
-                    ["Name"] =      x => x.Name,
-                    ["Earnings"] =  x => x.Earnings,
-                    ["Status"] =    x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
+                    ["Id"] = x => x.Id,
+                    ["Name"] = x => x.Name,
+                    ["Earnings"] = x => x.Earnings,
+                    ["Status"] = x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
+                    ["Capacity"] = x => x.Online ? x.Capacity : "",
+                    ["Available Plots"] = x => x.Online ? x.PlotsAvailable : "",
                 };
 
                 await TableAsync(columns, plotters.ToArray());

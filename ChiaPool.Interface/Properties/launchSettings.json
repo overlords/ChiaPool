@@ -2,7 +2,7 @@
   "profiles": {
     "ChiaPool.Interface": {
       "commandName": "Project",
-      "commandLineArgs": "Plot Generate --path /plots2 --cache /plots2 --buckets 60 --buffer 5000"
+      "commandLineArgs": "User Show"
     }
   }
 }
