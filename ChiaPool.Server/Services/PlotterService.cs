@@ -47,10 +47,10 @@ namespace ChiaPool.Services
         public int GetAvailablePlotCount()
             => ActivePlotters.Sum(x => x.Value.PlotsAvailable);
 
-        public bool IsPlotterActive(long plotterId)
-            => ActivePlotters.TryGetValue(plotterId, out _);
         public PlotterInfo GetPlotterInfo(Plotter plotter)
-            => new PlotterInfo(plotter.Id, IsPlotterActive(plotter.Id), plotter.Name, plotter.LastCapacity, plotter.PlotMinutes, plotter.OwnerId);
+           => ActivePlotters.TryGetValue(plotter.Id, out var plotterStatus)
+               ? new PlotterInfo(plotter.Id, true, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId)
+               : new PlotterInfo(plotter.Id, false, plotterStatus.Capacity, plotterStatus.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId);
 
         public Task ActivatePlotterAsync(long plotterId, PlotterStatus status)
             => !ActivePlotters.TryAdd(plotterId, status)

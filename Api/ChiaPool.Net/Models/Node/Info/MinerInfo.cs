@@ -4,22 +4,22 @@
     {
         public long Id { get; init; }
         public bool Online { get; init; }
+        public int PlotCount { get; init; }
         public string Name { get; init; }
 
-        public short LastPlotCount { get; set; }
-        public long PlotMinutes { get; set; }
+        public long Earnings { get; set; }
         public long OwnerId { get; init; }
 
         public MinerInfo()
         {
         }
-        public MinerInfo(long id, bool online, string name, short lastPlotCount, long plotMinutes, long ownerId)
+        public MinerInfo(long id, bool online, int plotCount, string name, long totalEarnings, long ownerId)
         {
             Id = id;
             Online = online;
             Name = name;
-            LastPlotCount = lastPlotCount;
-            PlotMinutes = plotMinutes;
+            PlotCount = plotCount;
+            Earnings = totalEarnings;
             OwnerId = ownerId;
         }
     }

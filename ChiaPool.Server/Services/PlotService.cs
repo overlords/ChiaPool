@@ -21,9 +21,7 @@ namespace ChiaPool.Services
             using var scope = Provider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
 
-            TotalPlotMinutes = 0;
-            TotalPlotMinutes += await dbContext.Miners.SumAsync(x => x.PlotMinutes);
-            TotalPlotMinutes += await dbContext.Plotters.SumAsync(x => x.PlotMinutes);
+            TotalPlotMinutes = await dbContext.Users.SumAsync(x => x.PlotMinutes);
         }
 
         public void IncrementTotalPlotMinutes(int amount)

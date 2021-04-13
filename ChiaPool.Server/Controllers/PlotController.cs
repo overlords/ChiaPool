@@ -32,9 +32,12 @@ namespace ChiaPool.Controllers
         public async Task<IActionResult> BuyPlotTranferAsync([FromRoute] int deadlineHours = 12)
         {
             long minerId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var miner = DbContext.Miners.Local.FirstOrDefault(x => x.Id == minerId);
+            var miner = await DbContext.Miners
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == minerId);
+            var customer = miner.Owner;
 
-            if (miner.PlotMinutes < 0)
+            if (customer.PlotMinutes < 0)
             {
                 return Conflict();
             }
@@ -45,13 +48,19 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var plotter = await DbContext.Plotters.FirstOrDefaultAsync(x => x.Id == plotterId);
+            var plotter = await DbContext.Plotters
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == plotterId);
+            var seller = plotter.Owner;
+
             var plotTransfer = await PlotterService.TryRequestPlotTransferAsync(miner.Id, plotter.Id, deadlineHours);
 
-            plotter.PlotMinutes += plotTransfer.Cost;
-            miner.PlotMinutes -= plotTransfer.Cost;
+            plotter.Earnings+= plotTransfer.Cost;
+            seller.PlotMinutes += plotTransfer.Cost;
+            customer.PlotMinutes -= plotTransfer.Cost;
+
             DbContext.PlotTranfers.Add(plotTransfer);
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesConcurrentAsync();
 
             return Ok(plotTransfer);
         }

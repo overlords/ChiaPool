@@ -1,6 +1,7 @@
 ﻿using ChiaPool.Api;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
@@ -37,14 +38,20 @@ namespace ChiaPool.Commands
                 ? await ServerAccessor.GetMinerByIdAsync(Id)
                 : await MinerAccessor.GetCurrentMinerAsync();
 
-            await InfoLineAsync($"[ID]      |   {miner.Id}");
-            await InfoLineAsync($"[Name]    |   {miner.Name}");
-            await InfoLineAsync($"[PM]      |   {miner.PlotMinutes}");
-            await InfoAsync($"[Online]  |   ");
+            await InfoLineAsync($"[ID]         |   {miner.Id}");
+            await InfoLineAsync($"[Name]       |   {miner.Name}");
+            await InfoLineAsync($"[Earnigs]    |   {miner.Earnings}");
+            await InfoAsync(    $"[Status]     |   ");
 
-            await (miner.Online
-                ? SuccessLineAsync("Online")
-                : ErrorLineAsync("Offline"));
+            if (!miner.Online)
+            {
+                await ErrorLineAsync("Offline");
+                return;
+            }
+
+            await SuccessLineAsync("Online");
+            await InfoLineAsync($"[Plots]      |   {miner.PlotCount}");
+            await InfoLineAsync($"[Size]       |   {Math.Round(miner.PlotCount * Constants.PlotSize)} GB");
         }
     }
 }

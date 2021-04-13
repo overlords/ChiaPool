@@ -41,14 +41,20 @@ namespace ChiaPool.Commands
                 ? await ServerAccessor.GetPlotterByNameAsync(Name)
                 : await ServerAccessor.GetPlotterByIdAsync(Id);
 
-            await InfoLineAsync($"[ID]      |   {plotter.Id}");
-            await InfoLineAsync($"[Name]    |   {plotter.Name}");
-            await InfoLineAsync($"[PM]      |   {plotter.PlotMinutes}");
-            await InfoAsync($"[Online]  |   ");
+            await InfoLineAsync($"[ID]         |   {plotter.Id}");
+            await InfoLineAsync($"[Name]       |   {plotter.Name}");
+            await InfoLineAsync($"[Earnings]   |   {plotter.Earnings}");
+            await InfoAsync(    $"[Status]     |   ");
 
-            await (plotter.Online
-                ? SuccessLineAsync("Online")
-                : ErrorLineAsync("Offline"));
+            if (!plotter.Online)
+            {
+                await ErrorLineAsync("Offline");
+                return;
+            }
+
+            await SuccessLineAsync("Online");
+            await InfoLineAsync($"[Capacity]   |   {plotter.Capacity}");
+            await InfoLineAsync($"[Plots]      |   {plotter.PlotsAvailable}");
         }
     }
 }

@@ -25,7 +25,7 @@ namespace ChiaPool.Controllers
         {
             long totalPlotMinutes = await DbContext.Users
                 .Where(x => x.Id == userId)
-                .Select(x => x.Miners.Sum(z => z.PlotMinutes) + x.Plotters.Sum(z => z.PlotMinutes))
+                .Select(x => x.PlotMinutes)
                 .FirstOrDefaultAsync();
 
             var wallet = await WalletService.GetWalletFractionAsync(totalPlotMinutes);
@@ -37,7 +37,7 @@ namespace ChiaPool.Controllers
         {
             long totalPlotMinutes = await DbContext.Users
                 .Where(x => x.Name == name)
-                .Select(x => x.Miners.Sum(z => z.PlotMinutes) + x.Plotters.Sum(z => z.PlotMinutes))
+                .Select(x => x.PlotMinutes)
                 .FirstOrDefaultAsync();
 
             var wallet = await WalletService.GetWalletFractionAsync(totalPlotMinutes);

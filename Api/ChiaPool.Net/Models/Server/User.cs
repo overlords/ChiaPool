@@ -21,6 +21,11 @@ namespace ChiaPool.Models
         public string PasswordHash { get; set; }
 
         /// <summary>
+        /// The PM count the user owns.
+        /// </summary>
+        public long PlotMinutes { get; set; }
+
+        /// <summary>
         /// The miners of the user.
         /// </summary>
         [JsonIgnore]

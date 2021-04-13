@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ChiaPool.Migrations
 {
     [DbContext(typeof(MinerContext))]
-    [Migration("20210409141224_Initial")]
+    [Migration("20210413161112_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,16 +28,14 @@ namespace ChiaPool.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<short>("LastPlotCount")
-                        .HasColumnType("smallint");
+                    b.Property<long>("Earnings")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<long>("OwnerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PlotMinutes")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Token")
@@ -92,11 +90,9 @@ namespace ChiaPool.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<short>("LastAvailablePlots")
-                        .HasColumnType("smallint");
-
-                    b.Property<short>("LastCapacity")
-                        .HasColumnType("smallint");
+                    b.Property<long>("Earnings")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -104,15 +100,18 @@ namespace ChiaPool.Migrations
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("PlotMinutes")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("Token")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("OwnerId");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
 
                     b.ToTable("Plotters");
                 });
@@ -130,7 +129,14 @@ namespace ChiaPool.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
 
+                    b.Property<long>("PlotMinutes")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

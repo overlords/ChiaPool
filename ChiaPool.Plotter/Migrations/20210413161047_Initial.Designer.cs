@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChiaPool.Migrations
 {
     [DbContext(typeof(PlotContext))]
-    [Migration("20210407180355_Initial")]
+    [Migration("20210413161047_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

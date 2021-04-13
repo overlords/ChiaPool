@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChiaPool.Models
 {
@@ -23,7 +25,13 @@ namespace ChiaPool.Models
                 .ValueGeneratedOnAdd();
 
                 b.Property(x => x.Name);
+                b.HasIndex(x => x.Name)
+                .IsUnique();
+
                 b.Property(x => x.PasswordHash);
+
+                b.Property(x => x.PlotMinutes)
+                .IsConcurrencyToken();
 
                 b.HasMany(x => x.Miners)
                 .WithOne(x => x.Owner)
@@ -50,9 +58,8 @@ namespace ChiaPool.Models
                 b.HasIndex(x => x.Token)
                 .IsUnique();
 
-                b.Property(x => x.PlotMinutes);
-
-                b.Property(x => x.LastPlotCount);
+                b.Property(x => x.Earnings)
+                .IsConcurrencyToken();
 
                 b.Property(x => x.OwnerId);
 
@@ -66,13 +73,15 @@ namespace ChiaPool.Models
                 .ValueGeneratedOnAdd();
 
                 b.Property(x => x.Name);
+                b.HasIndex(x => x.Name)
+                .IsUnique();
 
                 b.Property(x => x.Token);
+                b.HasIndex(X => X.Token)
+                .IsUnique();
 
-                b.Property(x => x.PlotMinutes);
-
-                b.Property(x => x.LastCapacity);
-                b.Property(x => x.LastAvailablePlots);
+                b.Property(x => x.Earnings)
+                .IsConcurrencyToken();
 
                 b.Property(x => x.OwnerId);
 
@@ -94,6 +103,36 @@ namespace ChiaPool.Models
 
                 b.ToTable("PlotTransfers");
             });
+        }
+
+        public async Task SaveChangesConcurrentAsync()
+        {
+            bool saveSuccessful = false;
+            while (!saveSuccessful)
+            {
+                try
+                {
+                    await SaveChangesAsync();
+                    saveSuccessful = true;
+                }
+                catch (DbUpdateConcurrencyException e)
+                {
+                    foreach (var entry in e.Entries)
+                    {
+                        var databaseValues = await entry.GetDatabaseValuesAsync();
+                        var originalValues = entry.OriginalValues;
+                        var proposedValues = entry.CurrentValues;
+
+                        foreach (var property in proposedValues.Properties.Where(x => x.IsConcurrencyToken))
+                        {
+                            long valueChange = (long)proposedValues[property] - (long)originalValues[property];
+                            proposedValues[property] = (long)databaseValues[property] + valueChange;
+                        }
+
+                        entry.OriginalValues.SetValues(databaseValues);
+                    }
+                }
+            }
         }
     }
 }

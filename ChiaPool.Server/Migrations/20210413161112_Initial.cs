@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System;
 
 namespace ChiaPool.Migrations
 {
@@ -32,7 +32,8 @@ namespace ChiaPool.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true)
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    PlotMinutes = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,8 +48,7 @@ namespace ChiaPool.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: true),
-                    PlotMinutes = table.Column<long>(type: "bigint", nullable: false),
-                    LastPlotCount = table.Column<short>(type: "smallint", nullable: false),
+                    Earnings = table.Column<long>(type: "bigint", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -70,9 +70,7 @@ namespace ChiaPool.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: true),
                     Token = table.Column<string>(type: "text", nullable: true),
-                    PlotMinutes = table.Column<long>(type: "bigint", nullable: false),
-                    LastCapacity = table.Column<short>(type: "smallint", nullable: false),
-                    LastAvailablePlots = table.Column<short>(type: "smallint", nullable: false),
+                    Earnings = table.Column<long>(type: "bigint", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -104,9 +102,27 @@ namespace ChiaPool.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Plotters_Name",
+                table: "Plotters",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Plotters_OwnerId",
                 table: "Plotters",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plotters_Token",
+                table: "Plotters",
+                column: "Token",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Name",
+                table: "Users",
+                column: "Name",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

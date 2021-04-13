@@ -9,10 +9,7 @@ namespace ChiaPool.Models
         public string Name { get; set; }
 
         public string Token { get; set; }
-        public long PlotMinutes { get; set; }
-
-        public short LastPlotCount { get; set; }
-
+        public long Earnings { get; set; }
 
         [JsonIgnore]
         public User Owner { get; set; }
@@ -25,8 +22,6 @@ namespace ChiaPool.Models
         {
             Name = name;
             Token = Guid.NewGuid().ToString();
-            PlotMinutes = 0;
-            LastPlotCount = 0;
             OwnerId = ownerId;
         }
     }

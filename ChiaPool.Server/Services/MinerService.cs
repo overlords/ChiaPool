@@ -56,17 +56,22 @@ namespace ChiaPool.Services
             var minerIds = activeMiners.Keys.ToArray();
 
             var miners = await dbContext.Miners
+                .Include(x => x.Owner)
                 .Where(x => minerIds.Contains(x.Id))
                 .ToListAsync();
 
             foreach (var miner in miners)
             {
                 var status = activeMiners[miner.Id];
-                int pmReward = status.Status.PlotCount * PlotMinutesPerInterval; ;
-                miner.PlotMinutes += pmReward;
+                int pmReward = status.Status.PlotCount * PlotMinutesPerInterval;
+
+                miner.Earnings += pmReward;
+                miner.Owner.PlotMinutes += pmReward;
+
                 PlotService.IncrementTotalPlotMinutes(pmReward);
             }
-            await dbContext.SaveChangesAsync();
+
+            await dbContext.SaveChangesConcurrentAsync();
         }
 
         public Task<int> GetTotalMinerCount()
@@ -81,11 +86,10 @@ namespace ChiaPool.Services
         public int GetActivePlotCount()
             => ActiveMiners.Sum(x => x.Value.Status.PlotCount);
 
-        public bool IsMinerActive(long minerId)
-            => ActiveMiners.TryGetValue(minerId, out _);
-
-        public MinerInfo GetMinerInfo(Miner miner)
-            => new MinerInfo(miner.Id, IsMinerActive(miner.Id), miner.Name, miner.LastPlotCount, miner.PlotMinutes, miner.OwnerId);
+        public MinerInfo GetMinerInfo(Miner miner) 
+            => ActiveMiners.TryGetValue(miner.Id, out var minerStatus)
+                ? new MinerInfo(miner.Id, true, -1, miner.Name, miner.Earnings, miner.OwnerId)
+                : new MinerInfo(miner.Id, false, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId);
 
         public async Task ActivateMinerAsync(long minerId, MinerStatus status, IPAddress address)
         {
