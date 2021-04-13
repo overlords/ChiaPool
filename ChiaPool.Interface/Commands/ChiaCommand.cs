@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Reflection;
 
 namespace ChiaPool.Commands
 {
@@ -61,54 +62,64 @@ namespace ChiaPool.Commands
         protected Task ErrorLineAsync(string message)
             => WriteLineAsync(message, ConsoleColor.Red);
 
-        protected async Task TableAsync<T>(Dictionary<string, Func<T, object>> columns, T[] values, int columnSpace = 2)
+        protected async Task TableAsync<T>(Dictionary<string, Func<T, object>> columns, T[] values, ConsoleColor headerColor = ConsoleColor.Cyan, int columnSpace = 2)
         {
             var columnNames = columns.Keys.ToArray();
             var columnSelectors = columns.Values.ToArray();
 
-            Tuple<ConsoleColor, string>[][] contents = new Tuple<ConsoleColor, string>[columns.Count][];
-
+            Tuple<ConsoleColor, string>[][] contents = new Tuple<ConsoleColor, string>[values.Length + 1][];
+            contents[0] = new Tuple<ConsoleColor, string>[columns.Count];
             for (int i = 0; i < columns.Count; i++)
             {
-                contents[i] = new Tuple<ConsoleColor, string>[values.Length];
-                for (int j = 0; j < values.Length; j++)
+                contents[0][i] = new Tuple<ConsoleColor, string>(headerColor, columnNames[i]);
+            }
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                contents[i + 1] = new Tuple<ConsoleColor, string>[columns.Count];
+
+                for (int j = 0; j < columns.Count; j++)
                 {
-                    var value = columnSelectors[i].Invoke(values[j]);
-                    contents[i][j] = value as Tuple<ConsoleColor, string> ?? new Tuple<ConsoleColor, string>(default, value.ToString());
+                    var value = columnSelectors[j].Invoke(values[i]);
+                    var d = value.GetType();
+                    if (value.GetType().Name == "ValueTuple`2" && value.GetType().GetGenericArguments().FirstOrDefault() == typeof(ConsoleColor))
+                    {
+                        var color = (ConsoleColor)value.GetType().GetField("Item1").GetValue(value);
+                        string text = value.GetType().GetField("Item2").GetValue(value).ToString();
+                        contents[i + 1][j] = new Tuple<ConsoleColor, string>(color, text);
+                        continue;
+                    }
+
+                    contents[i + 1][j] = new Tuple<ConsoleColor, string>(ConsoleColor.Gray, value.ToString());
                 }
             }
 
-            int[] headerSpaces = new int[columns.Count - 1];
-            int[] valueSpaces = new int[columns.Count - 1];
-
+            int[][] spacings = new int[values.Length + 1][];
             for (int i = 0; i < columns.Count - 1; i++)
             {
-                headerSpaces[i] = contents[i].Max(x => x.Item2.Length) + columnSpace - columnNames[i].Length;
+                spacings[i] = new int[columns.Count - 1];
             }
             for (int i = 0; i < columns.Count - 1; i++)
             {
-                if (headerSpaces[i] > 0)
+                int maxValueLength = contents.Max(x => x[i].Item2.Length) + columnSpace;
+
+                for (int j = 0; j < contents.Length; j++)
                 {
-                    valueSpaces[i] = columnSpace;
-                    continue;
+                    spacings[j][i] = maxValueLength - contents[j][i].Item2.Length;
                 }
-
-                valueSpaces[i] = columnSpace - headerSpaces[i] + 1;
-                headerSpaces[i] = 1;
             }
 
-            for (int i = 0; i < contents.Length; i++)
+
+            for (int i = 0; i < values.Length + 1; i++)
             {
-                for (int j = 0; j < contents[i].Length; j++)
+                for (int j = 0; j < columns.Count; j++)
                 {
                     if (j != 0)
                     {
-                        await WriteAsync(Space(i == 0 ? headerSpaces[j] : valueSpaces[j]));
+                        await WriteAsync(Space(spacings[i][j - 1]));
                     }
 
-                    await (i == 0
-                        ? InfoAsync(columnNames[j])
-                        : WriteAsync(contents[i][j].Item2, contents[i][j].Item1));
+                    await WriteAsync(contents[i][j].Item2, contents[i][j].Item1);
                 }
                 await WriteLineAsync();
             }
