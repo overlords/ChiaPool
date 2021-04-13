@@ -29,61 +29,37 @@ namespace ChiaPool.Commands
 
         protected abstract Task ExecuteAsync(IConsole console);
 
-        protected async Task WriteAsync(string message, ConsoleColor color = default)
+        protected async Task WriteAsync(string message, ConsoleColor color = ConsoleColor.Gray)
         {
             using var colorSettings = TargetConsole.WithForegroundColor(color);
             await TargetConsole.Output.WriteAsync(message);
         }
 
-        protected async Task WriteLineAsync(string message = "", ConsoleColor color = default)
+        protected async Task WriteLineAsync(string message = "", ConsoleColor color = ConsoleColor.Gray)
         {
             using var colorSettings = TargetConsole.WithForegroundColor(color);
             await TargetConsole.Output.WriteLineAsync(message);
         }
 
-        protected async Task SuccessAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Green);
-            await WriteAsync(message);
-        }
-        protected async Task SuccessLineAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Green);
-            await WriteLineAsync(message);
-        }
+        protected Task SuccessAsync(string message)
+            => WriteAsync(message, ConsoleColor.Green);
+        protected Task SuccessLineAsync(string message)
+            => WriteLineAsync(message, ConsoleColor.Green);
 
-        protected async Task InfoAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Cyan);
-            await WriteAsync(message);
-        }
-        protected async Task InfoLineAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Cyan);
-            await WriteLineAsync(message);
-        }
+        protected Task InfoAsync(string message)
+            => WriteAsync(message, ConsoleColor.Cyan);
+        protected Task InfoLineAsync(string message)
+            => WriteLineAsync(message, ConsoleColor.Cyan);
 
-        protected async Task WarnAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Yellow);
-            await WriteAsync(message);
-        }
-        protected async Task WarnLineAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Yellow);
-            await WriteLineAsync(message);
-        }
+        protected Task WarnAsync(string message)
+            => WriteAsync(message, ConsoleColor.Yellow);
+        protected Task WarnLineAsync(string message)
+            => WriteLineAsync(message, ConsoleColor.Yellow);
 
-        protected async Task ErrorAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Red);
-            await WriteAsync(message);
-        }
-        protected async Task ErrorLineAsync(string message)
-        {
-            using var colorSetting = TargetConsole.WithForegroundColor(ConsoleColor.Red);
-            await WriteLineAsync(message);
-        }
+        protected Task ErrorAsync(string message)
+            => WriteAsync(message, ConsoleColor.Red);
+        protected Task ErrorLineAsync(string message)
+            => WriteLineAsync(message, ConsoleColor.Red);
 
         protected async Task TableAsync<T>(Dictionary<string, Func<T, object>> columns, T[] values, int columnSpace = 2)
         {

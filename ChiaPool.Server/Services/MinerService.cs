@@ -88,8 +88,8 @@ namespace ChiaPool.Services
 
         public MinerInfo GetMinerInfo(Miner miner) 
             => ActiveMiners.TryGetValue(miner.Id, out var minerStatus)
-                ? new MinerInfo(miner.Id, true, -1, miner.Name, miner.Earnings, miner.OwnerId)
-                : new MinerInfo(miner.Id, false, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId);
+                ? new MinerInfo(miner.Id, true, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId)
+                : new MinerInfo(miner.Id, false, -1, miner.Name, miner.Earnings, miner.OwnerId);
 
         public async Task ActivateMinerAsync(long minerId, MinerStatus status, IPAddress address)
         {
