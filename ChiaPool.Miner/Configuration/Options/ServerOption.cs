@@ -2,23 +2,41 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChiaPool.Configuration.Options
+namespace ChiaPool.Configuration
 {
     public class ServerOption : Option
     {
-        public string PoolHost { get; init; } = Environment.GetEnvironmentVariable("pool_host");
-        private string RawManagerPort { get; init; } = Environment.GetEnvironmentVariable("manager_port");
-        public short ManagerPort { get; private set; }
+        public Uri PoolHost { get; set; }
+        public Uri FarmerHost { get; set; }
 
-        protected override ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
+        private string PoolHostRaw { get; set; } = Environment.GetEnvironmentVariable("pool_host");
+        private string FarmerHostRaw { get; set; } = Environment.GetEnvironmentVariable("farmer_host");
+
+        protected override async ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
         {
-            if (!short.TryParse(RawManagerPort, out short port))
+            if (string.IsNullOrWhiteSpace(PoolHostRaw))
             {
-                return ValueTask.FromResult(ValidationResult.Failed("Port is not a valid number"));
+                return ValidationResult.Failed("Could not find \"pool_host\" environment variable!");
+            }
+            if (string.IsNullOrWhiteSpace(FarmerHostRaw))
+            {
+                return ValidationResult.Failed("Could not find \"farmer_host\" environment variable!");
             }
 
-            ManagerPort = port;
-            return ValueTask.FromResult(ValidationResult.Success);
+            if (!Uri.TryCreate(PoolHostRaw, UriKind.Absolute, out var ph))
+            {
+                return ValidationResult.Failed($"Could not parse pool host \"{PoolHostRaw}\" to URL");
+            }
+            if (!Uri.TryCreate(FarmerHostRaw, UriKind.Absolute, out var fh))
+            {
+                return ValidationResult.Failed($"Could not parse farmer host \"{FarmerHostRaw}\" to URL");
+            }
+
+            PoolHost = ph;
+            FarmerHost = fh;
+
+            var result = await base.ValidateAsync(provider);
+            return result;
         }
     }
 }

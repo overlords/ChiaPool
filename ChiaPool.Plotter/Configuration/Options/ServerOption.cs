@@ -6,19 +6,26 @@ namespace ChiaPool.Configuration
 {
     public class ServerOption : Option
     {
-        public string PoolHost { get; init; } = Environment.GetEnvironmentVariable("pool_host");
-        private string ManagerPortString { get; init; } = Environment.GetEnvironmentVariable("manager_port");
-        public short ManagerPort { get; private set; }
+        public Uri PoolHost { get; set; }
 
-        protected override ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
+        private string PoolHostRaw { get; set; } = Environment.GetEnvironmentVariable("pool_host");
+
+        protected override async ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
         {
-            if (!short.TryParse(ManagerPortString, out short port))
+            if (string.IsNullOrWhiteSpace(PoolHostRaw))
             {
-                return ValueTask.FromResult(ValidationResult.Failed("Port is not a valid number"));
+                return ValidationResult.Failed("Could not find \"pool_host\" environment variable!");
             }
 
-            ManagerPort = port;
-            return ValueTask.FromResult(ValidationResult.Success);
+            if (!Uri.TryCreate(PoolHostRaw, UriKind.Absolute, out var ph))
+            {
+                return ValidationResult.Failed($"Could not parse pool host \"{PoolHostRaw}\" to URL");
+            }
+
+            PoolHost = ph;
+
+            var result = await base.ValidateAsync(provider);
+            return result;
         }
     }
 }

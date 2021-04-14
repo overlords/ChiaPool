@@ -9,66 +9,64 @@ namespace ChiaPool.Api
 {
     public sealed class ServerApiAccessor : ApiAccessor
     {
-        private const string ApiUrl = "https://pool.playwo.de/";
-
         public ServerApiAccessor(HttpClient client)
             : base(client)
         {
         }
 
         public Task<ServerStatus> GetStatusAsync()
-            => GetAsync<ServerStatus>(ServerRoutes.Status(ApiUrl));
+            => GetAsync<ServerStatus>(ServerRoutes.Status());
 
         public async Task<ZipArchive> GetCACertificateArchiveAsync(string token)
         {
-            var zipStream = await GetStreamAsync(ServerRoutes.GetCACertificate(ApiUrl), "Miner", token);
+            var zipStream = await GetStreamAsync(ServerRoutes.GetCACertificate(), "Miner", token);
             return new ZipArchive(zipStream);
         }
 
         public Task<List<User>> ListUsersAsync()
-            => GetAsync<List<User>>(ServerRoutes.ListUsers(ApiUrl));
+            => GetAsync<List<User>>(ServerRoutes.ListUsers());
         public Task<User> GetUserByNameAsync(string name)
-            => GetAsync<User>(ServerRoutes.GetUserByName(ApiUrl, name));
+            => GetAsync<User>(ServerRoutes.GetUserByName(name));
         public Task<User> GetUserByIdAsync(long id)
-            => GetAsync<User>(ServerRoutes.GetUserById(ApiUrl, id));
+            => GetAsync<User>(ServerRoutes.GetUserById(id));
 
         public Task<List<MinerInfo>> ListMinersByOwnerNameAsync(string name)
-            => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerName(ApiUrl, name));
+            => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerName(name));
         public Task<List<PlotterInfo>> ListPlottersByOwnerNameAsync(string name)
-            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerName(ApiUrl, name));
+            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerName(name));
 
         public Task<List<MinerInfo>> ListMinersByOwnerIdAsync(long id)
-            => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerId(ApiUrl, id));
+            => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerId(id));
         public Task<List<PlotterInfo>> ListPlottersByOwnerIdAsync(long id)
-            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerId(ApiUrl, id));
+            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerId(id));
 
         public Task<MinerInfo> GetMinerByIdAsync(long id)
-            => GetAsync<MinerInfo>(ServerRoutes.GetMinerById(ApiUrl, id));
+            => GetAsync<MinerInfo>(ServerRoutes.GetMinerById(id));
         public Task<MinerInfo> GetMinerByNameAsync(string name)
-            => GetAsync<MinerInfo>(ServerRoutes.GetMinerByName(ApiUrl, name));
+            => GetAsync<MinerInfo>(ServerRoutes.GetMinerByName(name));
         public Task<MinerInfo> GetMinerByTokenAsync(string token)
-            => GetAsync<MinerInfo>(ServerRoutes.GetMinerByToken(ApiUrl, token));
+            => GetAsync<MinerInfo>(ServerRoutes.GetMinerByToken(token));
 
         public Task<PlotterInfo> GetPlotterByIdAsync(long id)
-            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterById(ApiUrl, id));
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterById(id));
         public Task<PlotterInfo> GetPlotterByNameAsync(string name)
-            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByName(ApiUrl, name));
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByName(name));
         public Task<PlotterInfo> GetPlotterByTokenAsync(string token)
-            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByToken(ApiUrl, token));
+            => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterByToken(token));
 
         public Task<Wallet> GetWalletByOwnerIdAsync(long userId)
-            => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerId(ApiUrl, userId));
+            => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerId(userId));
         public Task<Wallet> GetWalletByOwnerNameAsync(string name)
-            => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerName(ApiUrl, name));
+            => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerName(name));
         public Task<Wallet> GetPoolWalletAsync()
-            => GetAsync<Wallet>(ServerRoutes.GetPoolWallet(ApiUrl));
+            => GetAsync<Wallet>(ServerRoutes.GetPoolWallet());
 
         public Task<PoolInfo> GetPoolInfoAsync()
-            => GetAsync<PoolInfo>(ServerRoutes.GetPoolInfo(ApiUrl));
+            => GetAsync<PoolInfo>(ServerRoutes.GetPoolInfo());
 
         public Task<long> GetPlotTransferCostAsync(int deadlineHours)
-            => GetAsync<long>(ServerRoutes.GetPlotTransferPrice(ApiUrl, deadlineHours));
+            => GetAsync<long>(ServerRoutes.GetPlotTransferPrice(deadlineHours));
         public Task<PlotTransfer> BuyPlotTransferAsync(string token, int deadlineHours)
-            => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(ApiUrl, deadlineHours), "Miner", token);
+            => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(deadlineHours), "Miner", token);
     }
 }

@@ -4,57 +4,57 @@ namespace ChiaPool.Api
 {
     internal static class ServerRoutes
     {
-        public static Uri Status(string apiUrl)
-            => new Uri(apiUrl + "Status");
+        public static Uri Status()
+            => new Uri("Status", UriKind.Relative);
 
-        public static Uri GetCACertificate(string apiUrl)
-            => new Uri(apiUrl + "Cert/CA");
+        public static Uri GetCACertificate()
+            => new Uri("Cert/CA", UriKind.Relative);
 
-        public static Uri ListUsers(string apiUrl)
-            => new Uri(apiUrl + "User/List");
-        public static Uri GetUserByName(string apiUrl, string name)
-            => new Uri(apiUrl + $"User/Get/Name/{name}");
-        public static Uri GetUserById(string apiUrl, long id)
-            => new Uri(apiUrl + $"User/Get/Id/{id}");
+        public static Uri ListUsers()
+            => new Uri("User/List", UriKind.Relative);
+        public static Uri GetUserByName(string name)
+            => new Uri($"User/Get/Name/{name}", UriKind.Relative);
+        public static Uri GetUserById(long id)
+            => new Uri($"User/Get/Id/{id}", UriKind.Relative);
 
-        public static Uri ListMinersByOwnerName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Miner/List/Name/{name}");
-        public static Uri ListPlottersByOwnerName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Plotter/List/Name/{name}");
+        public static Uri ListMinersByOwnerName(string name)
+            => new Uri($"Miner/List/Name/{name}", UriKind.Relative);
+        public static Uri ListPlottersByOwnerName(string name)
+            => new Uri($"Plotter/List/Name/{name}", UriKind.Relative);
 
-        public static Uri ListMinersByOwnerId(string apiUrl, long id)
-            => new Uri(apiUrl + $"Miner/List/Id/{id}");
-        public static Uri ListPlottersByOwnerId(string apiUrl, long id)
-            => new Uri(apiUrl + $"Plotter/List/Id/{id}");
+        public static Uri ListMinersByOwnerId(long id)
+            => new Uri($"Miner/List/Id/{id}", UriKind.Relative);
+        public static Uri ListPlottersByOwnerId(long id)
+            => new Uri($"Plotter/List/Id/{id}", UriKind.Relative);
 
-        public static Uri GetMinerById(string apiUrl, long id)
-            => new Uri(apiUrl + $"Miner/Get/Id/{id}");
-        public static Uri GetMinerByName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Miner/Get/Name/{name}");
-        public static Uri GetMinerByToken(string apiUrl, string token)
-            => new Uri(apiUrl + $"Miner/Get/Token/{token}");
+        public static Uri GetMinerById(long id)
+            => new Uri($"Miner/Get/Id/{id}", UriKind.Relative);
+        public static Uri GetMinerByName(string name)
+            => new Uri($"Miner/Get/Name/{name}", UriKind.Relative);
+        public static Uri GetMinerByToken(string token)
+            => new Uri($"Miner/Get/Token/{token}", UriKind.Relative);
 
-        public static Uri GetPlotterById(string apiUrl, long id)
-            => new Uri(apiUrl + $"Plotter/Get/Id/{id}");
-        public static Uri GetPlotterByName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Plotter/Get/Name/{name}");
-        public static Uri GetPlotterByToken(string apiUrl, string token)
-            => new Uri(apiUrl + $"Plotter/Get/Token/{token}");
+        public static Uri GetPlotterById(long id)
+            => new Uri($"Plotter/Get/Id/{id}", UriKind.Relative);
+        public static Uri GetPlotterByName(string name)
+            => new Uri($"Plotter/Get/Name/{name}", UriKind.Relative);
+        public static Uri GetPlotterByToken(string token)
+            => new Uri($"Plotter/Get/Token/{token}", UriKind.Relative);
 
-        public static Uri GetWalletByOwnerId(string apiUrl, long userId)
-            => new Uri(apiUrl + $"Wallet/Get/User/Id/{userId}");
-        public static Uri GetWalletByOwnerName(string apiUrl, string name)
-            => new Uri(apiUrl + $"Wallet/Get/User/Name/{name}");
-        public static Uri GetPoolWallet(string apiUrl)
-            => new Uri(apiUrl + $"Wallet/Get/Pool");
+        public static Uri GetWalletByOwnerId(long userId)
+            => new Uri($"Wallet/Get/User/Id/{userId}", UriKind.Relative);
+        public static Uri GetWalletByOwnerName(string name)
+            => new Uri($"Wallet/Get/User/Name/{name}", UriKind.Relative);
+        public static Uri GetPoolWallet()
+            => new Uri($"Wallet/Get/Pool", UriKind.Relative);
 
-        public static Uri GetPoolInfo(string apiUrl)
-            => new Uri(apiUrl + $"Pool/Info");
+        public static Uri GetPoolInfo()
+            => new Uri($"Pool/Info", UriKind.Relative);
 
-        public static Uri GetPlotTransferPrice(string apiUrl, int deadlineHours)
-            => new Uri(apiUrl + $"Plot/Transfer/Cost/{deadlineHours}");
-        public static Uri BuyPlotTransfer(string apiUrl, int deadlineHours)
-            => new Uri(apiUrl + $"Plot/Transfer/Buy/{deadlineHours}");
+        public static Uri GetPlotTransferPrice(int deadlineHours)
+            => new Uri($"Plot/Transfer/Cost/{deadlineHours}", UriKind.Relative);
+        public static Uri BuyPlotTransfer(int deadlineHours)
+            => new Uri($"Plot/Transfer/Buy/{deadlineHours}", UriKind.Relative);
 
     }
 }

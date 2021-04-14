@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -27,7 +28,7 @@ namespace ChiaPool.Services
         protected override ValueTask InitializeAsync()
         {
             Connection = new HubConnectionBuilder()
-                .WithUrl($"https://{ServerOptions.PoolHost}:{ServerOptions.ManagerPort}/PHub", x =>
+                .WithUrl(new Uri(ServerOptions.PoolHost, "PHub"), x =>
                 {
                     x.Headers.Add("Authorization", $"Plotter {AuthOptions.Token}");
                     x.Transports = HttpTransportType.WebSockets;

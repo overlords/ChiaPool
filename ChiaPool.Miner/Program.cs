@@ -23,6 +23,7 @@ namespace ChiaPool
         public static async Task Main(string[] args)
         {
             Application = CreateHostBuilder(args).Build();
+
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
             var assembly = Assembly.GetExecutingAssembly();
             var chiaNetAssembly = Assembly.GetAssembly(typeof(HarvesterClient));
@@ -36,6 +37,9 @@ namespace ChiaPool
                 Application.Dispose();
                 Environment.Exit(1);
             }
+
+            InitializeServices();
+
             if (args.Length == 1 && args[0] == "init")
             {
                 bool success = await RunInitAsync();
@@ -67,6 +71,14 @@ namespace ChiaPool
             await Application.WaitForShutdownAsync();
 
             Application.Dispose();
+        }
+
+        private static void InitializeServices()
+        {
+            var serverOptions = Application.Services.GetRequiredService<ServerOption>();
+            var serverAccessor = Application.Services.GetRequiredService<ServerApiAccessor>();
+
+            serverAccessor.SetApiUrl(serverOptions.PoolHost);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -11,6 +11,7 @@ namespace ChiaPool.Api
 {
     public abstract class ApiAccessor : Service
     {
+        private Uri ApiUrl;
         protected readonly HttpClient Client;
 
         public ApiAccessor(HttpClient client)
@@ -18,9 +19,12 @@ namespace ChiaPool.Api
             Client = client;
         }
 
+        public void SetApiUrl(Uri apiUrl) 
+            => ApiUrl = apiUrl;
+
         protected async Task<T> GetAsync<T>(Uri requestUri, string authScheme = null, string authValue = null)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(ApiUrl, requestUri));
             if (authScheme != default || authValue != default)
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue(authScheme, authValue);
@@ -45,7 +49,7 @@ namespace ChiaPool.Api
 
         protected async Task<Stream> GetStreamAsync(Uri requestUri, string authScheme = null, string authValue = null)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(ApiUrl, requestUri));
             if (authScheme != default || authValue != default)
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue(authScheme, authValue);
@@ -60,7 +64,7 @@ namespace ChiaPool.Api
 
         protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
+            using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(ApiUrl, requestUri))
             {
                 Content = JsonContent.Create(parameters ?? new Dictionary<string, string>())
             };

@@ -8,49 +8,47 @@ namespace ChiaPool.Api
 {
     public sealed class MinerApiAccessor : ApiAccessor
     {
-        private const string ApiUrl = "http://localhost:8888/";
-
         public MinerApiAccessor(HttpClient client)
             : base(client)
         {
         }
 
         public Task<MinerStatus> GetStatusAsync()
-            => GetAsync<MinerStatus>(MinerRoutes.Status(ApiUrl));
+            => GetAsync<MinerStatus>(MinerRoutes.Status());
 
         public Task<Plot[]> GetPlotsAsync()
-            => GetAsync<Plot[]>(MinerRoutes.ListPlots(ApiUrl));
+            => GetAsync<Plot[]>(MinerRoutes.ListPlots());
         public Task ReloadPlotsAsync()
-            => PostAsync(MinerRoutes.ReloadPlots(ApiUrl));
+            => PostAsync(MinerRoutes.ReloadPlots());
         public Task<bool> DeletePlotByPublicKeyAsync(string publicKey)
-            => PostAsync<bool>(MinerRoutes.DeletePlotByPublicKey(ApiUrl), new Dictionary<string, string>()
+            => PostAsync<bool>(MinerRoutes.DeletePlotByPublicKey(), new Dictionary<string, string>()
             {
                 ["publicKey"] = publicKey.ToString(),
             });
         public Task<bool> DeletePlotByFileNameAsync(string fileName)
-            => PostAsync<bool>(MinerRoutes.DeletePlotByFileName(ApiUrl), new Dictionary<string, string>()
+            => PostAsync<bool>(MinerRoutes.DeletePlotByFileName(), new Dictionary<string, string>()
             {
                 ["fileName"] = fileName,
             });
         public Task StartPlotGenerationAsync(PlottingConfiguration configuration)
-            => PostAsync(MinerRoutes.StartPlotGeneration(ApiUrl), configuration);
+            => PostAsync(MinerRoutes.StartPlotGeneration(), configuration);
 
         public Task<string[]> GetChiaLogAsync(ushort count)
-            => GetAsync<string[]>(MinerRoutes.GetChiaLog(ApiUrl, count));
+            => GetAsync<string[]>(MinerRoutes.GetChiaLog(count));
         public Task<string[]> GetPoolLogAsync(ushort count)
-            => GetAsync<string[]>(MinerRoutes.GetPoolLog(ApiUrl, count));
+            => GetAsync<string[]>(MinerRoutes.GetPoolLog(count));
 
         public Task<Wallet> GetCurrentWalletAsync()
-            => GetAsync<Wallet>(MinerRoutes.GetCurrentWalletAsync(ApiUrl));
+            => GetAsync<Wallet>(MinerRoutes.GetCurrentWalletAsync());
 
         public Task<User> GetCurrentUserAync()
-            => GetAsync<User>(MinerRoutes.GetCurrentUser(ApiUrl));
+            => GetAsync<User>(MinerRoutes.GetCurrentUser());
 
         public Task<MinerInfo> GetCurrentMinerAsync()
-            => GetAsync<MinerInfo>(MinerRoutes.GetCurrentMiner(ApiUrl));
+            => GetAsync<MinerInfo>(MinerRoutes.GetCurrentMiner());
         public Task<List<MinerInfo>> ListOwnedMinersAsync()
-            => GetAsync<List<MinerInfo>>(MinerRoutes.ListOwnedMiners(ApiUrl));
+            => GetAsync<List<MinerInfo>>(MinerRoutes.ListOwnedMiners());
         public Task<List<PlotterInfo>> ListOwnedPlottersAsync()
-            => GetAsync<List<PlotterInfo>>(MinerRoutes.ListOwnedPlotters(ApiUrl));
+            => GetAsync<List<PlotterInfo>>(MinerRoutes.ListOwnedPlotters());
     }
 }

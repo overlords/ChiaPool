@@ -8,9 +8,9 @@ cd ../chia-blockchain
 chia init
 chia init -c ca
 sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
-chia configure --set-farmer-peer ${pool_host}:${farmer_port}
+chia configure --set-farmer-peer ${farmer_host}
 
-curl https://${pool_host}:${manager_port}/Cert/Keys -H "Authorization: Miner ${token}" | chia keys add
+curl ${pool_host}/Cert/Keys -H "Authorization: Miner ${token}" | chia keys add
 
 for i in $(echo ${plot_dirs} | tr ";" "\n") 
 do

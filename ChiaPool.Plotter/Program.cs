@@ -1,3 +1,5 @@
+using ChiaPool.Api;
+using ChiaPool.Configuration;
 using Common.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +34,8 @@ namespace ChiaPool
                 Environment.Exit(1);
             }
 
+            InitializeServices();
+
             await Application.Services.InitializeApplicationServicesAsync(assembly);
             Application.Services.RunApplicationServices(assembly);
 
@@ -39,6 +43,14 @@ namespace ChiaPool
             await Application.WaitForShutdownAsync();
 
             Application.Dispose();
+        }
+
+        private static void InitializeServices()
+        {
+            var serverOptions = Application.Services.GetRequiredService<ServerOption>();
+            var serverAccessor = Application.Services.GetRequiredService<ServerApiAccessor>();
+
+            serverAccessor.SetApiUrl(serverOptions.PoolHost);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
