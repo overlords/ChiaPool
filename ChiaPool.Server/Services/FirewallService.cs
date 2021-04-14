@@ -67,24 +67,6 @@ namespace ChiaPool.Services
                 AccessSemaphore.Release();
             }
         }
-        public async Task SwapMinerIP(IPAddress oldAddress, IPAddress newAddress)
-        {
-            if (newAddress.Equals(oldAddress))
-            {
-                return;
-            }
-
-            await AccessSemaphore.WaitAsync();
-            try
-            {
-                AcceptIPInternal(newAddress);
-                DropIPInternal(oldAddress);
-            }
-            finally
-            {
-                AccessSemaphore.Release();
-            }
-        }
 
         private void FlushIPsInternal()
         {

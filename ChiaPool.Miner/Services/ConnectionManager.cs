@@ -1,6 +1,7 @@
 ﻿using ChiaPool.Clients;
 using ChiaPool.Configuration;
 using ChiaPool.Configuration.Options;
+using ChiaPool.Models;
 using ChiaPool.Utils;
 using Common.Services;
 using Microsoft.AspNetCore.Http.Connections;
@@ -14,6 +15,8 @@ namespace ChiaPool.Services
     [RunPriority(10)]
     public class ConnectionManager : Service, IConnectionManager
     {
+        private const int ConnectionRestartDelay = 5000;
+
         private HubConnection Connection;
         private long UserId;
 
@@ -44,6 +47,7 @@ namespace ChiaPool.Services
             Connection.Reconnecting += OnReconnecting;
             Connection.Reconnected += OnReconnected;
 
+            Connection.On<DisconnectRequest>(MinerMethods.Disconnect, HandleDisconnectRequestAsync);
 
             return ValueTask.CompletedTask;
         }
@@ -69,6 +73,12 @@ namespace ChiaPool.Services
             return Task.CompletedTask;
         }
 
+        private async Task HandleDisconnectRequestAsync(DisconnectRequest request)
+        {
+            Logger.LogWarning($"The server requested a disconnect!\n" +
+                              $"Reason: {request.Reason}");
+            await RestartConnectionAsync();
+        }
 
         public async Task SendStatusUpdateAsync()
         {
@@ -78,7 +88,25 @@ namespace ChiaPool.Services
         public async Task SendActivateRequestAsync()
         {
             var status = StatusService.GetCurrentStatus();
-            UserId = await Connection.InvokeAsync<long>(MinerHubMethods.Activate, status);
+            var result = await Connection.InvokeAsync<ActivationResult>(MinerHubMethods.Activate, status);
+
+            if (!result.Successful)
+            {
+                Logger.LogError($"Failed to execute {MinerHubMethods.Activate} via the websocket!\n" +
+                                $"Reason: \"{result.Reason}\"");
+                await RestartConnectionAsync();
+                return;
+            }
+
+            UserId = result.UserId;
+        }
+
+        private async Task RestartConnectionAsync()
+        {
+            await Connection.StopAsync();
+            await Task.Delay(ConnectionRestartDelay);
+            await Connection.StartAsync();
+            await SendActivateRequestAsync();
         }
 
         public long GetCurrentUserId()

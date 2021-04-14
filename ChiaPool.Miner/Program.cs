@@ -49,13 +49,13 @@ namespace ChiaPool
             }
 
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
-           
-            if(!await WaitForHarvesterAsync())
+
+            if (!await WaitForHarvesterAsync())
             {
                 Application.Dispose();
                 Environment.Exit(1);
             }
-            
+
             await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
 

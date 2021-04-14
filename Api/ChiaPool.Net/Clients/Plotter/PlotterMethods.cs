@@ -4,5 +4,7 @@
     {
         public const string RequestPlot = "Request";
         public const string DeletePlot = "Delete";
+
+        public const string Disconnect = "Disconnect";
     }
 }

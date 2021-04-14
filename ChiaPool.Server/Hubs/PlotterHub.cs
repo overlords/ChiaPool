@@ -20,16 +20,16 @@ namespace ChiaPool.Hubs
         }
 
         [HubMethodName(PlotterHubMethods.Activate)]
-        public void Activate(PlotterStatus status)
+        public Task<ActivationResult> ActivateAsync(PlotterStatus status)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
-            PlotterService.ActivatePlotterAsync(plotterId, status);
+            return PlotterService.ActivatePlotterAsync(Context.ConnectionId, plotterId, status);
         }
         [HubMethodName(PlotterHubMethods.Update)]
         public async Task UpdateAsync(PlotterStatus status)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
-            await PlotterService.UpdatePlotterAsync(plotterId, status);
+            await PlotterService.UpdatePlotterAsync(Context.ConnectionId, plotterId, status);
         }
 
         [HubMethodName(PlotterHubMethods.OfferPlot)]
@@ -39,11 +39,11 @@ namespace ChiaPool.Hubs
             await ((IPlotOfferHandler)PlotterService).HandlePlotOfferAsync(plot, plotterId);
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception exception)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
-            PlotterService.DeactivatePlotter(plotterId);
-            return base.OnDisconnectedAsync(exception);
+            await PlotterService.DeactivatePlotterAsync(Context.ConnectionId, plotterId);
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }

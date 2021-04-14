@@ -6,9 +6,11 @@ using Common.Services;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -21,18 +23,22 @@ namespace ChiaPool.Services
 
         [Inject]
         private readonly IHubContext<PlotterHub> HubContext;
+        [Inject]
+        private readonly UserService UserService;
 
-        private readonly ConcurrentDictionary<long, PlotterStatus> ActivePlotters;
+        private readonly Dictionary<long, PlotterActivation> ActivePlotters;
+        private readonly SemaphoreSlim ActivePlottersLock;
 
         private TaskCompletionSource<RemotePlot> PlotOfferCallback;
         private long PlotOfferPlotterId;
 
         public PlotterService()
         {
-            ActivePlotters = new ConcurrentDictionary<long, PlotterStatus>();
+            ActivePlotters = new Dictionary<long, PlotterActivation>();
+            ActivePlottersLock = new SemaphoreSlim(1, 1);
         }
 
-        public async Task<int> GetPlotterCount()
+        public async Task<int> GetTotalPlotterCountAsync()
         {
             using var scope = Provider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
@@ -43,27 +49,89 @@ namespace ChiaPool.Services
             => ActivePlotters.Count;
 
         public int GetPlottingCapacity()
-            => ActivePlotters.Sum(x => x.Value.Capacity);
+            => ActivePlotters.Sum(x => x.Value.Status.Capacity);
         public int GetAvailablePlotCount()
-            => ActivePlotters.Sum(x => x.Value.PlotsAvailable);
+            => ActivePlotters.Sum(x => x.Value.Status.PlotsAvailable);
 
         public PlotterInfo GetPlotterInfo(Plotter plotter)
            => ActivePlotters.TryGetValue(plotter.Id, out var plotterStatus)
-               ? new PlotterInfo(plotter.Id, true, plotterStatus.Capacity, plotterStatus.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
+               ? new PlotterInfo(plotter.Id, true, plotterStatus.Status.Capacity, plotterStatus.Status.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
                : new PlotterInfo(plotter.Id, false, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId);
 
-        public Task ActivatePlotterAsync(long plotterId, PlotterStatus status)
-            => !ActivePlotters.TryAdd(plotterId, status)
-                ? throw new InvalidOperationException("Cannot activate active plotter")
-                : Task.CompletedTask;
-        public Task UpdatePlotterAsync(long plotterId, PlotterStatus status)
-            => !ActivePlotters.TryUpdate(plotterId, status, status)
-                ? throw new InvalidOperationException("Cannot update inactive plotter")
-                : Task.CompletedTask;
-        public Task DeactivatePlotter(long plotterId)
-            => !ActivePlotters.TryRemove(plotterId, out _)
-                ? throw new InvalidOperationException("Cannot deactivate inactive plotter")
-                : Task.CompletedTask;
+        public async Task<ActivationResult> ActivatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
+        {
+            await ActivePlottersLock.WaitAsync();
+            try
+            {
+                var activation = new PlotterActivation(connectionId, status);
+                if (!ActivePlotters.TryAdd(plotterId, activation))
+                {
+                    return ActivationResult.FromFailed("There already is a active connection from this plotter!");
+                }
+
+                Logger.LogInformation($"Activated plotter [{plotterId}]");
+                long userId = await UserService.GetOwnerIdFromPlotterId(plotterId);
+                return ActivationResult.FromSuccess(userId);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "There was an exception while activating a plotter!");
+                return ActivationResult.FromFailed("An unknown error occurred!");
+            }
+            finally
+            {
+                ActivePlottersLock.Release();
+            }
+        }
+        public async Task UpdatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
+        {
+            await ActivePlottersLock.WaitAsync();
+
+            try
+            {
+                if (!ActivePlotters.TryGetValue(plotterId, out var oldValue))
+                {
+                    throw new InvalidOperationException("Cannot update inactive plotter");
+                }
+                if (oldValue.ConnectionId != connectionId)
+                {
+                    throw new InvalidOperationException("Cannot update active plotter from different connection");
+                }
+
+                oldValue.Status = status;
+                ActivePlotters[plotterId] = oldValue;
+                Logger.LogInformation($"Updated plotter [{plotterId}]");
+            }
+            finally
+            {
+                ActivePlottersLock.Release();
+            }
+        }
+        public async Task DeactivatePlotterAsync(string connectionId, long plotterId)
+        {
+            await ActivePlottersLock.WaitAsync();
+
+            try
+            {
+                if (!ActivePlotters.TryGetValue(plotterId, out var oldValue))
+                {
+                    throw new InvalidOperationException("Cannot deactivate inactive plotter");
+                }
+                if (oldValue.ConnectionId != connectionId)
+                {
+                    Logger.LogWarning("Cannot deactivate plotter from different connection");
+                    return;
+                    //throw new InvalidOperationException("Cannot deactivate plotter from different connection");
+                }
+
+                ActivePlotters.Remove(plotterId);
+                Logger.LogInformation($"Deactivated plotter [{plotterId}]");
+            }
+            finally
+            {
+                ActivePlottersLock.Release();
+            }
+        }
 
         public long GetPlotPrice(int deadlineHours)
         {
@@ -81,8 +149,8 @@ namespace ChiaPool.Services
 
         public long? GetSuitablePlotterId()
             => ActivePlotters
-                .OrderBy(x => x.Value.Capacity - x.Value.PlotsAvailable)
-                .Where(x => x.Value.PlotsAvailable > 0)
+                .OrderBy(x => x.Value.Status.Capacity - x.Value.Status.PlotsAvailable)
+                .Where(x => x.Value.Status.PlotsAvailable > 0)
                 .Select(x => x.Key)
                 .FirstOrDefault();
 

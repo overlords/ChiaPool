@@ -13,35 +13,31 @@ namespace ChiaPool.Hubs
     public class MinerHub : Hub
     {
         private readonly MinerService MinerService;
-        private readonly UserService UserService;
 
-        public MinerHub(MinerService minerService, UserService userService)
+        public MinerHub(MinerService minerService)
         {
             MinerService = minerService;
-            UserService = userService;
         }
 
         [HubMethodName(MinerHubMethods.Activate)]
-        public async Task<long> ActivateMinerAsync(MinerStatus status)
+        public Task<ActivationResult> ActivateAsync(MinerStatus status)
         {
             long minerId = long.Parse(Context.UserIdentifier);
             var address = GetRequestIP();
-            await MinerService.ActivateMinerAsync(minerId, status, address);
-            return await UserService.GetOwnerIdFromMinerId(minerId);
+            return MinerService.ActivateMinerAsync(Context.ConnectionId, minerId, status, address);
         }
 
         [HubMethodName(MinerHubMethods.Update)]
         public async Task UpdateMinerAsync(MinerStatus status)
         {
             long minerId = long.Parse(Context.UserIdentifier);
-            var address = GetRequestIP();
-            await MinerService.UpdateMinerAsync(minerId, status, address);
+            await MinerService.UpdateMinerAsync(Context.ConnectionId, minerId, status);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             long minerId = long.Parse(Context.UserIdentifier);
-            await MinerService.DeactivateMinerAsync(minerId);
+            await MinerService.DeactivateMinerAsync(Context.ConnectionId, minerId);
         }
 
         private IPAddress GetRequestIP()

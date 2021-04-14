@@ -19,5 +19,16 @@ namespace ChiaPool.Services
                 .Select(x => x.OwnerId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<long> GetOwnerIdFromPlotterId(long plotterId)
+        {
+            using var scope = Provider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
+
+            return await dbContext.Plotters
+                .Where(x => x.Id == plotterId)
+                .Select(x => x.OwnerId)
+                .FirstOrDefaultAsync();
+        }
     }
 }

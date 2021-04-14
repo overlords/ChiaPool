@@ -25,14 +25,16 @@ namespace ChiaPool.Services
         private readonly IHubContext<MinerHub> HubContext;
         [Inject]
         private readonly FirewallService FirewallService;
+        [Inject]
+        private readonly UserService UserService;
 
-        private readonly Dictionary<long, (MinerStatus Status, IPAddress Address)> ActiveMiners;
-        private readonly SemaphoreSlim ActiveMinerLock;
+        private readonly Dictionary<long, MinerActivation> ActiveMiners;
+        private readonly SemaphoreSlim ActiveMinersLock;
 
         public MinerService()
         {
-            ActiveMiners = new Dictionary<long, (MinerStatus Status, IPAddress Address)>();
-            ActiveMinerLock = new SemaphoreSlim(1, 1);
+            ActiveMiners = new Dictionary<long, MinerActivation>();
+            ActiveMinersLock = new SemaphoreSlim(1, 1);
         }
 
         protected override async ValueTask RunAsync()
@@ -49,7 +51,7 @@ namespace ChiaPool.Services
             }
         }
 
-        private async Task RewardMiners(IDictionary<long, (MinerStatus Status, IPAddress Address)> activeMiners)
+        private async Task RewardMiners(Dictionary<long, MinerActivation> activeMiners)
         {
             using var scope = Provider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
@@ -74,7 +76,7 @@ namespace ChiaPool.Services
             await dbContext.SaveChangesConcurrentAsync();
         }
 
-        public Task<int> GetTotalMinerCount()
+        public Task<int> GetTotalMinerCountAsync()
         {
             using var scope = Provider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MinerContext>();
@@ -91,27 +93,35 @@ namespace ChiaPool.Services
                 ? new MinerInfo(miner.Id, true, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId)
                 : new MinerInfo(miner.Id, false, -1, miner.Name, miner.Earnings, miner.OwnerId);
 
-        public async Task ActivateMinerAsync(long minerId, MinerStatus status, IPAddress address)
+        public async Task<ActivationResult> ActivateMinerAsync(string connectionId, long minerId, MinerStatus status, IPAddress address)
         {
-            await ActiveMinerLock.WaitAsync();
+            await ActiveMinersLock.WaitAsync();
             try
             {
-                if (!ActiveMiners.TryAdd(minerId, (status, address)))
+                var activation = new MinerActivation(connectionId, address, status);
+                if (!ActiveMiners.TryAdd(minerId, activation))
                 {
-                    throw new InvalidOperationException("Cannot activate active miner");
+                    return ActivationResult.FromFailed("There already is a active connection from this miner!");
                 }
 
                 await FirewallService.AcceptIPAsync(address);
                 Logger.LogInformation($"Activated miner [{minerId}]");
+                long userId = await UserService.GetOwnerIdFromMinerId(minerId);
+                return ActivationResult.FromSuccess(userId);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "There was an exception while activating a miner!");
+                return ActivationResult.FromFailed("An unknown error occurred!");
             }
             finally
             {
-                ActiveMinerLock.Release();
+                ActiveMinersLock.Release();
             }
         }
-        public async Task UpdateMinerAsync(long minerId, MinerStatus status, IPAddress address)
+        public async Task UpdateMinerAsync(string connectionId, long minerId, MinerStatus status)
         {
-            await ActiveMinerLock.WaitAsync();
+            await ActiveMinersLock.WaitAsync();
 
             try
             {
@@ -119,33 +129,44 @@ namespace ChiaPool.Services
                 {
                     throw new InvalidOperationException("Cannot update inactive miner");
                 }
-                ActiveMiners[minerId] = (status, address);
+                if (oldValue.ConnectionId != connectionId)
+                {
+                    throw new InvalidOperationException("Cannot update active miner from different connection");
+                }
 
-                await FirewallService.SwapMinerIP(oldValue.Address, address);
+                oldValue.Status = status;
+                ActiveMiners[minerId] = oldValue;
                 Logger.LogInformation($"Updated miner [{minerId}]");
             }
             finally
             {
-                ActiveMinerLock.Release();
+                ActiveMinersLock.Release();
             }
         }
-        public async Task DeactivateMinerAsync(long minerId)
+        public async Task DeactivateMinerAsync(string connectionId, long minerId)
         {
-            await ActiveMinerLock.WaitAsync();
+            await ActiveMinersLock.WaitAsync();
 
             try
             {
-                if (!ActiveMiners.Remove(minerId, out var oldValue))
+                if (!ActiveMiners.TryGetValue(minerId, out var oldValue))
                 {
                     throw new InvalidOperationException("Cannot deactivate inactive miner");
                 }
+                if (oldValue.ConnectionId != connectionId)
+                {
+                    Logger.LogWarning("Cannot deactivate miner from different connection");
+                    return;
+                    //throw new InvalidOperationException("Cannot deactivate miner from different connection");
+                }
 
+                ActiveMiners.Remove(minerId);
                 await FirewallService.DropIPAsync(oldValue.Address);
                 Logger.LogInformation($"Deactivated miner [{minerId}]");
             }
             finally
             {
-                ActiveMinerLock.Release();
+                ActiveMinersLock.Release();
             }
         }
     }
