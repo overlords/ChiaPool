@@ -31,6 +31,8 @@ namespace ChiaPool
                 return;
             }
 
+            InitializeServices();
+
             Application = new CliApplicationBuilder()
                 .AddCommandsFromThisAssembly()
                 .UseTypeActivator(Provider.GetService)
