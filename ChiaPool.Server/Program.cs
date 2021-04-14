@@ -31,7 +31,8 @@ namespace ChiaPool
             if (!validationResult.IsSuccessful)
             {
                 logger.LogError($"Config Validation failed: {validationResult.Reason}");
-                return;
+                Application.Dispose();
+                Environment.Exit(1);
             }
 
             await MigrateDatabaseAsync();
@@ -39,8 +40,13 @@ namespace ChiaPool
 
             if (args.Length == 1 && args[0] == "init")
             {
-                await RunInitAsync();
+                bool success = await RunInitAsync();
                 Application.Dispose();
+
+                if (!success)
+                {
+                    Environment.Exit(1);
+                }
                 return;
             }
 
@@ -79,7 +85,7 @@ namespace ChiaPool
             await dbContext.Database.MigrateAsync();
         }
 
-        private static async Task RunInitAsync()
+        private static async Task<bool> RunInitAsync()
         {
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
             var farmerApiClient = Application.Services.GetRequiredService<FarmerClient>();
@@ -93,15 +99,22 @@ namespace ChiaPool
                 {
                     await farmerApiClient.SetRewardTargets(Environment.GetEnvironmentVariable("wallet_address"));
                     logger.LogInformation("Done");
-                    return;
+                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    logger.LogWarning($"Connection failed. Trying again in 5 seconds. {9 - i} retries left");
+                    if (i == 9)
+                    {
+                        logger.LogError(ex, $"Failed connecting to chia!");
+                    }
+                    else
+                    {
+                        logger.LogWarning($"Connection failed. Trying again in 5 seconds. {9 - i} retries left");
+                    }
                 }
             }
 
-            throw new Exception("Conenction Error!");
+            return false;
         }
     }
 }

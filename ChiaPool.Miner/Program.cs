@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.IO.Compression;
 using System.Net;
 using System.Reflection;
@@ -32,17 +33,29 @@ namespace ChiaPool
             if (!validationResult.IsSuccessful)
             {
                 logger.LogError($"Config Validation failed: {validationResult.Reason}");
-                return;
+                Application.Dispose();
+                Environment.Exit(1);
             }
             if (args.Length == 1 && args[0] == "init")
             {
-                await RunInitAsync();
+                bool success = await RunInitAsync();
                 Application.Dispose();
+
+                if (!success)
+                {
+                    Environment.Exit(1);
+                }
                 return;
             }
 
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
-            await WaitForHarvesterAsync();
+           
+            if(!await WaitForHarvesterAsync())
+            {
+                Application.Dispose();
+                Environment.Exit(1);
+            }
+            
             await Application.Services.InitializeApplicationServicesAsync(assembly);
             await Application.Services.InitializeApplicationServicesAsync(chiaPoolNetAssembly);
 
@@ -85,19 +98,28 @@ namespace ChiaPool
                     config.AddJsonFile("appsettings.json", false);
                 });
 
-        private static async Task RunInitAsync()
+        private static async Task<bool> RunInitAsync()
         {
             var client = Application.Services.GetRequiredService<ServerApiAccessor>();
             var authOptions = Application.Services.GetRequiredService<AuthOption>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
-            logger.LogInformation("Downloading ca certificate...");
-            using var zipArchive = await client.GetCACertificateArchiveAsync(authOptions.Token);
-            logger.LogInformation("Extracting ca certificate...");
-            zipArchive.ExtractToDirectory("/root/chia-blockchain/ca/", true);
-            logger.LogInformation("Finished updating ca!");
+            try
+            {
+                logger.LogInformation("Downloading ca certificate...");
+                using var zipArchive = await client.GetCACertificateArchiveAsync(authOptions.Token);
+                logger.LogInformation("Extracting ca certificate...");
+                zipArchive.ExtractToDirectory("/root/chia-blockchain/ca/", true);
+                logger.LogInformation("Finished updating ca!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred while updating ca!");
+                return false;
+            }
         }
-        private static async Task WaitForHarvesterAsync()
+        private static async Task<bool> WaitForHarvesterAsync()
         {
             var client = Application.Services.GetRequiredService<HarvesterClient>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
@@ -111,13 +133,23 @@ namespace ChiaPool
                 {
                     await client.GetConnections();
                     logger.LogInformation("Done");
-                    return;
+                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    logger.LogWarning($"Connection failed. Trying again in 5 seconds. {9 - i} retries left");
+                    if (i == 9)
+                    {
+                        logger.LogError(ex, $"Failed connecting to chia!");
+                    }
+                    else
+                    {
+                        logger.LogWarning($"Connection failed. Trying again in 5 seconds. {9 - i} retries left");
+                    }
                 }
             }
+
+            return false;
+
 
         }
     }

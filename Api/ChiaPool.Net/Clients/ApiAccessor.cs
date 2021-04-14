@@ -29,11 +29,11 @@ namespace ChiaPool.Api
 
             var response = await Client.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode && !ShouldIgnoreStatusCode(response.StatusCode))
+            if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"There was an error! The server responded with {response.StatusCode}");
             }
-            if (typeof(T) == typeof(object) || !response.IsSuccessStatusCode)
+            if (typeof(T) == typeof(object))
             {
                 return default;
             }
@@ -54,7 +54,7 @@ namespace ChiaPool.Api
 
             var response = await Client.SendAsync(request);
 
-            return !response.IsSuccessStatusCode && !ShouldIgnoreStatusCode(response.StatusCode)
+            return !response.IsSuccessStatusCode
                 ? throw new Exception($"There was an error! The server responded with {response.StatusCode}")
                 : await response.Content.ReadAsStreamAsync();
         }
@@ -72,11 +72,11 @@ namespace ChiaPool.Api
 
             var response = await Client.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode && !ShouldIgnoreStatusCode(response.StatusCode))
+            if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"There was an error! The server responded with {response.StatusCode}");
             }
-            if (typeof(T) == typeof(object) || !response.IsSuccessStatusCode)
+            if (typeof(T) == typeof(object))
             {
                 return default;
             }
@@ -86,16 +86,5 @@ namespace ChiaPool.Api
 
         protected async Task PostAsync(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
             => await PostAsync<object>(requestUri, parameters, authScheme, authValue);
-
-        private bool ShouldIgnoreStatusCode(HttpStatusCode statusCode)
-        {
-            return statusCode switch
-            {
-                HttpStatusCode.NotFound => true,
-                HttpStatusCode.Unauthorized => true,
-                HttpStatusCode.Conflict => true,
-                _ => false,
-            };
-        }
     }
 }

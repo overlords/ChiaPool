@@ -12,7 +12,7 @@ namespace ChiaPool.Commands
         private readonly ServerApiAccessor ServerAccessor;
 
         [CommandOption("id", 'i', Description = "The Id of the plotter")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [CommandOption("name", 'n', Description = "The name of the plotter")]
         public string Name { get; set; }
@@ -39,12 +39,12 @@ namespace ChiaPool.Commands
 
             var plotter = Name != default
                 ? await ServerAccessor.GetPlotterByNameAsync(Name)
-                : await ServerAccessor.GetPlotterByIdAsync(Id);
+                : await ServerAccessor.GetPlotterByIdAsync(Id.Value);
 
             await InfoLineAsync($"[ID]         |   {plotter.Id}");
             await InfoLineAsync($"[Name]       |   {plotter.Name}");
             await InfoLineAsync($"[Earnings]   |   {plotter.Earnings}");
-            await InfoAsync(    $"[Status]     |   ");
+            await InfoAsync($"[Status]     |   ");
 
             if (!plotter.Online)
             {

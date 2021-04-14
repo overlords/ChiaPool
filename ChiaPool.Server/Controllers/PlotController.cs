@@ -3,7 +3,6 @@ using ChiaPool.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -55,7 +54,7 @@ namespace ChiaPool.Controllers
 
             var plotTransfer = await PlotterService.TryRequestPlotTransferAsync(miner.Id, plotter.Id, deadlineHours);
 
-            plotter.Earnings+= plotTransfer.Cost;
+            plotter.Earnings += plotTransfer.Cost;
             seller.PlotMinutes += plotTransfer.Cost;
             customer.PlotMinutes -= plotTransfer.Cost;
 

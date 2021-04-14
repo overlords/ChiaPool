@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -14,27 +15,30 @@ namespace ChiaPool
     {
         public const int ApplicationPort = 8555;
 
+        private static IHost Application;
+
         public static async Task Main(string[] args)
         {
-            var webHost = CreateHostBuilder(args).Build();
-            var logger = webHost.Services.GetRequiredService<ILogger<Startup>>();
+            Application = CreateHostBuilder(args).Build();
+            var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
             var assembly = Assembly.GetExecutingAssembly();
 
-            var validationResult = await webHost.Services.ValidateOptionsAsync(assembly);
+            var validationResult = await Application.Services.ValidateOptionsAsync(assembly);
 
             if (!validationResult.IsSuccessful)
             {
                 logger.LogError($"Config Validation failed: {validationResult.Reason}");
-                return;
+                Application.Dispose();
+                Environment.Exit(1);
             }
 
-            await webHost.Services.InitializeApplicationServicesAsync(assembly);
-            webHost.Services.RunApplicationServices(assembly);
+            await Application.Services.InitializeApplicationServicesAsync(assembly);
+            Application.Services.RunApplicationServices(assembly);
 
-            await webHost.StartAsync();
-            await webHost.WaitForShutdownAsync();
+            await Application.StartAsync();
+            await Application.WaitForShutdownAsync();
 
-            webHost.Dispose();
+            Application.Dispose();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

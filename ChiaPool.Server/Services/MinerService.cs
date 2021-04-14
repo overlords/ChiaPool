@@ -86,7 +86,7 @@ namespace ChiaPool.Services
         public int GetActivePlotCount()
             => ActiveMiners.Sum(x => x.Value.Status.PlotCount);
 
-        public MinerInfo GetMinerInfo(Miner miner) 
+        public MinerInfo GetMinerInfo(Miner miner)
             => ActiveMiners.TryGetValue(miner.Id, out var minerStatus)
                 ? new MinerInfo(miner.Id, true, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId)
                 : new MinerInfo(miner.Id, false, -1, miner.Name, miner.Earnings, miner.OwnerId);

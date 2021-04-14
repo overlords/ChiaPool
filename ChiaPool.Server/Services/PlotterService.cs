@@ -49,7 +49,7 @@ namespace ChiaPool.Services
 
         public PlotterInfo GetPlotterInfo(Plotter plotter)
            => ActivePlotters.TryGetValue(plotter.Id, out var plotterStatus)
-               ? new PlotterInfo(plotter.Id, true, plotterStatus.Capacity, plotterStatus.PlotsAvailable , plotter.Name, plotter.Earnings, plotter.OwnerId)
+               ? new PlotterInfo(plotter.Id, true, plotterStatus.Capacity, plotterStatus.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
                : new PlotterInfo(plotter.Id, false, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId);
 
         public Task ActivatePlotterAsync(long plotterId, PlotterStatus status)

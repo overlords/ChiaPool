@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace ChiaPool.Commands
 {
@@ -26,7 +25,7 @@ namespace ChiaPool.Commands
         public string Name { get; set; }
 
         [CommandOption("id", 'i', Description = "The id of the user")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         protected override async Task ExecuteAsync(IConsole console)
         {
@@ -39,7 +38,7 @@ namespace ChiaPool.Commands
             var user = Name != default
                 ? await ServerAccessor.GetUserByNameAsync(Name)
                 : Id != default
-                ? await ServerAccessor.GetUserByIdAsync(Id)
+                ? await ServerAccessor.GetUserByIdAsync(Id.Value)
                 : await MinerAccessor.GetCurrentUserAync();
 
             if (user == null)
@@ -51,13 +50,13 @@ namespace ChiaPool.Commands
             var miners = Name != default
                 ? await ServerAccessor.ListMinersByOwnerNameAsync(Name)
                 : Id != default
-                ? await ServerAccessor.ListMinersByOwnerIdAsync(Id)
+                ? await ServerAccessor.ListMinersByOwnerIdAsync(Id.Value)
                 : await MinerAccessor.ListOwnedMinersAsync();
 
             var plotters = Name != default
                 ? await ServerAccessor.ListPlottersByOwnerNameAsync(Name)
                 : Id != default
-                ? await ServerAccessor.ListPlottersByOwnerIdAsync(Id)
+                ? await ServerAccessor.ListPlottersByOwnerIdAsync(Id.Value)
                 : await MinerAccessor.ListOwnedPlottersAsync();
 
             await InfoLineAsync($"[ {user.Name}   |   User Info ] ");
@@ -85,6 +84,7 @@ namespace ChiaPool.Commands
                     ["Earnings"] = x => x.Earnings,
                     ["Status"] = x => (x.Online ? ConsoleColor.Green : ConsoleColor.Red, x.Online ? "Online" : "Offline"),
                     ["Plots"] = x => x.Online ? x.PlotCount : "",
+                    ["Size"] = x => x.Online ? $"{Math.Round(x.PlotCount * Constants.PlotSize)} GB" : "",
                 };
 
                 await TableAsync(columns, miners.ToArray());

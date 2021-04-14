@@ -13,7 +13,7 @@ namespace ChiaPool.Commands
         private readonly ServerApiAccessor ServerAccessor;
 
         [CommandOption("id", 'i', Description = "The Id of the miner")]
-        public long Id { get; set; }
+        public long? Id { get; set; }
 
         [CommandOption("name", 'n', Description = "The name of the miner")]
         public string Name { get; set; }
@@ -35,13 +35,13 @@ namespace ChiaPool.Commands
             var miner = Name != default
                 ? await ServerAccessor.GetMinerByNameAsync(Name)
                 : Id != default
-                ? await ServerAccessor.GetMinerByIdAsync(Id)
+                ? await ServerAccessor.GetMinerByIdAsync(Id.Value)
                 : await MinerAccessor.GetCurrentMinerAsync();
 
             await InfoLineAsync($"[ID]         |   {miner.Id}");
             await InfoLineAsync($"[Name]       |   {miner.Name}");
             await InfoLineAsync($"[Earnigs]    |   {miner.Earnings}");
-            await InfoAsync(    $"[Status]     |   ");
+            await InfoAsync($"[Status]     |   ");
 
             if (!miner.Online)
             {
