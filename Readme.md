@@ -19,10 +19,8 @@ This is used as a private mining pool until pools are officially supported by ch
 - The mining rewards are stored on a wallet which is not accessible by miners
   - Miners must trust Pool
                  
-## Building
- - Clone the project
- - Go to the subfolder of Docker depending on which one you want to build
- - `docker build . -t [ImageName] --build-arg BRANCH=latest --no-cache`
+## Installation
+ - https://github.com/Playwo/ChiaPool/wiki/Installation
 
 ## Using the CLI Interface
 Configure environment variables
