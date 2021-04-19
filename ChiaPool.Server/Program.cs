@@ -89,15 +89,20 @@ namespace ChiaPool
         {
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
             var farmerApiClient = Application.Services.GetRequiredService<FarmerClient>();
+            var walletApiClient = Application.Services.GetRequiredService<WalletClient>();
 
-            logger.LogInformation("Configuring farmer reward target");
+            logger.LogInformation("Retrieving wallet address");
+
+            string walletAddress = await walletApiClient.GetWalletAddressAsync((int)ChiaWalletId.Wallet, false);
+
+            logger.LogInformation($"Setting farmer target to {walletAddress.Substring(0, 10)} ...");
 
             for (int i = 0; i < 10; i++)
             {
                 await Task.Delay(5000);
                 try
                 {
-                    await farmerApiClient.SetRewardTargets(Environment.GetEnvironmentVariable("wallet_address"));
+                    await farmerApiClient.SetRewardTargets(walletAddress);
                     logger.LogInformation("Done");
                     return true;
                 }
