@@ -25,5 +25,19 @@ namespace Chia.NET.Clients
             });
             return result.Wallet;
         }
+
+        /// <summary>
+        /// Retrieves the address of the wallet at the given id for the current key.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> GetWalletAddressAsync(int walletId, bool generateAddress)
+        {
+            var result = await PostAsync<GetWalletAddressResult>(WalletRoutes.GetWalletAddress(ApiUrl), new Dictionary<string, string>()
+            {
+                ["wallet_id"] = $"{walletId}",
+                ["new_address"] = $"{generateAddress}"
+            });
+            return result.Address;
+        }
     }
 }
