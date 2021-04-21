@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Chia.NET.Parser;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace Chia.NET.Models
@@ -15,6 +16,7 @@ namespace Chia.NET.Models
         public int BytesWritten { get; init; }
 
         [JsonPropertyName("peer_host")]
+        [JsonConverter(typeof(JsonIPAddressConverter))]
         public IPAddress PeerHost { get; init; }
 
         [JsonPropertyName("peer_port")]
