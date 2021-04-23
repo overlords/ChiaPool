@@ -40,7 +40,10 @@ namespace ChiaPool.Controllers
             DbContext.Miners.Add(miner);
             await DbContext.SaveChangesAsync();
 
-            return Ok(miner);
+            var minerInfo = MinerService.GetMinerInfo(miner);
+            var result = new CreateMinerResult(miner.Token, minerInfo);
+
+            return Ok(result);
         }
 
         [HttpGet("Get/Id/{id}")]

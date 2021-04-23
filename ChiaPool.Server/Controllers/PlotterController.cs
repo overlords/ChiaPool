@@ -40,7 +40,10 @@ namespace ChiaPool.Controllers
             DbContext.Plotters.Add(plotter);
             await DbContext.SaveChangesAsync();
 
-            return Ok(plotter);
+            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            var result = new CreatePlotterResult(plotter.Token, plotterInfo);
+
+            return Ok(result);
         }
 
         [HttpGet("Get/Id/{id}")]

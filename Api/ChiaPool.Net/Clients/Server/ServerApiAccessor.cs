@@ -33,8 +33,8 @@ namespace ChiaPool.Api
         public Task<UserInfo> GetUserByIdAsync(long id)
             => GetAsync<UserInfo>(ServerRoutes.GetUserById(id));
 
-        public Task<string> CreateMinerAsync(string name, string username, string password)
-            => PostAsync<string>(ServerRoutes.CreateMiner(), new Dictionary<string, string>()
+        public Task<CreateMinerResult> CreateMinerAsync(string name, string username, string password)
+            => PostAsync<CreateMinerResult>(ServerRoutes.CreateMiner(), new Dictionary<string, string>()
             {
                 ["name"] = name,
             }, "Basic", $"{username}:{password}");
@@ -49,8 +49,8 @@ namespace ChiaPool.Api
         public Task<MinerInfo> GetMinerByTokenAsync(string token)
             => GetAsync<MinerInfo>(ServerRoutes.GetMinerByToken(token));
 
-        public Task<string> CreatePlotterAsync(string name, string username, string password)
-            => PostAsync<string>(ServerRoutes.CreatePlotter(), new Dictionary<string, string>()
+        public Task<CreatePlotterResult> CreatePlotterAsync(string name, string username, string password)
+            => PostAsync<CreatePlotterResult>(ServerRoutes.CreatePlotter(), new Dictionary<string, string>()
             {
                 ["name"] = name,
             }, "Basic", $"{username}:{password}");
