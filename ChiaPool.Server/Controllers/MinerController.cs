@@ -1,8 +1,11 @@
-﻿using ChiaPool.Models;
+﻿using ChiaPool.Configuration.Options;
+using ChiaPool.Models;
 using ChiaPool.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -13,11 +16,31 @@ namespace ChiaPool.Controllers
     {
         private readonly MinerContext DbContext;
         private readonly MinerService MinerService;
+        private readonly CustomizationOption CustomizationOptions;
 
-        public MinerController(MinerContext dbContext, MinerService minerService)
+        public MinerController(MinerContext dbContext, MinerService minerService, CustomizationOption customizationOptions)
         {
             DbContext = dbContext;
             MinerService = minerService;
+            CustomizationOptions = customizationOptions;
+        }
+
+        [HttpPost("Create")]
+        [Authorize(AuthenticationSchemes = "Basic")]
+        public async Task<IActionResult> CreateMinerAsync([FromForm] string name)
+        {
+            if (!CustomizationOptions.AllowMinerCreation)
+            {
+                return NotFound();
+            }
+
+            long userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var miner = new Miner(name, userId);
+
+            DbContext.Miners.Add(miner);
+            await DbContext.SaveChangesAsync();
+
+            return Ok(miner);
         }
 
         [HttpGet("Get/Id/{id}")]

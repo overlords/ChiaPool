@@ -21,7 +21,11 @@ namespace ChiaPool.Api
         public Task<ServerStatus> GetStatusAsync()
             => GetAsync<ServerStatus>(ServerRoutes.Status());
 
-
+        public Task<UserInfo> RegisterUserAsync(string name)
+            => PostAsync<UserInfo>(ServerRoutes.RegisterUser(), new Dictionary<string, string>()
+            {
+                ["name"] = name,
+            });
         public Task<List<UserInfo>> ListUsersAsync()
             => GetAsync<List<UserInfo>>(ServerRoutes.ListUsers());
         public Task<UserInfo> GetUserByNameAsync(string name)
@@ -29,16 +33,15 @@ namespace ChiaPool.Api
         public Task<UserInfo> GetUserByIdAsync(long id)
             => GetAsync<UserInfo>(ServerRoutes.GetUserById(id));
 
+        public Task<string> CreateMinerAsync(string name, string username, string password)
+            => PostAsync<string>(ServerRoutes.CreateMiner(), new Dictionary<string, string>()
+            {
+                ["name"] = name,
+            }, "Basic", $"{username}:{password}");
         public Task<List<MinerInfo>> ListMinersByOwnerNameAsync(string name)
             => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerName(name));
-        public Task<List<PlotterInfo>> ListPlottersByOwnerNameAsync(string name)
-            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerName(name));
-
         public Task<List<MinerInfo>> ListMinersByOwnerIdAsync(long id)
             => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerId(id));
-        public Task<List<PlotterInfo>> ListPlottersByOwnerIdAsync(long id)
-            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerId(id));
-
         public Task<MinerInfo> GetMinerByIdAsync(long id)
             => GetAsync<MinerInfo>(ServerRoutes.GetMinerById(id));
         public Task<MinerInfo> GetMinerByNameAsync(string name)
@@ -46,6 +49,15 @@ namespace ChiaPool.Api
         public Task<MinerInfo> GetMinerByTokenAsync(string token)
             => GetAsync<MinerInfo>(ServerRoutes.GetMinerByToken(token));
 
+        public Task<string> CreatePlotterAsync(string name, string username, string password)
+            => PostAsync<string>(ServerRoutes.CreatePlotter(), new Dictionary<string, string>()
+            {
+                ["name"] = name,
+            }, "Basic", $"{username}:{password}");
+        public Task<List<PlotterInfo>> ListPlottersByOwnerNameAsync(string name)
+            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerName(name));
+        public Task<List<PlotterInfo>> ListPlottersByOwnerIdAsync(long id)
+            => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerId(id));
         public Task<PlotterInfo> GetPlotterByIdAsync(long id)
             => GetAsync<PlotterInfo>(ServerRoutes.GetPlotterById(id));
         public Task<PlotterInfo> GetPlotterByNameAsync(string name)

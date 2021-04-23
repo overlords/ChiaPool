@@ -1,8 +1,11 @@
-﻿using ChiaPool.Models;
+﻿using ChiaPool.Configuration.Options;
+using ChiaPool.Models;
 using ChiaPool.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Controllers
@@ -13,11 +16,31 @@ namespace ChiaPool.Controllers
     {
         private readonly MinerContext DbContext;
         private readonly PlotterService PlotterService;
+        private readonly CustomizationOption CustomizationOptions;
 
-        public PlotterController(MinerContext dbContext, PlotterService plotterService)
+        public PlotterController(MinerContext dbContext, PlotterService plotterService, CustomizationOption customizationOptions)
         {
             DbContext = dbContext;
             PlotterService = plotterService;
+            CustomizationOptions = customizationOptions;
+        }
+
+        [HttpPost("Create")]
+        [Authorize(AuthenticationSchemes = "Basic")]
+        public async Task<IActionResult> CreatePlotterAsync([FromForm] string name)
+        {
+            if (!CustomizationOptions.AllowPlotterCreation)
+            {
+                return NotFound();
+            }
+
+            long userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var plotter = new Plotter(name, userId);
+
+            DbContext.Plotters.Add(plotter);
+            await DbContext.SaveChangesAsync();
+
+            return Ok(plotter);
         }
 
         [HttpGet("Get/Id/{id}")]

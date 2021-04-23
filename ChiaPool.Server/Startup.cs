@@ -39,7 +39,8 @@ namespace ChiaPool
 
             services.AddAuthentication("Miner")
                 .AddScheme<MinerAuthenticationOptions, MinerAuthenticationHandler>("Miner", null)
-                .AddScheme<PlotterAuthenticationOptions, PlotterAuthenticationHandler>("Plotter", null);
+                .AddScheme<PlotterAuthenticationOptions, PlotterAuthenticationHandler>("Plotter", null)
+                .AddScheme<BasicAuthOptions, BasicAuthHandler>("Basic", null);
 
             services.AddSignalR()
                 .AddJsonProtocol();

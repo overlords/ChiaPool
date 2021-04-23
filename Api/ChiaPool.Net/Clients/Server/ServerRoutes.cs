@@ -7,6 +7,9 @@ namespace ChiaPool.Api
         public static Uri Status()
             => new Uri("Status", UriKind.Relative);
 
+        public static Uri RegisterUser()
+            => new Uri("User/Register", UriKind.Relative);
+
         public static Uri ListUsers()
             => new Uri("User/List", UriKind.Relative);
         public static Uri GetUserByName(string name)
@@ -14,16 +17,12 @@ namespace ChiaPool.Api
         public static Uri GetUserById(long id)
             => new Uri($"User/Get/Id/{id}", UriKind.Relative);
 
+        public static Uri CreateMiner()
+            => new Uri("Miner/Create", UriKind.Relative);
         public static Uri ListMinersByOwnerName(string name)
             => new Uri($"Miner/List/Name/{name}", UriKind.Relative);
-        public static Uri ListPlottersByOwnerName(string name)
-            => new Uri($"Plotter/List/Name/{name}", UriKind.Relative);
-
         public static Uri ListMinersByOwnerId(long id)
             => new Uri($"Miner/List/Id/{id}", UriKind.Relative);
-        public static Uri ListPlottersByOwnerId(long id)
-            => new Uri($"Plotter/List/Id/{id}", UriKind.Relative);
-
         public static Uri GetMinerById(long id)
             => new Uri($"Miner/Get/Id/{id}", UriKind.Relative);
         public static Uri GetMinerByName(string name)
@@ -31,6 +30,12 @@ namespace ChiaPool.Api
         public static Uri GetMinerByToken(string token)
             => new Uri($"Miner/Get/Token/{token}", UriKind.Relative);
 
+        public static Uri CreatePlotter()
+            => new Uri("Plotter/Create", UriKind.Relative);
+        public static Uri ListPlottersByOwnerName(string name)
+            => new Uri($"Plotter/List/Name/{name}", UriKind.Relative);
+        public static Uri ListPlottersByOwnerId(long id)
+            => new Uri($"Plotter/List/Id/{id}", UriKind.Relative);
         public static Uri GetPlotterById(long id)
             => new Uri($"Plotter/Get/Id/{id}", UriKind.Relative);
         public static Uri GetPlotterByName(string name)

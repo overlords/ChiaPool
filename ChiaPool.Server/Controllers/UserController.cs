@@ -1,4 +1,5 @@
-﻿using ChiaPool.Models;
+﻿using ChiaPool.Configuration.Options;
+using ChiaPool.Models;
 using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,16 +15,22 @@ namespace ChiaPool.Controllers
         private readonly MinerContext DbContext;
         private readonly HashingService HashingService;
         private readonly UserService UserService;
+        private readonly CustomizationOption CustomizationOptions;
 
-        public UserController(MinerContext dbContext, HashingService hashingService)
+        public UserController(MinerContext dbContext, HashingService hashingService, CustomizationOption customizationOptions)
         {
             DbContext = dbContext;
             HashingService = hashingService;
+            CustomizationOptions = customizationOptions;
         }
 
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUserAsync([FromForm] string name, [FromForm] string password)
         {
+            if (!CustomizationOptions.AllowUserRegistration)
+            {
+                return NotFound();
+            }
             if (await DbContext.Users.AnyAsync(x => x.Name.ToUpper() == name.ToUpper()))
             {
                 return Conflict("Username already taken!");
