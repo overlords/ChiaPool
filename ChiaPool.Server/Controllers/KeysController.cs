@@ -12,7 +12,7 @@ namespace ChiaPool.Controllers
         [Authorize(AuthenticationSchemes = "Miner, Plotter")]
         public IActionResult GetKeys()
         {
-            string farmerKeys = Environment.GetEnvironmentVariable("farmer_keys");
+            string farmerKeys = Environment.GetEnvironmentVariable("plotting_keys");
             return Ok(farmerKeys);
         }
     }
