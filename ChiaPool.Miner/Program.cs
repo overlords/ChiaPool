@@ -8,7 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.IO.Compression;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace ChiaPool
 {
     public class Program
     {
+        public const string ConfigFilePath = "/root/.chia/mainnet/config/config.yaml";
         public const int ApplicationPort = 8888;
         private static IHost Application;
 
@@ -38,7 +40,8 @@ namespace ChiaPool
                 Environment.Exit(1);
             }
 
-            InitializeServices();
+            InitializeServerApiAccessor();
+            await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 
             if (args.Length == 1 && args[0] == "init")
             {
@@ -52,9 +55,7 @@ namespace ChiaPool
                 return;
             }
 
-            await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
-
-            if (!await WaitForHarvesterAsync())
+            if (!await WaitForChiaClientAsync<HarvesterClient>("harvester"))
             {
                 Application.Dispose();
                 Environment.Exit(1);
@@ -73,12 +74,13 @@ namespace ChiaPool
             Application.Dispose();
         }
 
-        private static void InitializeServices()
+        private static void InitializeServerApiAccessor()
         {
             var serverOptions = Application.Services.GetRequiredService<ServerOption>();
             var serverAccessor = Application.Services.GetRequiredService<ServerApiAccessor>();
 
             serverAccessor.SetApiUrl(serverOptions.PoolHost);
+            serverAccessor.SetAuthenticationScheme("Miner");
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -101,7 +103,7 @@ namespace ChiaPool
                         options.IncludeScopes = true;
                         options.MaxFileSizeInMB = 5;
                         options.MaxNumberFiles = 3;
-                        options.Path = "../.chia/mainnet/log/pool.log";
+                        options.Path = "/root/.chia/mainnet/log/pool.log";
                     });
                 })
                 .ConfigureAppConfiguration(config =>
@@ -111,32 +113,89 @@ namespace ChiaPool
                 });
 
         private static async Task<bool> RunInitAsync()
+            => await WaitForChiaClientAsync<FarmerClient>("farmer") &&
+               await TrySetFarmerTargetAsync() &&
+               await TrySetFarmerFullNodePeer();
+
+        private static async Task<bool> TrySetFarmerTargetAsync()
         {
-            var client = Application.Services.GetRequiredService<ServerApiAccessor>();
+            var serverAccessor = Application.Services.GetRequiredService<ServerApiAccessor>();
+            var farmerApiClient = Application.Services.GetRequiredService<FarmerClient>();
             var authOptions = Application.Services.GetRequiredService<AuthOption>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
+            logger.LogInformation("Downloading target address...");
+            string walletAddress = await serverAccessor.GetPoolWalletAddressAsync(authOptions.Token);
+
+            if (string.IsNullOrWhiteSpace(walletAddress))
+            {
+                logger.LogError("The server did not send a valid wallet address!");
+                return false;
+            }
+
             try
             {
-                logger.LogInformation("Downloading ca certificate...");
-                using var zipArchive = await client.GetCACertificateArchiveAsync(authOptions.Token);
-                logger.LogInformation("Extracting ca certificate...");
-                zipArchive.ExtractToDirectory("/root/chia-blockchain/ca/", true);
-                logger.LogInformation("Finished updating ca!");
+                logger.LogInformation($"Setting farmer target to {walletAddress}...");
+                await farmerApiClient.SetRewardTargets(walletAddress);
+
+                logger.LogInformation("Done!");
                 return true;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while updating ca!");
+                logger.LogError(ex, "An error occurred while setting target address!");
                 return false;
             }
         }
-        private static async Task<bool> WaitForHarvesterAsync()
+        private static async Task<bool> TrySetFarmerFullNodePeer()
         {
-            var client = Application.Services.GetRequiredService<HarvesterClient>();
+            var serverOptions = Application.Services.GetRequiredService<ServerOption>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
-            logger.LogInformation("Waiting for harvester to spin up");
+            logger.LogInformation($"Setting farmer fullnode peer to {serverOptions.FullNodeHost}:{serverOptions.FullNodePort}!");
+
+            try
+            {
+                //I know this is terrible, feel free to make it better yourself. I am a lazy person!
+                logger.LogInformation("Reading chia config file...");
+                string[] configFileLines = await File.ReadAllLinesAsync(ConfigFilePath);
+
+                logger.LogInformation("Patching chia config file...");
+                for (int i = 0; i < configFileLines.Length; i++)
+                {
+                    string line = configFileLines[i];
+
+                    if (!line.Contains("full_node_peer:"))
+                    {
+                        continue;
+                    }
+
+                    int spaceCount = configFileLines[i + 1].TakeWhile(x => x == ' ').Count();
+                    string spaces = new string(' ', spaceCount);
+
+                    configFileLines[i + 1] = $"{spaces}host: {serverOptions.FullNodeHost}";
+                    configFileLines[i + 2] = $"{spaces}port: {serverOptions.FullNodePort}";
+                }
+
+                logger.LogInformation("Overriding config file...");
+                await File.WriteAllLinesAsync(ConfigFilePath, configFileLines);
+
+                logger.LogInformation("Done!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error while setting farmer fullnode peer!");
+                return false;
+            }
+        }
+
+        private static async Task<bool> WaitForChiaClientAsync<T>(string chiaNodeName) where T : ChiaApiClient
+        {
+            var client = Application.Services.GetRequiredService<T>();
+            var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
+
+            logger.LogInformation($"Waiting for {chiaNodeName} to spin up");
 
             for (int i = 0; i < 10; i++)
             {
@@ -144,14 +203,14 @@ namespace ChiaPool
                 try
                 {
                     await client.GetConnections();
-                    logger.LogInformation("Done");
+                    logger.LogInformation("Connection established!");
                     return true;
                 }
                 catch (Exception ex)
                 {
                     if (i == 9)
                     {
-                        logger.LogError(ex, $"Failed connecting to chia!");
+                        logger.LogError(ex, $"Failed connecting to {chiaNodeName}!");
                     }
                     else
                     {
@@ -161,8 +220,6 @@ namespace ChiaPool
             }
 
             return false;
-
-
         }
     }
 }

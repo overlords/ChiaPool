@@ -1,5 +1,5 @@
-﻿using ChiaPool.Extensions;
-using ChiaPool.Models;
+﻿using ChiaPool.Models;
+using ChiaPool.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -12,18 +12,39 @@ namespace ChiaPool.Controllers
     public class UserController : ControllerBase
     {
         private readonly MinerContext DbContext;
+        private readonly HashingService HashingService;
+        private readonly UserService UserService;
 
-        public UserController(MinerContext dbContext)
+        public UserController(MinerContext dbContext, HashingService hashingService)
         {
             DbContext = dbContext;
+            HashingService = hashingService;
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterUserAsync([FromForm] string name, [FromForm] string password)
+        {
+            if (await DbContext.Users.AnyAsync(x => x.Name.ToUpper() == name.ToUpper()))
+            {
+                return Conflict("Username already taken!");
+            }
+
+            string passwordHash = HashingService.HashString(password);
+            var user = new User(name, passwordHash);
+            DbContext.Users.Add(user);
+            await DbContext.SaveChangesAsync();
+
+            var userInfo = UserService.GetUserInfo(user);
+
+            return Ok(userInfo);
         }
 
         [HttpGet("List")]
         public async Task<IActionResult> GetAllUsersAsync()
         {
             var users = await DbContext.Users.ToListAsync();
-            var publicUsers = users.Select(x => x.WithoutSecrets()).ToList();
-            return Ok(publicUsers);
+            var userInfos = users.Select(x => UserService.GetUserInfo(x));
+            return Ok(userInfos);
         }
 
         [HttpGet("Get/Name/{name}")]
@@ -38,7 +59,8 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            return Ok(user.WithoutSecrets());
+            var userInfo = UserService.GetUserInfo(user);
+            return Ok(userInfo);
         }
         [HttpGet("Get/Id/{id}")]
         public async Task<IActionResult> GetUserByNameAsync([FromRoute] long id)
@@ -52,7 +74,8 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            return Ok(user.WithoutSecrets());
+            var userInfo = UserService.GetUserInfo(user);
+            return Ok(userInfo);
         }
     }
 }

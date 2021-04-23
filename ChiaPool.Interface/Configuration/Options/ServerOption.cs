@@ -6,8 +6,8 @@ namespace ChiaPool.Configuration
 {
     public sealed class ServerOption : Option
     {
-        public Uri PoolHost { get; set; } 
-        public Uri MinerHost { get; set; } 
+        public Uri PoolHost { get; set; }
+        public Uri MinerHost { get; set; }
 
         private string PoolHostRaw { get; set; } = Environment.GetEnvironmentVariable("chiapoolcli_poolhost");
         private string MinerHostRaw { get; set; } = Environment.GetEnvironmentVariable("chiapoolcli_minerhost");

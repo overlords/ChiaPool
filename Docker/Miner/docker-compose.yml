@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  harvester:
-    image: ChiaPoolMiner
+  miner:
+    image: chiapoolminer
     ports:
       - 127.0.0.1:8888:8888
     restart: always
-    container_name: ChiaHarvester
+    container_name: ChiaPoolMiner
     volumes:
       - /yourplotspath:/plots #Add more plot directories here
       # /yoursecondplotpath:/plots2

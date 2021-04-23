@@ -1,7 +1,5 @@
-﻿using ChiaPool.Hubs;
-using ChiaPool.Models;
+﻿using ChiaPool.Models;
 using Common.Services;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,10 +19,6 @@ namespace ChiaPool.Services
 
         [Inject]
         private readonly PlotService PlotService;
-        [Inject]
-        private readonly IHubContext<MinerHub> HubContext;
-        [Inject]
-        private readonly FirewallService FirewallService;
         [Inject]
         private readonly UserService UserService;
 
@@ -104,7 +98,6 @@ namespace ChiaPool.Services
                     return ActivationResult.FromFailed("There already is a active connection from this miner!");
                 }
 
-                await FirewallService.AcceptIPAsync(address);
                 Logger.LogInformation($"Activated miner [{minerId}]");
                 long userId = await UserService.GetOwnerIdFromMinerId(minerId);
                 return ActivationResult.FromSuccess(userId);
@@ -161,7 +154,6 @@ namespace ChiaPool.Services
                 }
 
                 ActiveMiners.Remove(minerId);
-                await FirewallService.DropIPAsync(oldValue.Address);
                 Logger.LogInformation($"Deactivated miner [{minerId}]");
             }
             finally

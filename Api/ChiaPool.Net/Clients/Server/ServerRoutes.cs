@@ -7,9 +7,6 @@ namespace ChiaPool.Api
         public static Uri Status()
             => new Uri("Status", UriKind.Relative);
 
-        public static Uri GetCACertificate()
-            => new Uri("Cert/CA", UriKind.Relative);
-
         public static Uri ListUsers()
             => new Uri("User/List", UriKind.Relative);
         public static Uri GetUserByName(string name)
@@ -47,6 +44,8 @@ namespace ChiaPool.Api
             => new Uri($"Wallet/Get/User/Name/{name}", UriKind.Relative);
         public static Uri GetPoolWallet()
             => new Uri($"Wallet/Get/Pool", UriKind.Relative);
+        public static Uri GetPoolWalletAddress()
+            => new Uri("Wallet/Get/Address", UriKind.Relative);
 
         public static Uri GetPoolInfo()
             => new Uri($"Pool/Info", UriKind.Relative);
@@ -55,6 +54,9 @@ namespace ChiaPool.Api
             => new Uri($"Plot/Transfer/Cost/{deadlineHours}", UriKind.Relative);
         public static Uri BuyPlotTransfer(int deadlineHours)
             => new Uri($"Plot/Transfer/Buy/{deadlineHours}", UriKind.Relative);
+
+        public static Uri GetPlottingKeys()
+            => new Uri("Keys/Plotting", UriKind.Relative);
 
     }
 }

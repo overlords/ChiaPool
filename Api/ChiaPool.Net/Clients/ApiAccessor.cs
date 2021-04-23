@@ -19,7 +19,7 @@ namespace ChiaPool.Api
             Client = client;
         }
 
-        public void SetApiUrl(Uri apiUrl) 
+        public void SetApiUrl(Uri apiUrl)
             => ApiUrl = apiUrl;
 
         protected async Task<T> GetAsync<T>(Uri requestUri, string authScheme = null, string authValue = null)

@@ -9,6 +9,9 @@ namespace ChiaPool.Services
 {
     public sealed class UserService : Service
     {
+        public UserInfo GetUserInfo(User user)
+            => new UserInfo(user.Id, user.Name, user.PlotMinutes);
+
         public async Task<long> GetOwnerIdFromMinerId(long minerId)
         {
             using var scope = Provider.CreateScope();

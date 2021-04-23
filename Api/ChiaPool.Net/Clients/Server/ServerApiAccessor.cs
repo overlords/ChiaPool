@@ -1,7 +1,6 @@
 ﻿using Chia.NET.Models;
 using ChiaPool.Models;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -9,26 +8,26 @@ namespace ChiaPool.Api
 {
     public sealed class ServerApiAccessor : ApiAccessor
     {
+        private string AuthenticationScheme;
+
         public ServerApiAccessor(HttpClient client)
             : base(client)
         {
         }
 
+        public void SetAuthenticationScheme(string scheme)
+            => AuthenticationScheme = scheme;
+
         public Task<ServerStatus> GetStatusAsync()
             => GetAsync<ServerStatus>(ServerRoutes.Status());
 
-        public async Task<ZipArchive> GetCACertificateArchiveAsync(string token)
-        {
-            var zipStream = await GetStreamAsync(ServerRoutes.GetCACertificate(), "Miner", token);
-            return new ZipArchive(zipStream);
-        }
 
-        public Task<List<User>> ListUsersAsync()
-            => GetAsync<List<User>>(ServerRoutes.ListUsers());
-        public Task<User> GetUserByNameAsync(string name)
-            => GetAsync<User>(ServerRoutes.GetUserByName(name));
-        public Task<User> GetUserByIdAsync(long id)
-            => GetAsync<User>(ServerRoutes.GetUserById(id));
+        public Task<List<UserInfo>> ListUsersAsync()
+            => GetAsync<List<UserInfo>>(ServerRoutes.ListUsers());
+        public Task<UserInfo> GetUserByNameAsync(string name)
+            => GetAsync<UserInfo>(ServerRoutes.GetUserByName(name));
+        public Task<UserInfo> GetUserByIdAsync(long id)
+            => GetAsync<UserInfo>(ServerRoutes.GetUserById(id));
 
         public Task<List<MinerInfo>> ListMinersByOwnerNameAsync(string name)
             => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerName(name));
@@ -60,6 +59,8 @@ namespace ChiaPool.Api
             => GetAsync<Wallet>(ServerRoutes.GetWalletByOwnerName(name));
         public Task<Wallet> GetPoolWalletAsync()
             => GetAsync<Wallet>(ServerRoutes.GetPoolWallet());
+        public Task<string> GetPoolWalletAddressAsync(string token)
+            => GetAsync<string>(ServerRoutes.GetPoolWalletAddress(), AuthenticationScheme, token);
 
         public Task<PoolInfo> GetPoolInfoAsync()
             => GetAsync<PoolInfo>(ServerRoutes.GetPoolInfo());
@@ -67,6 +68,9 @@ namespace ChiaPool.Api
         public Task<long> GetPlotTransferCostAsync(int deadlineHours)
             => GetAsync<long>(ServerRoutes.GetPlotTransferPrice(deadlineHours));
         public Task<PlotTransfer> BuyPlotTransferAsync(string token, int deadlineHours)
-            => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(deadlineHours), "Miner", token);
+            => GetAsync<PlotTransfer>(ServerRoutes.BuyPlotTransfer(deadlineHours), AuthenticationScheme, token);
+
+        public Task<string> GetPlottingKeysAsync(string token)
+            => GetAsync<string>(ServerRoutes.GetPlottingKeys(), AuthenticationScheme, token);
     }
 }

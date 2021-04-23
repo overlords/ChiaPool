@@ -8,9 +8,20 @@ namespace ChiaPool.Configuration
     {
         public string Token { get; init; } = Environment.GetEnvironmentVariable("token");
 
-        protected override ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
-            => Guid.TryParse(Token, out _)
-                ? ValueTask.FromResult(ValidationResult.Success)
-                : ValueTask.FromResult(ValidationResult.Failed("Miner token has invalid format!"));
+        public string FarmerKeys { get; init; } = Environment.GetEnvironmentVariable("farmer_keys");
+
+        protected override async ValueTask<ValidationResult> ValidateAsync(IServiceProvider provider)
+        {
+            if (!Guid.TryParse(Token, out _))
+            {
+                return ValidationResult.Failed("Miner token has invalid format!");
+            }
+            if (FarmerKeys.Split(' ').Length != 24)
+            {
+                return ValidationResult.Failed($"Invalid farmer keys! Excpected 24 words, got {FarmerKeys}");
+            }
+
+            return await base.ValidateAsync(provider);
+        }
     }
 }

@@ -17,8 +17,6 @@ namespace ChiaPool.Services
         private const string IpTable = "filter";
         private const string IpChain = "WHITE";
 
-        private const int IPRefreshDelay = 60 * 60 * 1000; //1 Hour
-
         private readonly SemaphoreSlim AccessSemaphore;
         private readonly IpTablesSystem System;
 

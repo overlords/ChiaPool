@@ -1,5 +1,6 @@
 ﻿using ChiaPool.Models;
 using ChiaPool.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -18,6 +19,14 @@ namespace ChiaPool.Controllers
         {
             DbContext = dbContext;
             WalletService = walletService;
+        }
+
+        [HttpGet("Get/Address")]
+        [Authorize(AuthenticationSchemes = "Miner")]
+        public Task<IActionResult> GetWalletAddressAsync()
+        {
+            string walletAddress = WalletService.GetWalletAddress();
+            return Task.FromResult((IActionResult)Ok(walletAddress));
         }
 
         [HttpGet("Get/User/Id/{id}")]

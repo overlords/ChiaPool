@@ -4,16 +4,11 @@ using System;
 
 namespace ChiaPool.Controllers
 {
-    [Route("Cert")]
+    [Route("Keys")]
     [ApiController]
-    public class CertificateController : ControllerBase
+    public class KeysController : ControllerBase
     {
-        [HttpGet("Ca")]
-        [Authorize(AuthenticationSchemes = "Miner")]
-        public IActionResult GetCAKeys()
-            => PhysicalFile("/root/ca.zip", "application/zip", "ca.zip");
-
-        [HttpGet("Keys")]
+        [HttpGet("Plotting")]
         [Authorize(AuthenticationSchemes = "Miner, Plotter")]
         public IActionResult GetKeys()
         {
