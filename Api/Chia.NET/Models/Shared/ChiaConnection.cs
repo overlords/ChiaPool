@@ -20,13 +20,13 @@ namespace Chia.NET.Models
         public IPAddress PeerHost { get; init; }
 
         [JsonPropertyName("peer_port")]
-        public short PeerPort { get; init; }
+        public ushort PeerPort { get; init; }
 
         [JsonPropertyName("peer_server_port")]
-        public short PeerServerPort { get; init; }
+        public ushort PeerServerPort { get; init; }
 
         [JsonPropertyName("local_port")]
-        public short LocalPort { get; init; }
+        public ushort LocalPort { get; init; }
 
         [JsonPropertyName("type")]
         public int Type { get; init; }
