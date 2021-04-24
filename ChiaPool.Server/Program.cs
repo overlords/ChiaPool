@@ -36,11 +36,21 @@ namespace ChiaPool
             }
 
             await MigrateDatabaseAsync();
-
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 
-            if (!await WaitForChiaClientAsync<WalletClient>("wallet") ||
-                !await WaitForChiaClientAsync<FullNodeClient>("fullnode"))
+            if (args.Length == 1 && args[0] == "init")
+            {
+                bool success = await RunInitAsync();
+                Application.Dispose();
+
+                if (!success)
+                {
+                    Environment.Exit(1);
+                }
+                return;
+            }
+
+            if (!await WaitForChiaClientAsync<FullNodeClient>("fullnode"))
             {
                 Application.Dispose();
                 Environment.Exit(1);
@@ -81,6 +91,9 @@ namespace ChiaPool
 
             await dbContext.Database.MigrateAsync();
         }
+
+        private static Task<bool> RunInitAsync() 
+            => WaitForChiaClientAsync<WalletClient>("wallet");
 
         private static async Task<bool> WaitForChiaClientAsync<T>(string chiaNodeName) where T : ChiaApiClient
         {
