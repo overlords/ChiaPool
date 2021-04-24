@@ -54,7 +54,7 @@ namespace ChiaPool
                 }
                 return;
             }
-
+            
             if (!await WaitForChiaClientAsync<HarvesterClient>("harvester"))
             {
                 Application.Dispose();
@@ -115,7 +115,8 @@ namespace ChiaPool
         private static async Task<bool> RunInitAsync()
             => await WaitForChiaClientAsync<FarmerClient>("farmer") &&
                await TrySetFarmerTargetAsync() &&
-               await TrySetFarmerFullNodePeer();
+               await TrySetFarmerFullNodePeer() &&
+               await TrySetPlottingKeyEnvironmentVariable();
 
         private static async Task<bool> TrySetFarmerTargetAsync()
         {
@@ -188,6 +189,28 @@ namespace ChiaPool
                 logger.LogError(ex, "An error while setting farmer fullnode peer!");
                 return false;
             }
+        }
+
+        private static async Task<bool> TrySetPlottingKeyEnvironmentVariable()
+        {
+            var serverAccessor = Application.Services.GetRequiredService<ServerApiAccessor>();
+            var authOptions = Application.Services.GetRequiredService<AuthOption>();
+            var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
+
+            logger.LogInformation("Retrieving plotting keys...");
+            string plottingKeys = await serverAccessor.GetPlottingKeysAsync(authOptions.Token);
+
+            if (string.IsNullOrWhiteSpace(plottingKeys))
+            {
+                logger.LogError("The server did not send valid plottings keys!");
+                return false;
+            }
+
+            logger.LogInformation("Storing plotting keys to environment variable...");
+            Environment.SetEnvironmentVariable("plotting_keys", plottingKeys);
+
+            logger.LogInformation("Done!");
+            return true;
         }
 
         private static async Task<bool> WaitForChiaClientAsync<T>(string chiaNodeName) where T : ChiaApiClient
