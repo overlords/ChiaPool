@@ -22,25 +22,25 @@ namespace ChiaPool.Services
 
         public FirewallService()
         {
-            var ad = new IPTablesBinaryAdapter();
-            var fa = new LocalFactory();
-            System = new IpTablesSystem(fa, ad);
+            //var ad = new IPTablesBinaryAdapter();
+            //var fa = new LocalFactory();
+            //System = new IpTablesSystem(fa, ad);
 
-            AccessSemaphore = new SemaphoreSlim(1, 1);
+            //AccessSemaphore = new SemaphoreSlim(1, 1);
         }
 
-        protected override async ValueTask InitializeAsync()
-        {
-            await AccessSemaphore.WaitAsync();
-            try
-            {
-                FlushIPsInternal();
-            }
-            finally
-            {
-                AccessSemaphore.Release();
-            }
-        }
+        //protected override async ValueTask InitializeAsync()
+        //{
+        //    await AccessSemaphore.WaitAsync();
+        //    try
+        //    {
+        //        FlushIPsInternal();
+        //    }
+        //    finally
+        //    {
+        //        AccessSemaphore.Release();
+        //    }
+        //}
         public async Task AcceptIPAsync(IPAddress address)
         {
             await AccessSemaphore.WaitAsync();
