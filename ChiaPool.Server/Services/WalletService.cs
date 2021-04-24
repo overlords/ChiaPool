@@ -18,7 +18,7 @@ namespace ChiaPool.Services
 
         protected override async ValueTask InitializeAsync()
         {
-            WalletAddress = await WalletApiClient.GetWalletAddressAsync((int)ChiaWalletId.Wallet, false);
+            WalletAddress = await WalletApiClient.GetWalletAddressAsync((int)ChiaWalletId.Wallet, true);
         }
 
         public Task<Wallet> GetWalletAsync()
