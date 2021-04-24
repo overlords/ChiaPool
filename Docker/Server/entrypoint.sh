@@ -1,4 +1,4 @@
-cd chia-blockchain
+cd /root/chia-blockchain
 . ./activate
 chia init
 
@@ -17,7 +17,7 @@ fi
 
 echo "${wallet_keys}" | chia keys add
 
-sed -i 's/localhost/127.0.0.1/g' root/.chia/mainnet/config/config.yaml
+sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 
 chia start wallet
 
