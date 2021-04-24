@@ -1,3 +1,5 @@
+set -e
+
 cd /root/chia-blockchain
 
 . ./activate

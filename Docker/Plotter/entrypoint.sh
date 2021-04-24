@@ -1,3 +1,5 @@
+set -e
+
 cd manager
 ./ChiaPool.Plotter init
 

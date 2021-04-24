@@ -125,17 +125,17 @@ namespace ChiaPool
             var authOptions = Application.Services.GetRequiredService<AuthOption>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
-            logger.LogInformation("Downloading target address...");
-            string walletAddress = await serverAccessor.GetPoolWalletAddressAsync(authOptions.Token);
-
-            if (string.IsNullOrWhiteSpace(walletAddress))
-            {
-                logger.LogError("The server did not send a valid wallet address!");
-                return false;
-            }
-
             try
             {
+                logger.LogInformation("Downloading target address...");
+                string walletAddress = await serverAccessor.GetPoolWalletAddressAsync(authOptions.Token);
+
+                if (string.IsNullOrWhiteSpace(walletAddress))
+                {
+                    logger.LogError("The server did not send a valid wallet address!");
+                    return false;
+                }
+
                 logger.LogInformation($"Setting farmer target to {walletAddress}...");
                 await farmerApiClient.SetRewardTargets(walletAddress);
 
@@ -186,7 +186,7 @@ namespace ChiaPool
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error while setting farmer fullnode peer!");
+                logger.LogError(ex, "An error occured while setting farmer fullnode peer!");
                 return false;
             }
         }
@@ -197,20 +197,29 @@ namespace ChiaPool
             var authOptions = Application.Services.GetRequiredService<AuthOption>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
 
-            logger.LogInformation("Retrieving plotting keys...");
-            string plottingKeys = await serverAccessor.GetPlottingKeysAsync(authOptions.Token);
-
-            if (string.IsNullOrWhiteSpace(plottingKeys))
+            try
             {
-                logger.LogError("The server did not send valid plottings keys!");
+                logger.LogInformation("Retrieving plotting keys...");
+                string plottingKeys = await serverAccessor.GetPlottingKeysAsync(authOptions.Token);
+
+                if (string.IsNullOrWhiteSpace(plottingKeys))
+                {
+                    logger.LogError("The server did not send valid plottings keys!");
+                    return false;
+                }
+
+                logger.LogInformation("Storing plotting keys to environment variable...");
+                Environment.SetEnvironmentVariable("plotting_keys", plottingKeys);
+
+                logger.LogInformation("Done!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occured while retrieving plotting keys!");
                 return false;
             }
 
-            logger.LogInformation("Storing plotting keys to environment variable...");
-            Environment.SetEnvironmentVariable("plotting_keys", plottingKeys);
-
-            logger.LogInformation("Done!");
-            return true;
         }
 
         private static async Task<bool> WaitForChiaClientAsync<T>(string chiaNodeName) where T : ChiaApiClient
