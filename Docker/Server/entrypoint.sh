@@ -15,11 +15,11 @@ if [[ -z "${db_connection}" ]]; then
 	exit 1
 fi
 
+echo "${wallet_keys}" | chia keys add
+
 sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 
 chia start wallet
-
-{ echo "1"; echo "S"; } | chia wallet show
 
 cd /root/manager
 ./ChiaPool.Server
