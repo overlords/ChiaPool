@@ -21,9 +21,7 @@ sed -i 's/localhost/127.0.0.1/g' ~/.chia/mainnet/config/config.yaml
 
 chia start wallet
 
-cd /root/manager
-./ChiaPool.Server init
-
 { echo "1"; echo "S"; } | chia wallet show
 
+cd /root/manager
 ./ChiaPool.Server

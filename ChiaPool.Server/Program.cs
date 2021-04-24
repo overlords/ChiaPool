@@ -36,21 +36,18 @@ namespace ChiaPool
             }
 
             await MigrateDatabaseAsync();
+
             await Application.Services.InitializeApplicationServicesAsync(chiaNetAssembly);
 
-            if (args.Length == 1 && args[0] == "init")
+            if (!await WaitForChiaClientAsync<WalletClient>("wallet") ||
+                !await WaitForChiaClientAsync<FullNodeClient>("fullnode"))
             {
-                bool success = await RunInitAsync();
                 Application.Dispose();
-
-                if (!success)
-                {
-                    Environment.Exit(1);
-                }
-                return;
+                Environment.Exit(1);
             }
 
             await Application.Services.InitializeApplicationServicesAsync(assembly);
+
             Application.Services.RunApplicationServices(assembly);
             Application.Services.RunApplicationServices(chiaNetAssembly);
 
@@ -85,32 +82,27 @@ namespace ChiaPool
             await dbContext.Database.MigrateAsync();
         }
 
-        private static async Task<bool> RunInitAsync()
+        private static async Task<bool> WaitForChiaClientAsync<T>(string chiaNodeName) where T : ChiaApiClient
         {
+            var client = Application.Services.GetRequiredService<T>();
             var logger = Application.Services.GetRequiredService<ILogger<Startup>>();
-            var farmerApiClient = Application.Services.GetRequiredService<FarmerClient>();
-            var walletApiClient = Application.Services.GetRequiredService<WalletClient>();
 
-            logger.LogInformation("Retrieving wallet address");
-
-            string walletAddress = await walletApiClient.GetWalletAddressAsync((int)ChiaWalletId.Wallet, false);
-
-            logger.LogInformation($"Setting farmer target to {walletAddress.Substring(0, 10)} ...");
+            logger.LogInformation($"Waiting for {chiaNodeName} to spin up");
 
             for (int i = 0; i < 10; i++)
             {
                 await Task.Delay(5000);
                 try
                 {
-                    await farmerApiClient.SetRewardTargets(walletAddress);
-                    logger.LogInformation("Done");
+                    await client.GetConnections();
+                    logger.LogInformation("Connection established!");
                     return true;
                 }
                 catch (Exception ex)
                 {
                     if (i == 9)
                     {
-                        logger.LogError(ex, $"Failed connecting to chia!");
+                        logger.LogError(ex, $"Failed connecting to {chiaNodeName}!");
                     }
                     else
                     {
