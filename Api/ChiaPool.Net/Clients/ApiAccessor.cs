@@ -32,10 +32,8 @@ namespace ChiaPool.Api
 
             var response = await Client.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"There was an error! The server responded with {response.StatusCode}");
-            }
+            response.EnsureSuccessStatusCode();
+
             if (typeof(T) == typeof(object))
             {
                 return default;
@@ -61,9 +59,9 @@ namespace ChiaPool.Api
 
             var response = await Client.SendAsync(request);
 
-            return !response.IsSuccessStatusCode
-                ? throw new Exception($"There was an error! The server responded with {response.StatusCode}")
-                : await response.Content.ReadAsStreamAsync();
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsStreamAsync();
         }
 
         protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
@@ -79,10 +77,8 @@ namespace ChiaPool.Api
 
             var response = await Client.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception($"There was an error! The server responded with {response.StatusCode}");
-            }
+            response.EnsureSuccessStatusCode();
+
             if (typeof(T) == typeof(object))
             {
                 return default;

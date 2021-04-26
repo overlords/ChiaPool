@@ -63,7 +63,7 @@ namespace Chia.NET.Clients
             var result = await response.Content.ReadFromJsonAsync<T>();
 
             return !result.Success
-                ? throw new Exception("Chia responded with unsuccessful")
+                ? throw new HttpRequestException("Chia responded with unsuccessful")
                 : result;
         }
 

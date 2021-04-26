@@ -48,7 +48,7 @@ namespace ChiaPool.Commands
                 {
                     await ErrorLineAsync("This pool does not support user registration!");   
                 }
-                if (responseCode == HttpStatusCode.Conflict)
+                else if (responseCode == HttpStatusCode.Conflict)
                 {
                     await WarnLineAsync("This username has already been taken!");
                 }
