@@ -92,7 +92,7 @@ namespace ChiaPool
             await dbContext.Database.MigrateAsync();
         }
 
-        private static Task<bool> RunInitAsync() 
+        private static Task<bool> RunInitAsync()
             => WaitForChiaClientAsync<WalletClient>("wallet");
 
         private static async Task<bool> WaitForChiaClientAsync<T>(string chiaNodeName) where T : ChiaApiClient

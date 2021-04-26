@@ -1,14 +1,12 @@
 ﻿using Common.Services;
 using IPTables.Net;
 using IPTables.Net.Iptables;
-using IPTables.Net.Iptables.Adapter;
 using IPTables.Net.Netfilter.TableSync;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using SystemInteract.Local;
 
 namespace ChiaPool.Services
 {

@@ -54,7 +54,7 @@ namespace ChiaPool
                 }
                 return;
             }
-            
+
             if (!await WaitForChiaClientAsync<HarvesterClient>("harvester"))
             {
                 Application.Dispose();

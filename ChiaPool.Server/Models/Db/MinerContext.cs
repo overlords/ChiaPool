@@ -22,7 +22,8 @@ namespace ChiaPool.Models
             {
                 b.HasKey(x => x.Id);
                 b.Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .UseIdentityAlwaysColumn();
 
                 b.Property(x => x.Name);
                 b.HasIndex(x => x.Name)
@@ -48,7 +49,8 @@ namespace ChiaPool.Models
             {
                 b.HasKey(x => x.Id);
                 b.Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .UseIdentityAlwaysColumn();
 
                 b.Property(x => x.Name);
                 b.HasIndex(x => x.Name)
@@ -70,7 +72,8 @@ namespace ChiaPool.Models
             {
                 b.HasKey(x => x.Id);
                 b.Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd()
+                .UseIdentityAlwaysColumn();
 
                 b.Property(x => x.Name);
                 b.HasIndex(x => x.Name)
@@ -91,7 +94,9 @@ namespace ChiaPool.Models
             modelBuilder.Entity<PlotTransfer>(b =>
             {
                 b.HasKey(x => x.Id);
-                b.Property(x => x.Id);
+                b.Property(x => x.Id)
+                .ValueGeneratedOnAdd()
+                .UseIdentityAlwaysColumn();
 
                 b.Property(x => x.PlotterId);
                 b.Property(x => x.MinerId);
