@@ -33,6 +33,10 @@ namespace ChiaPool.Controllers
             {
                 return NotFound();
             }
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return UnprocessableEntity();
+            }
 
             long userId = long.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var plotter = new Plotter(name, userId);

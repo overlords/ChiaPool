@@ -21,10 +21,11 @@ namespace ChiaPool.Api
         public Task<ServerStatus> GetStatusAsync()
             => GetAsync<ServerStatus>(ServerRoutes.Status());
 
-        public Task<UserInfo> RegisterUserAsync(string name)
+        public Task<UserInfo> RegisterUserAsync(string name, string password)
             => PostAsync<UserInfo>(ServerRoutes.RegisterUser(), new Dictionary<string, string>()
             {
                 ["name"] = name,
+                ["password"] = password,
             });
         public Task<List<UserInfo>> ListUsersAsync()
             => GetAsync<List<UserInfo>>(ServerRoutes.ListUsers());

@@ -32,6 +32,10 @@ namespace ChiaPool.Controllers
             {
                 return NotFound();
             }
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(password))
+            {
+                return UnprocessableEntity();
+            }
             if (await DbContext.Users.AnyAsync(x => x.Name.ToUpper() == name.ToUpper()))
             {
                 return Conflict("Username already taken!");

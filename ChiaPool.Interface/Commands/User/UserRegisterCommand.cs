@@ -29,7 +29,7 @@ namespace ChiaPool.Commands
 
         protected override async Task ExecuteAsync(IConsole console)
         {
-            var registerTask = ServerAccessor.RegisterUserAsync(Username);
+            var registerTask = ServerAccessor.RegisterUserAsync(Username, Password);
 
             var userInfo = await registerTask.Try();
 
@@ -49,6 +49,10 @@ namespace ChiaPool.Commands
                 else if (responseCode == HttpStatusCode.Conflict)
                 {
                     await WarnLineAsync("This username has already been taken!");
+                }
+                else if (response == HttpStatusCode.UnprocessableEntity)
+                {
+                    await WarnLineAsync("Username & Password cannot be empty!");
                 }
                 else
                 {
