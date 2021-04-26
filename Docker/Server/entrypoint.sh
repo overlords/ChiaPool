@@ -26,6 +26,6 @@ chia start wallet
 cd /root/manager
 ./ChiaPool.Server init
 
-{ echo "1"; echo "S"; } | chia wallet show
+{ echo "S"; } | chia wallet show
 
 ./ChiaPool.Server
