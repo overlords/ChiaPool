@@ -40,6 +40,10 @@ namespace ChiaPool.Api
             {
                 return default;
             }
+            if (typeof(T) == typeof(string))
+            {
+                return (T)(object) await response.Content.ReadAsStringAsync();
+            }
 
             return await response.Content.ReadFromJsonAsync<T>();
         }
@@ -82,6 +86,10 @@ namespace ChiaPool.Api
             if (typeof(T) == typeof(object))
             {
                 return default;
+            }
+            if (typeof(T) == typeof(string))
+            {
+                return (T)(object)await response.Content.ReadAsStringAsync();
             }
 
             return await response.Content.ReadFromJsonAsync<T>();
