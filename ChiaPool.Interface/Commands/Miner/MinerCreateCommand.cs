@@ -5,10 +5,8 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Net;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
@@ -49,6 +47,10 @@ namespace ChiaPool.Commands
                 if (responseCode == HttpStatusCode.NotFound)
                 {
                     await ErrorLineAsync("This pool does not support miner creation!");
+                }
+                else if (responseCode == HttpStatusCode.Unauthorized)
+                {
+                    await ErrorLineAsync("Your credentials are wrong!");
                 }
                 else
                 {

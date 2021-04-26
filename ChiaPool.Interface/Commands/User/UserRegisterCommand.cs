@@ -5,10 +5,8 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Commands
@@ -46,7 +44,7 @@ namespace ChiaPool.Commands
 
                 if (responseCode == HttpStatusCode.NotFound)
                 {
-                    await ErrorLineAsync("This pool does not support user registration!");   
+                    await ErrorLineAsync("This pool does not support user registration!");
                 }
                 else if (responseCode == HttpStatusCode.Conflict)
                 {
