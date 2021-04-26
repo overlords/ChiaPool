@@ -37,7 +37,7 @@ namespace ChiaPool.Api
             => PostAsync<CreateMinerResult>(ServerRoutes.CreateMiner(), new Dictionary<string, string>()
             {
                 ["name"] = name,
-            }, "Basic", $"{username}:{password}");
+            }, "Basic", Base64Encode($"{username}:{password}"));
         public Task<List<MinerInfo>> ListMinersByOwnerNameAsync(string name)
             => GetAsync<List<MinerInfo>>(ServerRoutes.ListMinersByOwnerName(name));
         public Task<List<MinerInfo>> ListMinersByOwnerIdAsync(long id)
@@ -53,7 +53,7 @@ namespace ChiaPool.Api
             => PostAsync<CreatePlotterResult>(ServerRoutes.CreatePlotter(), new Dictionary<string, string>()
             {
                 ["name"] = name,
-            }, "Basic", $"{username}:{password}");
+            }, "Basic", Base64Encode($"{username}:{password}"));
         public Task<List<PlotterInfo>> ListPlottersByOwnerNameAsync(string name)
             => GetAsync<List<PlotterInfo>>(ServerRoutes.ListPlottersByOwnerName(name));
         public Task<List<PlotterInfo>> ListPlottersByOwnerIdAsync(long id)

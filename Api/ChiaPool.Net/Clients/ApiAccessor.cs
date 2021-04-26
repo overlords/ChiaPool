@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Api
@@ -40,7 +41,7 @@ namespace ChiaPool.Api
             }
             if (typeof(T) == typeof(string))
             {
-                return (T)(object) await response.Content.ReadAsStringAsync();
+                return (T)(object)await response.Content.ReadAsStringAsync();
             }
 
             return await response.Content.ReadFromJsonAsync<T>();
@@ -93,5 +94,8 @@ namespace ChiaPool.Api
 
         protected async Task PostAsync(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
             => await PostAsync<object>(requestUri, parameters, authScheme, authValue);
+
+        protected string Base64Encode(string plain)
+            => Convert.ToBase64String(Encoding.UTF8.GetBytes(plain));
     }
 }
