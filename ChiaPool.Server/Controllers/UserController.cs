@@ -17,11 +17,12 @@ namespace ChiaPool.Controllers
         private readonly UserService UserService;
         private readonly CustomizationOption CustomizationOptions;
 
-        public UserController(MinerContext dbContext, HashingService hashingService, CustomizationOption customizationOptions)
+        public UserController(MinerContext dbContext, HashingService hashingService, CustomizationOption customizationOptions, UserService userService)
         {
             DbContext = dbContext;
             HashingService = hashingService;
             CustomizationOptions = customizationOptions;
+            UserService = userService;
         }
 
         [HttpPost("Register")]
