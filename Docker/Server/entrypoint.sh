@@ -11,6 +11,13 @@ if [[ -z "${wallet_keys}" ]]; then
 	echo "Aborting..."
   exit 1
 fi
+if [[ -z "${plotting_keys}" ]]; then
+	echo "You need to provide keys for plotting!"
+	echo "generating new keys, add them to the node.env file (plotting_keys=\"24words\")"
+	chia keys generate_and_print
+	echo "Aborting..."
+  exit 1
+fi
 if [[ -z "${db_connection}" ]]; then
 	echo "You need to provide a postgres connection string!"
 	echo "Aborting..."
