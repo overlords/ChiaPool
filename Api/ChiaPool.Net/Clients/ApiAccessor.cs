@@ -43,6 +43,10 @@ namespace ChiaPool.Api
             {
                 return (T)(object)await response.Content.ReadAsStringAsync();
             }
+            if (typeof(T) == typeof(Stream))
+            {
+                return (T)(object)await response.Content.ReadAsStreamAsync();
+            }
 
             return await response.Content.ReadFromJsonAsync<T>();
         }
@@ -50,26 +54,15 @@ namespace ChiaPool.Api
         protected async Task GetAsync(Uri requestUri, string authScheme = null, string authValue = null)
             => await GetAsync<object>(requestUri, authScheme, authValue);
 
-        protected async Task<Stream> GetStreamAsync(Uri requestUri, string authScheme = null, string authValue = null)
-        {
-            using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(ApiUrl, requestUri));
-            if (authScheme != default || authValue != default)
-            {
-                request.Headers.Authorization = new AuthenticationHeaderValue(authScheme, authValue);
-            }
-
-            var response = await Client.SendAsync(request);
-
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStreamAsync();
-        }
-
         protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
         {
+            var content = (HttpContent) (parameters is Dictionary<string, string> dict
+                ? new FormUrlEncodedContent(dict)
+                : JsonContent.Create(parameters));
+
             using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(ApiUrl, requestUri))
             {
-                Content = JsonContent.Create(parameters ?? new Dictionary<string, string>())
+                Content = content,
             };
             if (authScheme != default || authValue != default)
             {
@@ -88,9 +81,13 @@ namespace ChiaPool.Api
             {
                 return (T)(object)await response.Content.ReadAsStringAsync();
             }
+            if (typeof(T) == typeof(Stream))
+            {
+                return (T)(object)await response.Content.ReadAsStreamAsync();
+            }
 
             return await response.Content.ReadFromJsonAsync<T>();
-        }
+        }       
 
         protected async Task PostAsync(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
             => await PostAsync<object>(requestUri, parameters, authScheme, authValue);
