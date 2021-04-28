@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using Chia.NET.Parser;
+using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace Chia.NET.Models
 {
@@ -10,8 +12,12 @@ namespace Chia.NET.Models
         [JsonPropertyName("genesis_challenge_initialized")]
         public bool GenesisChallengeInitiated { get; init; }
 
+        [JsonPropertyName("peak")]
+        public BlockRecord Peak { get; init; }
+
         [JsonPropertyName("space")]
-        public long Space { get; init; }
+        [JsonConverter(typeof(JsonBigIntegerConverter))]
+        public BigInteger Space { get; init; }
 
         [JsonPropertyName("sync")]
         public SyncState SyncState { get; init; }

@@ -51,8 +51,16 @@ namespace ChiaPool.Commands
             {
                 await SuccessLineAsync("Online");
                 await WriteLineAsync();
-                await InfoLineAsync($"Currently synced to block height {serverStatus.SyncHeight}");
-                await InfoLineAsync($"Peak block height {serverStatus.MaxSyncHeight}");
+                if (serverStatus.Synced)
+                {
+                    await InfoLineAsync("Node fully synced");
+                    await InfoLineAsync($"Current peak height {serverStatus.SyncHeight}");
+                }
+                else
+                {
+                    await InfoLineAsync("Node Syncing...");
+                    await InfoLineAsync($"Currently synced to block height {serverStatus.SyncHeight} / {serverStatus.MaxSyncHeight}");
+                }
             }
         }
     }

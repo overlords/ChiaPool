@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -215,7 +214,7 @@ namespace ChiaPool.Util
             var sb = new StringBuilder();
             sb.Append("0x");
 
-            foreach(byte b in puzzleHashBytes)
+            foreach (byte b in puzzleHashBytes)
             {
                 sb.Append(Convert.ToString(b, 16));
             }

@@ -56,7 +56,7 @@ namespace ChiaPool.Api
 
         protected async Task<T> PostAsync<T>(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
         {
-            var content = (HttpContent) (parameters is Dictionary<string, string> dict
+            var content = (HttpContent)(parameters is Dictionary<string, string> dict
                 ? new FormUrlEncodedContent(dict)
                 : JsonContent.Create(parameters));
 
@@ -87,7 +87,7 @@ namespace ChiaPool.Api
             }
 
             return await response.Content.ReadFromJsonAsync<T>();
-        }       
+        }
 
         protected async Task PostAsync(Uri requestUri, object parameters = null, string authScheme = null, string authValue = null)
             => await PostAsync<object>(requestUri, parameters, authScheme, authValue);
