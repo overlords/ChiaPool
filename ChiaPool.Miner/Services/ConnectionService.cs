@@ -86,6 +86,15 @@ namespace ChiaPool.Services
         {
             var status = StatusService.GetCurrentStatus();
             var plotInfos = await PlotService.GetPlotInfosAsync();
+
+            if (status.PlotCount != plotInfos.Length)
+            {
+                Logger.LogInformation("Plot count not matching with plot infos.\n" +
+                                      "Updating Status...");
+                await StatusService.RefreshStatusAsync();
+                status = StatusService.GetCurrentStatus();
+            }
+
             var result = await Connection.InvokeAsync<MinerUpdateResult>(MinerHubMethods.Update, status, plotInfos);
 
             if (!result.Successful)
@@ -101,6 +110,15 @@ namespace ChiaPool.Services
         {
             var status = StatusService.GetCurrentStatus();
             var plotInfos = await PlotService.GetPlotInfosAsync();
+
+            if (status.PlotCount != plotInfos.Length)
+            {
+                Logger.LogInformation("Plot count not matching with plot infos.\n" +
+                                      "Updating Status...");
+                await StatusService.RefreshStatusAsync();
+                status = StatusService.GetCurrentStatus();
+            }
+
             var result = await Connection.InvokeAsync<MinerActivationResult>(MinerHubMethods.Activate, status, plotInfos);
 
             if (!result.Successful)
