@@ -6,6 +6,8 @@ namespace ChiaPool.Models
     {
         [JsonPropertyName("s")]
         public bool Successful { get; init; }
+        [JsonPropertyName("c")]
+        public PlotInfo[] Conflicts { get; init; }
         [JsonPropertyName("r")]
         public string Reason { get; init; }
 
@@ -13,15 +15,23 @@ namespace ChiaPool.Models
         public MinerUpdateResult()
         {
         }
-        private MinerUpdateResult(bool successful, string reason)
+        private MinerUpdateResult(bool successful, PlotInfo[] conflicts, string reason)
         {
             Successful = successful;
+            Conflicts = conflicts;
             Reason = reason;
         }
 
         public static MinerUpdateResult FromSuccess()
-            => new MinerUpdateResult(true, default);
-        public static MinerUpdateResult FromFailed(string reason)
-            => new MinerUpdateResult(false, reason);
+            => new MinerUpdateResult(true, default, default);
+
+        public static MinerUpdateResult FromConflicingPlots(PlotInfo[] conflicts)
+            => new MinerUpdateResult(true, conflicts, default);
+
+        public static MinerUpdateResult FromError()
+            => FromFailed("An unknown error occurred");
+
+        private static MinerUpdateResult FromFailed(string reason)
+            => new MinerUpdateResult(false, default, reason);
     }
 }

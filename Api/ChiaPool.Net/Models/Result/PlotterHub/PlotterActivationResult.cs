@@ -24,7 +24,14 @@ namespace ChiaPool.Models
 
         public static PlotterActivationResult FromSuccess(long userId)
             => new PlotterActivationResult(true, userId, default);
-        public static PlotterActivationResult FromFailed(string reason)
+
+        public static PlotterActivationResult FromAlreadyActive()
+            => FromFailed("There already is a active connection from this plotter");
+
+        public static PlotterActivationResult FromError()
+            => FromFailed("An unknown error occurred!");
+
+        private static PlotterActivationResult FromFailed(string reason)
             => new PlotterActivationResult(false, default, reason);
     }
 }

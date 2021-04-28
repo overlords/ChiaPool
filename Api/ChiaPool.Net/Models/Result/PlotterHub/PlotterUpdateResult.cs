@@ -21,7 +21,11 @@ namespace ChiaPool.Models
 
         public static PlotterUpdateResult FromSuccess()
             => new PlotterUpdateResult(true, default);
-        public static PlotterUpdateResult FromFailed(string reason)
+
+        public static PlotterUpdateResult FromError()
+            => FromFailed("An unknown error occurred!");
+
+        private static PlotterUpdateResult FromFailed(string reason)
             => new PlotterUpdateResult(false, reason);
     }
 }

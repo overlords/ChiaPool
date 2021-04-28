@@ -27,7 +27,7 @@ namespace ChiaPool.Services
         private readonly UserService UserService;
 
         private readonly Dictionary<long, PlotterActivation> ActivePlotters;
-        private readonly SemaphoreSlim ActivePlottersLock;
+        private readonly SemaphoreSlim PlotterLock;
 
         private TaskCompletionSource<RemotePlot> PlotOfferCallback;
         private long PlotOfferPlotterId;
@@ -35,7 +35,7 @@ namespace ChiaPool.Services
         public PlotterService()
         {
             ActivePlotters = new Dictionary<long, PlotterActivation>();
-            ActivePlottersLock = new SemaphoreSlim(1, 1);
+            PlotterLock = new SemaphoreSlim(1, 1);
         }
 
         public async Task<int> GetTotalPlotterCountAsync()
@@ -45,28 +45,67 @@ namespace ChiaPool.Services
 
             return await dbContext.Plotters.CountAsync();
         }
-        public int GetActivePlotterCount()
-            => ActivePlotters.Count;
+        public async Task<int> GetActivePlotterCountAsync()
+        {
+            await PlotterLock.WaitAsync();
+            try
+            {
+                return ActivePlotters.Count;
+            }
+            finally
+            {
+                PlotterLock.Release();
+            }
+        }
+        public async Task<int> GetPlottingCapacityAsync()
+        {
+            await PlotterLock.WaitAsync();
+            try
+            {
+                return ActivePlotters.Sum(x => x.Value.Status.Capacity);
+            }
+            finally
+            {
+                PlotterLock.Release();
+            }
+        }
+        public async Task<int> GetAvailablePlotCountAsync()
+        {
+            await PlotterLock.WaitAsync();
+            try
+            {
+                return ActivePlotters.Sum(x => x.Value.Status.PlotsAvailable);
+            }
+            finally
+            {
+                PlotterLock.Release();
+            }
+        }
 
-        public int GetPlottingCapacity()
-            => ActivePlotters.Sum(x => x.Value.Status.Capacity);
-        public int GetAvailablePlotCount()
-            => ActivePlotters.Sum(x => x.Value.Status.PlotsAvailable);
-
-        public PlotterInfo GetPlotterInfo(Plotter plotter)
-           => ActivePlotters.TryGetValue(plotter.Id, out var plotterStatus)
-               ? new PlotterInfo(plotter.Id, true, plotterStatus.Status.Capacity, plotterStatus.Status.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
-               : new PlotterInfo(plotter.Id, false, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId);
+        public async Task<PlotterInfo> GetPlotterInfoAsync(Plotter plotter)
+        {
+            await PlotterLock.WaitAsync();
+            try
+            {
+                return ActivePlotters.TryGetValue(plotter.Id, out var plotterStatus)
+                    ? new PlotterInfo(plotter.Id, true, plotterStatus.Status.Capacity, plotterStatus.Status.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
+                    : new PlotterInfo(plotter.Id, false, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId);
+            }
+            finally
+            {
+                PlotterLock.Release();
+            }
+        }
 
         public async Task<PlotterActivationResult> ActivatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
         {
-            await ActivePlottersLock.WaitAsync();
+            await PlotterLock.WaitAsync();
             try
             {
                 var activation = new PlotterActivation(connectionId, status);
                 if (!ActivePlotters.TryAdd(plotterId, activation))
                 {
-                    return PlotterActivationResult.FromFailed("There already is a active connection from this plotter!");
+                    return PlotterActivationResult.FromAlreadyActive();
                 }
 
                 Logger.LogInformation($"Activated plotter [{plotterId}]");
@@ -76,16 +115,16 @@ namespace ChiaPool.Services
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an exception while activating a plotter!");
-                return PlotterActivationResult.FromFailed("An unknown error occurred!");
+                return PlotterActivationResult.FromError();
             }
             finally
             {
-                ActivePlottersLock.Release();
+                PlotterLock.Release();
             }
         }
         public async Task<PlotterUpdateResult> UpdatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
         {
-            await ActivePlottersLock.WaitAsync();
+            await PlotterLock.WaitAsync();
 
             try
             {
@@ -106,16 +145,16 @@ namespace ChiaPool.Services
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an excpetion while updating a plotter!");
-                return PlotterUpdateResult.FromFailed("An unknown error occurred!");
+                return PlotterUpdateResult.FromError();
             }
             finally
             {
-                ActivePlottersLock.Release();
+                PlotterLock.Release();
             }
         }
         public async Task DeactivatePlotterAsync(string connectionId, long plotterId)
         {
-            await ActivePlottersLock.WaitAsync();
+            await PlotterLock.WaitAsync();
 
             try
             {
@@ -135,30 +174,40 @@ namespace ChiaPool.Services
             }
             finally
             {
-                ActivePlottersLock.Release();
+                PlotterLock.Release();
             }
         }
 
-        public long GetPlotPrice(int deadlineHours)
+        public async Task<long> GetPlotPriceAsync(int deadlineHours)
         {
-            int availablePlots = GetAvailablePlotCount();
+            int availablePlots = await GetAvailablePlotCountAsync();
 
             if (availablePlots == 0)
             {
                 return -1;
             }
 
-            int capacity = GetPlottingCapacity();
+            int capacity = await GetPlottingCapacityAsync();
 
             return (PlotBaseCost * capacity / availablePlots) + (deadlineHours * PlotDeadLineHourCost);
         }
 
-        public long? GetSuitablePlotterId()
-            => ActivePlotters
-                .OrderBy(x => x.Value.Status.Capacity - x.Value.Status.PlotsAvailable)
-                .Where(x => x.Value.Status.PlotsAvailable > 0)
-                .Select(x => x.Key)
-                .FirstOrDefault();
+        public async Task<long?> GetSuitablePlotterIdAsync()
+        {
+            await PlotterLock.WaitAsync();
+            try
+            {
+                return ActivePlotters
+               .OrderBy(x => x.Value.Status.Capacity - x.Value.Status.PlotsAvailable)
+               .Where(x => x.Value.Status.PlotsAvailable > 0)
+               .Select(x => x.Key)
+               .FirstOrDefault();
+            }
+            finally
+            {
+                PlotterLock.Release();
+            }
+        }
 
         public async Task<PlotTransfer> TryRequestPlotTransferAsync(long minerId, long plotterId, int deadlineHours)
         {
@@ -176,7 +225,8 @@ namespace ChiaPool.Services
             }
 
             var remotePlot = await PlotOfferCallback.Task;
-            return new PlotTransfer(plotterId, remotePlot.PlotId, minerId, GetPlotPrice(deadlineHours), remotePlot.DownloadAddress, deadlineHours);
+            long plotPrice = await GetPlotPriceAsync(deadlineHours);
+            return new PlotTransfer(plotterId, remotePlot.PlotId, minerId, plotPrice, remotePlot.DownloadAddress, deadlineHours);
         }
 
         ValueTask IPlotOfferHandler.HandlePlotOfferAsync(RemotePlot plot, long plotterId)

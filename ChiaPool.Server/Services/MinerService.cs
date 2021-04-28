@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,12 +23,14 @@ namespace ChiaPool.Services
         private readonly UserService UserService;
 
         private readonly Dictionary<long, MinerActivation> ActiveMiners;
-        private readonly SemaphoreSlim ActiveMinersLock;
+        private readonly HashSet<PlotInfo> PlotInfos;
+        private readonly SemaphoreSlim MinerLock;
 
         public MinerService()
         {
             ActiveMiners = new Dictionary<long, MinerActivation>();
-            ActiveMinersLock = new SemaphoreSlim(1, 1);
+            PlotInfos = new HashSet<PlotInfo>();
+            MinerLock = new SemaphoreSlim(1, 1);
         }
 
         protected override async ValueTask RunAsync()
@@ -78,42 +81,86 @@ namespace ChiaPool.Services
         public int GetActiveMinerCount()
             => ActiveMiners.Count;
 
-        public int GetActivePlotCount()
-            => ActiveMiners.Sum(x => x.Value.Status.PlotCount);
-
-        public MinerInfo GetMinerInfo(Miner miner)
-            => ActiveMiners.TryGetValue(miner.Id, out var minerStatus)
-                ? new MinerInfo(miner.Id, true, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId)
-                : new MinerInfo(miner.Id, false, -1, miner.Name, miner.Earnings, miner.OwnerId);
-
-        public async Task<MinerActivationResult> ActivateMinerAsync(string connectionId, long minerId, MinerStatus status, PlotInfo[] plotInfos)
+        public async Task<int> GetActivePlotCountAsync()
         {
-            await ActiveMinersLock.WaitAsync();
+            await MinerLock.WaitAsync();
             try
             {
-                var activation = new MinerActivation(connectionId, status, plotInfos);
-                if (!ActiveMiners.TryAdd(minerId, activation))
+                return ActiveMiners.Sum(x => x.Value.Status.PlotCount);
+            }
+            finally
+            {
+                MinerLock.Release();
+            }
+        }
+        public async Task<MinerInfo> GetMinerInfoAsync(Miner miner)
+        {
+            await MinerLock.WaitAsync();
+            try
+            {
+                return ActiveMiners.TryGetValue(miner.Id, out var minerStatus)
+                   ? new MinerInfo(miner.Id, true, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId)
+                   : new MinerInfo(miner.Id, false, -1, miner.Name, miner.Earnings, miner.OwnerId);
+            }
+            finally
+            {
+                MinerLock.Release();
+            }
+        }
+
+        public async Task<MinerActivationResult> ActivateMinerAsync(string connectionId, long minerId, MinerStatus status, List<PlotInfo> plotInfos)
+        {
+            await MinerLock.WaitAsync();
+
+            try
+            {
+                if (plotInfos.Count != status.PlotCount)
                 {
-                    return MinerActivationResult.FromFailed("There already is a active connection from this miner!");
+                    Logger.LogWarning($"Miner {minerId} tried to activate with unmatching status and plotInfos plot count");
+                    return MinerActivationResult.FromStatusPlotCountUnmatch();
+                }
+                if (plotInfos.Count != plotInfos.Distinct().Count())
+                {
+                    Logger.LogWarning($"Miner {minerId} tried to activate with duplicate plot public keys");
+                    return MinerActivationResult.FromDuplicates();
+                }
+                if (ActiveMiners.ContainsKey(minerId))
+                {
+                    return MinerActivationResult.FromAlreadyActive();
                 }
 
-                Logger.LogInformation($"Activated miner [{minerId}]");
+                var conflicts = AddPlotInfosAndFilterConflicts(plotInfos);
+
+                if (conflicts.Any())
+                {
+                    Logger.LogWarning($"Miner {minerId} tried to activate with {conflicts.Count} conflicing plots!");
+                    status = new MinerStatus(status.PlotCount - conflicts.Count);
+                }
+
+                var activation = new MinerActivation(connectionId, status, plotInfos);
+                ActiveMiners.Add(minerId, activation);
+
                 long userId = await UserService.GetOwnerIdFromMinerId(minerId);
-                return MinerActivationResult.FromSuccess(userId);
+
+                Logger.LogInformation($"Activated miner [{minerId}]");
+
+                return conflicts.Any()
+                    ? MinerActivationResult.FromConflicingPlots(userId, conflicts.ToArray())
+                    : MinerActivationResult.FromSuccess(userId);
             }
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an exception while activating a miner!");
-                return MinerActivationResult.FromFailed("An unknown error occurred!");
+                return MinerActivationResult.FromError();
             }
             finally
             {
-                ActiveMinersLock.Release();
+                MinerLock.Release();
             }
         }
-        public async Task<MinerUpdateResult> UpdateMinerAsync(string connectionId, long minerId, MinerStatus status, PlotInfo[] plotInfos)
+        public async Task<MinerUpdateResult> UpdateMinerAsync(string connectionId, long minerId, MinerStatus status, List<PlotInfo> plotInfos)
         {
-            await ActiveMinersLock.WaitAsync();
+            await MinerLock.WaitAsync();
 
             try
             {
@@ -126,24 +173,35 @@ namespace ChiaPool.Services
                     throw new InvalidOperationException("Cannot update active miner from different connection");
                 }
 
+                RemovePlotInfos(oldValue.PlotInfos);
+                var conflicts = AddPlotInfosAndFilterConflicts(plotInfos);
+
+                if (conflicts.Any())
+                {
+                    Logger.LogWarning($"Miner {minerId} tried to update with {conflicts.Count} conflicing plots!");
+                    status = new MinerStatus(status.PlotCount - conflicts.Count);
+                }
+
                 oldValue.Update(status, plotInfos);
-                ActiveMiners[minerId] = oldValue;
                 Logger.LogInformation($"Updated miner [{minerId}]");
-                return MinerUpdateResult.FromSuccess();
+
+                return conflicts.Any()
+                    ? MinerUpdateResult.FromConflicingPlots(conflicts.ToArray())
+                    : MinerUpdateResult.FromSuccess();
             }
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an excpetion while updating a miner!");
-                return MinerUpdateResult.FromFailed("An unknown error occurred!");
+                return MinerUpdateResult.FromError();
             }
             finally
             {
-                ActiveMinersLock.Release();
+                MinerLock.Release();
             }
         }
         public async Task DeactivateMinerAsync(string connectionId, long minerId)
         {
-            await ActiveMinersLock.WaitAsync();
+            await MinerLock.WaitAsync();
 
             try
             {
@@ -155,16 +213,44 @@ namespace ChiaPool.Services
                 {
                     Logger.LogWarning("Cannot deactivate miner from different connection");
                     return;
-                    //throw new InvalidOperationException("Cannot deactivate miner from different connection");
                 }
+
+                RemovePlotInfos(oldValue.PlotInfos);
 
                 ActiveMiners.Remove(minerId);
                 Logger.LogInformation($"Deactivated miner [{minerId}]");
             }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "There was an excpetion while deactivating a miner!");
+            }
             finally
             {
-                ActiveMinersLock.Release();
+                MinerLock.Release();
             }
+        }
+
+        private void RemovePlotInfos(List<PlotInfo> plotInfos) //May only be called inside of MinerLock
+        {
+            foreach(var plotInfo in plotInfos)
+            {
+                PlotInfos.Remove(plotInfo);
+            }
+        }
+        private List<PlotInfo> AddPlotInfosAndFilterConflicts(List<PlotInfo> plotInfos) //May only be called inside of MinerLock
+        {
+            List<PlotInfo> conflicingPlots = new List<PlotInfo>();
+            foreach (var plotInfo in plotInfos)
+            {
+                if (!PlotInfos.Add(plotInfo))
+                {
+                    continue;
+                }
+
+                conflicingPlots.Add(plotInfo);
+                plotInfos.Remove(plotInfo);
+            }
+            return conflicingPlots;
         }
     }
 }

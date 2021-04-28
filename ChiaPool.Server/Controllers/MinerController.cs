@@ -4,6 +4,7 @@ using ChiaPool.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace ChiaPool.Controllers
             DbContext.Miners.Add(miner);
             await DbContext.SaveChangesAsync();
 
-            var minerInfo = MinerService.GetMinerInfo(miner);
+            var minerInfo = await MinerService.GetMinerInfoAsync(miner);
             var result = new CreateMinerResult(miner.Token, minerInfo);
 
             return Ok(result);
@@ -60,7 +61,7 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var minerInfo = MinerService.GetMinerInfo(miner);
+            var minerInfo = await MinerService.GetMinerInfoAsync(miner);
             return Ok(minerInfo);
         }
         [HttpGet("Get/Name/{name}")]
@@ -73,7 +74,7 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var minerInfo = MinerService.GetMinerInfo(miner);
+            var minerInfo = await MinerService.GetMinerInfoAsync(miner);
             return Ok(minerInfo);
         }
         [HttpGet("Get/Token/{token}")]
@@ -86,7 +87,7 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var minerInfo = MinerService.GetMinerInfo(miner);
+            var minerInfo = await MinerService.GetMinerInfoAsync(miner);
             return Ok(minerInfo);
         }
 
@@ -97,9 +98,12 @@ namespace ChiaPool.Controllers
                 .Where(x => x.Owner.Id == id)
                 .ToListAsync();
 
-            var minerInfos = miners
-                .Select(x => MinerService.GetMinerInfo(x))
-                .ToList();
+            var minerInfos = new List<MinerInfo>();
+            foreach (var miner in miners)
+            {
+                var minerInfo = await MinerService.GetMinerInfoAsync(miner);
+                minerInfos.Add(minerInfo);
+            }
 
             return Ok(minerInfos);
         }
@@ -110,9 +114,12 @@ namespace ChiaPool.Controllers
                 .Where(x => x.Owner.Name == name)
                 .ToListAsync();
 
-            var minerInfos = miners
-                .Select(x => MinerService.GetMinerInfo(x))
-                .ToList();
+            var minerInfos = new List<MinerInfo>();
+            foreach(var miner in miners)
+            {
+                var minerInfo = await MinerService.GetMinerInfoAsync(miner);
+                minerInfos.Add(minerInfo);
+            }
 
             return Ok(minerInfos);
         }

@@ -44,7 +44,7 @@ namespace ChiaPool.Controllers
             DbContext.Plotters.Add(plotter);
             await DbContext.SaveChangesAsync();
 
-            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            var plotterInfo = await PlotterService.GetPlotterInfoAsync(plotter);
             var result = new CreatePlotterResult(plotter.Token, plotterInfo);
 
             return Ok(result);
@@ -60,7 +60,7 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            var plotterInfo = PlotterService.GetPlotterInfoAsync(plotter);
             return Ok(plotterInfo);
         }
         [HttpGet("Get/Name/{name}")]
@@ -73,7 +73,7 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            var plotterInfo = PlotterService.GetPlotterInfoAsync(plotter);
             return Ok(plotterInfo);
         }
         [HttpGet("Get/Token/{token}")]
@@ -86,7 +86,7 @@ namespace ChiaPool.Controllers
                 return NotFound();
             }
 
-            var plotterInfo = PlotterService.GetPlotterInfo(plotter);
+            var plotterInfo = PlotterService.GetPlotterInfoAsync(plotter);
             return Ok(plotterInfo);
         }
 
@@ -98,7 +98,7 @@ namespace ChiaPool.Controllers
                 .ToListAsync();
 
             var plotterInfos = plotters
-                .Select(x => PlotterService.GetPlotterInfo(x))
+                .Select(x => PlotterService.GetPlotterInfoAsync(x))
                 .ToList();
 
             return Ok(plotterInfos);
@@ -111,7 +111,7 @@ namespace ChiaPool.Controllers
                 .ToListAsync();
 
             var plotterInfos = plotters
-                .Select(x => PlotterService.GetPlotterInfo(x))
+                .Select(x => PlotterService.GetPlotterInfoAsync(x))
                 .ToList();
 
             return Ok(plotterInfos);

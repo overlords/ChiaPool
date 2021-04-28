@@ -36,12 +36,12 @@ namespace ChiaPool.Controllers
                 TotalPlotterCount = await DbContext.Plotters.CountAsync(),
 
                 ActiveMinerCount = MinerService.GetActiveMinerCount(),
-                ActivePlotterCount = PlotterService.GetActivePlotterCount(),
+                ActivePlotterCount = await PlotterService.GetActivePlotterCountAsync(),
 
-                PlotterCapactity = PlotterService.GetPlottingCapacity(),
+                PlotterCapactity = await PlotterService.GetPlottingCapacityAsync(),
 
-                PlotterPlots = PlotterService.GetAvailablePlotCount(),
-                MinerPlots = MinerService.GetActivePlotCount(),
+                PlotterPlots = await PlotterService.GetAvailablePlotCountAsync(),
+                MinerPlots = await MinerService.GetActivePlotCountAsync(),
 
                 TotalPlotMinutes = PlotService.GetTotalPlotMinutes(),
             };

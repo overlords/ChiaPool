@@ -4,10 +4,13 @@ using ChiaPool.Models;
 using ChiaPool.Utils;
 using Common.Services;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -105,6 +108,8 @@ namespace ChiaPool.Services
                 await RestartConnectionAsync();
                 return;
             }
+
+            HandleConflicts(result.Conflicts);
         }
         public async Task SendActivateRequestAsync()
         {
@@ -130,7 +135,26 @@ namespace ChiaPool.Services
                 return;
             }
 
+            HandleConflicts(result.Conflicts);
             UserId = result.UserId;
+        }
+
+        private void HandleConflicts(PlotInfo[] conflicts)
+        {
+            if (!conflicts.Any())
+            {
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("The pool reported plot conflicts:");
+            foreach (var conflict in conflicts)
+            {
+                sb.AppendLine($"- {conflict.PublicKey}");
+            }
+            sb.Append("Make sure you're not using the same plots on a different miner!");
+
+            Logger.LogError(sb.ToString());
         }
 
         private async Task RestartConnectionAsync()

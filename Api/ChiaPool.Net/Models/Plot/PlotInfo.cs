@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace ChiaPool.Models
 {
@@ -15,5 +16,11 @@ namespace ChiaPool.Models
         {
             PublicKey = publicKey;
         }
+
+        public override bool Equals(object obj) 
+            => obj is PlotInfo plotInfo && plotInfo.PublicKey == PublicKey;
+
+        public override int GetHashCode() 
+            => HashCode.Combine(PublicKey);
     }
 }

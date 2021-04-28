@@ -23,8 +23,8 @@ namespace ChiaPool.Controllers
 
 
         [HttpGet("Transfer/Cost/{deadlineHours}")]
-        public long GetPlotCost([FromRoute] int deadlineHours = 12)
-           => PlotterService.GetPlotPrice(deadlineHours);
+        public Task<long> GetPlotCost([FromRoute] int deadlineHours = 12)
+           => PlotterService.GetPlotPriceAsync(deadlineHours);
 
         [HttpGet("Transfer/Buy/{deadlineHours}")]
         [Authorize(AuthenticationSchemes = "Miner")]
@@ -41,7 +41,7 @@ namespace ChiaPool.Controllers
                 return Conflict();
             }
 
-            long? plotterId = PlotterService.GetSuitablePlotterId();
+            long? plotterId = await PlotterService.GetSuitablePlotterIdAsync();
             if (plotterId == null)
             {
                 return NotFound();
