@@ -1,5 +1,7 @@
 ﻿using ChiaPool.Models;
 using Common.Services;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Services
@@ -10,9 +12,9 @@ namespace ChiaPool.Services
         private const int StatusRefreshDelay = 30 * 1000;
 
         [Inject]
-        private readonly ConnectionManager ConnectionManager;
+        private readonly ConnectionService ConnectionManager;
         [Inject]
-        private readonly PlotManager PlotManager;
+        private readonly PlotService PlotManager;
 
         private MinerStatus CurrentStatus;
 
@@ -33,15 +35,22 @@ namespace ChiaPool.Services
 
         public async Task RefreshStatusAsync()
         {
-            var newStatus = await LoadCurrentStatusAsync();
-
-            if (CurrentStatus.Equals(newStatus))
+            try
             {
-                return;
-            }
+                var newStatus = await LoadCurrentStatusAsync();
 
-            CurrentStatus = newStatus;
-            await ConnectionManager.SendStatusUpdateAsync();
+                if (CurrentStatus.Equals(newStatus))
+                {
+                    return;
+                }
+
+                CurrentStatus = newStatus;
+                await ConnectionManager.SendStatusUpdateAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "There was an error while refreshing status");
+            }
         }
 
         private async Task<MinerStatus> LoadCurrentStatusAsync()

@@ -12,9 +12,9 @@ namespace ChiaPool.Controllers
     {
         private readonly ServerApiAccessor ServerAccessor;
         private readonly AuthOption AuthOptions;
-        private readonly ConnectionManager ConnectionManager;
+        private readonly ConnectionService ConnectionManager;
 
-        public ServerController(ServerApiAccessor serverAccessor, AuthOption authOptions, ConnectionManager connectionManager)
+        public ServerController(ServerApiAccessor serverAccessor, AuthOption authOptions, ConnectionService connectionManager)
         {
             ServerAccessor = serverAccessor;
             AuthOptions = authOptions;

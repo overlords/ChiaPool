@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -87,32 +86,32 @@ namespace ChiaPool.Services
                 ? new MinerInfo(miner.Id, true, minerStatus.Status.PlotCount, miner.Name, miner.Earnings, miner.OwnerId)
                 : new MinerInfo(miner.Id, false, -1, miner.Name, miner.Earnings, miner.OwnerId);
 
-        public async Task<ActivationResult> ActivateMinerAsync(string connectionId, long minerId, MinerStatus status, IPAddress address)
+        public async Task<MinerActivationResult> ActivateMinerAsync(string connectionId, long minerId, MinerStatus status, PlotInfo[] plotInfos)
         {
             await ActiveMinersLock.WaitAsync();
             try
             {
-                var activation = new MinerActivation(connectionId, address, status);
+                var activation = new MinerActivation(connectionId, status, plotInfos);
                 if (!ActiveMiners.TryAdd(minerId, activation))
                 {
-                    return ActivationResult.FromFailed("There already is a active connection from this miner!");
+                    return MinerActivationResult.FromFailed("There already is a active connection from this miner!");
                 }
 
                 Logger.LogInformation($"Activated miner [{minerId}]");
                 long userId = await UserService.GetOwnerIdFromMinerId(minerId);
-                return ActivationResult.FromSuccess(userId);
+                return MinerActivationResult.FromSuccess(userId);
             }
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an exception while activating a miner!");
-                return ActivationResult.FromFailed("An unknown error occurred!");
+                return MinerActivationResult.FromFailed("An unknown error occurred!");
             }
             finally
             {
                 ActiveMinersLock.Release();
             }
         }
-        public async Task UpdateMinerAsync(string connectionId, long minerId, MinerStatus status)
+        public async Task<MinerUpdateResult> UpdateMinerAsync(string connectionId, long minerId, MinerStatus status, PlotInfo[] plotInfos)
         {
             await ActiveMinersLock.WaitAsync();
 
@@ -127,9 +126,15 @@ namespace ChiaPool.Services
                     throw new InvalidOperationException("Cannot update active miner from different connection");
                 }
 
-                oldValue.Status = status;
+                oldValue.Update(status, plotInfos);
                 ActiveMiners[minerId] = oldValue;
                 Logger.LogInformation($"Updated miner [{minerId}]");
+                return MinerUpdateResult.FromSuccess();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "There was an excpetion while updating a miner!");
+                return MinerUpdateResult.FromFailed("An unknown error occurred!");
             }
             finally
             {

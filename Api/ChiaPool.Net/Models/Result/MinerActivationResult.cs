@@ -1,24 +1,24 @@
 ﻿namespace ChiaPool.Models
 {
-    public sealed class ActivationResult
+    public sealed class MinerActivationResult
     {
         public bool Successful { get; init; }
         public long UserId { get; init; }
         public string Reason { get; init; }
 
-        public ActivationResult()
+        public MinerActivationResult()
         {
         }
 
-        public static ActivationResult FromSuccess(long userId)
-            => new ActivationResult()
+        public static MinerActivationResult FromSuccess(long userId)
+            => new MinerActivationResult()
             {
                 Successful = true,
                 UserId = userId,
                 Reason = default,
             };
-        public static ActivationResult FromFailed(string reason)
-            => new ActivationResult()
+        public static MinerActivationResult FromFailed(string reason)
+            => new MinerActivationResult()
             {
                 Successful = false,
                 UserId = default,

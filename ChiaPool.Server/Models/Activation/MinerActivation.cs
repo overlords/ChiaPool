@@ -1,18 +1,22 @@
-﻿using System.Net;
-
-namespace ChiaPool.Models
+﻿namespace ChiaPool.Models
 {
     public sealed class MinerActivation
     {
-        public string ConnectionId { get; set; }
-        public IPAddress Address { get; set; }
-        public MinerStatus Status { get; set; }
+        public string ConnectionId { get; private set; }
+        public MinerStatus Status { get; private set; }
+        public PlotInfo[] PlotInfos { get; private set; }
 
-        public MinerActivation(string connectionId, IPAddress address, MinerStatus status)
+        public MinerActivation(string connectionId, MinerStatus status, PlotInfo[] plotInfos)
         {
             ConnectionId = connectionId;
-            Address = address;
             Status = status;
+            PlotInfos = plotInfos;
+        }
+
+        public void Update(MinerStatus status, PlotInfo[] plotInfos)
+        {
+            Status = status;
+            PlotInfos = plotInfos;
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace ChiaPool.Services
 {
     [RunPriority(10)]
-    public class ConnectionManager : Service, IConnectionManager
+    public class ConnectionService : Service, IConnectionManager
     {
         private const int ConnectionRestartDelay = 5000;
 
@@ -26,6 +26,8 @@ namespace ChiaPool.Services
         private readonly AuthOption AuthOptions;
         [Inject]
         private readonly StatusService StatusService;
+        [Inject]
+        private readonly PlotService PlotService;
 
         protected override ValueTask InitializeAsync()
         {
@@ -62,12 +64,12 @@ namespace ChiaPool.Services
             Logger.LogInformation("Successfully reconnected");
             await SendActivateRequestAsync();
         }
-        private Task OnReconnecting(System.Exception arg)
+        private Task OnReconnecting(Exception arg)
         {
             Logger.LogInformation("Reconnecting...");
             return Task.CompletedTask;
         }
-        private Task OnConnectionClosed(System.Exception arg)
+        private Task OnConnectionClosed(Exception arg)
         {
             Logger.LogWarning("Connection to ChiaPool Manager closed!");
             return Task.CompletedTask;
@@ -83,17 +85,29 @@ namespace ChiaPool.Services
         public async Task SendStatusUpdateAsync()
         {
             var status = StatusService.GetCurrentStatus();
-            await Connection.SendAsync(MinerHubMethods.Update, status);
+            var plotInfos = await PlotService.GetPlotInfosAsync();
+            var result = await Connection.InvokeAsync<MinerUpdateResult>(MinerHubMethods.Update, status, plotInfos);
+
+            if (!result.Successful)
+            {
+                Logger.LogError($"Failed to execute {MinerHubMethods.Update} via the websocket!\n" +
+                                $"Reason: \"{result.Reason}\"");
+                Logger.LogInformation("Restarting socket...");
+                await RestartConnectionAsync();
+                return;
+            }
         }
         public async Task SendActivateRequestAsync()
         {
             var status = StatusService.GetCurrentStatus();
-            var result = await Connection.InvokeAsync<ActivationResult>(MinerHubMethods.Activate, status);
+            var plotInfos = await PlotService.GetPlotInfosAsync();
+            var result = await Connection.InvokeAsync<MinerActivationResult>(MinerHubMethods.Activate, status, plotInfos);
 
             if (!result.Successful)
             {
                 Logger.LogError($"Failed to execute {MinerHubMethods.Activate} via the websocket!\n" +
                                 $"Reason: \"{result.Reason}\"");
+                Logger.LogInformation("Restarting socket...");
                 await RestartConnectionAsync();
                 return;
             }

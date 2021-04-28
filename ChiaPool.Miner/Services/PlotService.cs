@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace ChiaPool.Services
 {
-    public class PlotManager
+    public class PlotService
     {
         private readonly HarvesterClient HarvesterClient;
         private readonly ILoggerFactory LoggerFactory;
 
-        public PlotManager(HarvesterClient harvesterClient, ILoggerFactory loggerFactory)
+        public PlotService(HarvesterClient harvesterClient, ILoggerFactory loggerFactory)
         {
             HarvesterClient = harvesterClient;
             LoggerFactory = loggerFactory;
@@ -20,6 +20,14 @@ namespace ChiaPool.Services
 
         public async Task<Plot[]> GetPlotsAsync()
             => await HarvesterClient.GetPlotsAsync();
+
+        public async Task<PlotInfo[]> GetPlotInfosAsync()
+        {
+            var plots = await GetPlotsAsync();
+
+            return plots.Select(x => new PlotInfo(x.PublicKey))
+                        .ToArray();
+        }
 
         public async Task<int> GetPlotCountAsync()
             => (await HarvesterClient.GetPlotsAsync()).Length;

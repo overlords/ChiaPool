@@ -4,7 +4,6 @@ using ChiaPool.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace ChiaPool.Hubs
@@ -20,18 +19,17 @@ namespace ChiaPool.Hubs
         }
 
         [HubMethodName(MinerHubMethods.Activate)]
-        public Task<ActivationResult> ActivateAsync(MinerStatus status)
+        public Task<MinerActivationResult> ActivateAsync(MinerStatus status, PlotInfo[] plotInfos)
         {
             long minerId = long.Parse(Context.UserIdentifier);
-            var address = GetRequestIP();
-            return MinerService.ActivateMinerAsync(Context.ConnectionId, minerId, status, address);
+            return MinerService.ActivateMinerAsync(Context.ConnectionId, minerId, status, plotInfos);
         }
 
         [HubMethodName(MinerHubMethods.Update)]
-        public async Task UpdateMinerAsync(MinerStatus status)
+        public Task<MinerUpdateResult> UpdateMinerAsync(MinerStatus status, PlotInfo[] plotInfos)
         {
             long minerId = long.Parse(Context.UserIdentifier);
-            await MinerService.UpdateMinerAsync(Context.ConnectionId, minerId, status);
+            return MinerService.UpdateMinerAsync(Context.ConnectionId, minerId, status, plotInfos);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -40,9 +38,9 @@ namespace ChiaPool.Hubs
             await MinerService.DeactivateMinerAsync(Context.ConnectionId, minerId);
         }
 
-        private IPAddress GetRequestIP()
-        => !Context.GetHttpContext().Request.Headers.TryGetValue("HTTP_X-FORWARDED-FOR", out var value)
-            ? null
-            : IPAddress.Parse(value);
+        //private IPAddress GetRequestIP()
+        //=> !Context.GetHttpContext().Request.Headers.TryGetValue("HTTP_X-FORWARDED-FOR", out var value)
+        //    ? null
+        //    : IPAddress.Parse(value);
     }
 }

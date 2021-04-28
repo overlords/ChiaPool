@@ -58,7 +58,7 @@ namespace ChiaPool.Services
                ? new PlotterInfo(plotter.Id, true, plotterStatus.Status.Capacity, plotterStatus.Status.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
                : new PlotterInfo(plotter.Id, false, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId);
 
-        public async Task<ActivationResult> ActivatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
+        public async Task<MinerActivationResult> ActivatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
         {
             await ActivePlottersLock.WaitAsync();
             try
@@ -66,17 +66,17 @@ namespace ChiaPool.Services
                 var activation = new PlotterActivation(connectionId, status);
                 if (!ActivePlotters.TryAdd(plotterId, activation))
                 {
-                    return ActivationResult.FromFailed("There already is a active connection from this plotter!");
+                    return MinerActivationResult.FromFailed("There already is a active connection from this plotter!");
                 }
 
                 Logger.LogInformation($"Activated plotter [{plotterId}]");
                 long userId = await UserService.GetOwnerIdFromPlotterId(plotterId);
-                return ActivationResult.FromSuccess(userId);
+                return MinerActivationResult.FromSuccess(userId);
             }
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an exception while activating a plotter!");
-                return ActivationResult.FromFailed("An unknown error occurred!");
+                return MinerActivationResult.FromFailed("An unknown error occurred!");
             }
             finally
             {

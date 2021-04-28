@@ -10,9 +10,9 @@ namespace ChiaPool.Controllers
     [ApiController]
     public class PlotController : ControllerBase
     {
-        private readonly PlotManager PlotManager;
+        private readonly PlotService PlotManager;
 
-        public PlotController(PlotManager plotManager)
+        public PlotController(PlotService plotManager)
         {
             PlotManager = plotManager;
         }

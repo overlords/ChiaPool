@@ -28,7 +28,7 @@ namespace ChiaPool
             services.AddApplication(Configuration, Assembly.GetAssembly(typeof(HarvesterClient)));
             services.AddApplication(Configuration, Assembly.GetAssembly(typeof(ServerApiAccessor)));
             services.AddSingleton<HttpClient>();
-            services.AddScoped<PlotManager>();
+            services.AddScoped<PlotService>();
 
             services.AddControllers();
         }
