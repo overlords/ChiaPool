@@ -12,11 +12,11 @@ namespace Chia.NET.Parser
         {
             if (reader.TokenType != JsonTokenType.Number)
             {
-                throw new JsonException(string.Format("Found token {0} but expected token {1}", reader.TokenType, JsonTokenType.Number));
+                throw new JsonException($"Found token {reader.TokenType} but expected token {JsonTokenType.Number}");
             }
 
             using var doc = JsonDocument.ParseValue(ref reader);
-            return BigInteger.Parse(reader.GetString(), NumberFormatInfo.InvariantInfo);
+            return BigInteger.Parse(doc.RootElement.GetRawText(), NumberFormatInfo.InvariantInfo);
         }
 
         public override void Write(Utf8JsonWriter writer, BigInteger value, JsonSerializerOptions options)
