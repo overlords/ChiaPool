@@ -11,10 +11,12 @@ namespace ChiaPool.Controllers
     public class PlotController : ControllerBase
     {
         private readonly PlotService PlotManager;
+        private readonly StatusService StatusService;
 
-        public PlotController(PlotService plotManager)
+        public PlotController(PlotService plotManager, StatusService statusService)
         {
             PlotManager = plotManager;
+            StatusService = statusService;
         }
 
         [HttpGet("List")]
@@ -22,8 +24,11 @@ namespace ChiaPool.Controllers
             => PlotManager.GetPlotsAsync();
 
         [HttpPost("Reload")]
-        public Task ReloadPlotsAsync()
-            => PlotManager.ReloadPlotsAsync();
+        public async Task ReloadPlotsAsync()
+        {
+            await PlotManager.ReloadPlotsAsync();
+            await StatusService.RefreshStatusAsync();
+        }
 
         [HttpPost("DeleteKey")]
         public Task<bool> DeletePlotByPubKeyAsync([FromForm] string pubKey)
