@@ -58,7 +58,7 @@ namespace ChiaPool.Services
                ? new PlotterInfo(plotter.Id, true, plotterStatus.Status.Capacity, plotterStatus.Status.PlotsAvailable, plotter.Name, plotter.Earnings, plotter.OwnerId)
                : new PlotterInfo(plotter.Id, false, -1, -1, plotter.Name, plotter.Earnings, plotter.OwnerId);
 
-        public async Task<MinerActivationResult> ActivatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
+        public async Task<PlotterActivationResult> ActivatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
         {
             await ActivePlottersLock.WaitAsync();
             try
@@ -66,24 +66,24 @@ namespace ChiaPool.Services
                 var activation = new PlotterActivation(connectionId, status);
                 if (!ActivePlotters.TryAdd(plotterId, activation))
                 {
-                    return MinerActivationResult.FromFailed("There already is a active connection from this plotter!");
+                    return PlotterActivationResult.FromFailed("There already is a active connection from this plotter!");
                 }
 
                 Logger.LogInformation($"Activated plotter [{plotterId}]");
                 long userId = await UserService.GetOwnerIdFromPlotterId(plotterId);
-                return MinerActivationResult.FromSuccess(userId);
+                return PlotterActivationResult.FromSuccess(userId);
             }
             catch (Exception ex)
             {
                 Logger.LogCritical(ex, "There was an exception while activating a plotter!");
-                return MinerActivationResult.FromFailed("An unknown error occurred!");
+                return PlotterActivationResult.FromFailed("An unknown error occurred!");
             }
             finally
             {
                 ActivePlottersLock.Release();
             }
         }
-        public async Task UpdatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
+        public async Task<PlotterUpdateResult> UpdatePlotterAsync(string connectionId, long plotterId, PlotterStatus status)
         {
             await ActivePlottersLock.WaitAsync();
 
@@ -101,6 +101,12 @@ namespace ChiaPool.Services
                 oldValue.Status = status;
                 ActivePlotters[plotterId] = oldValue;
                 Logger.LogInformation($"Updated plotter [{plotterId}]");
+                return PlotterUpdateResult.FromSuccess();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "There was an excpetion while updating a plotter!");
+                return PlotterUpdateResult.FromFailed("An unknown error occurred!");
             }
             finally
             {

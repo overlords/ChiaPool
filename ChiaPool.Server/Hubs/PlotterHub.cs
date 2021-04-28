@@ -20,16 +20,16 @@ namespace ChiaPool.Hubs
         }
 
         [HubMethodName(PlotterHubMethods.Activate)]
-        public Task<MinerActivationResult> ActivateAsync(PlotterStatus status)
+        public Task<PlotterActivationResult> ActivateAsync(PlotterStatus status)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
             return PlotterService.ActivatePlotterAsync(Context.ConnectionId, plotterId, status);
         }
         [HubMethodName(PlotterHubMethods.Update)]
-        public async Task UpdateAsync(PlotterStatus status)
+        public Task<PlotterUpdateResult> UpdateAsync(PlotterStatus status)
         {
             long plotterId = long.Parse(Context.UserIdentifier);
-            await PlotterService.UpdatePlotterAsync(Context.ConnectionId, plotterId, status);
+            return PlotterService.UpdatePlotterAsync(Context.ConnectionId, plotterId, status);
         }
 
         [HubMethodName(PlotterHubMethods.OfferPlot)]
