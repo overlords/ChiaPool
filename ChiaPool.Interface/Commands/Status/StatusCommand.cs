@@ -27,7 +27,7 @@ namespace ChiaPool.Commands
             MinerStatus clientStatus = await clientStatusTask;
             ServerStatus serverStatus = await serverStatusTask;
 
-            await InfoAsync($"Client ");
+            await InfoAsync($"Miner ");
 
             if (clientStatus == null)
             {
