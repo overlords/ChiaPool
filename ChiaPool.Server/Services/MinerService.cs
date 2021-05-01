@@ -116,12 +116,12 @@ namespace ChiaPool.Services
             {
                 if (plotInfos.Count != status.PlotCount)
                 {
-                    Logger.LogWarning($"Miner {minerId} tried to activate with unmatching status and plotInfos plot count");
+                    Logger.LogWarning($"Miner [{minerId}] tried to activate with unmatching status and plotInfos plot count");
                     return MinerActivationResult.FromStatusPlotCountUnmatch();
                 }
                 if (plotInfos.Count != plotInfos.Distinct().Count())
                 {
-                    Logger.LogWarning($"Miner {minerId} tried to activate with duplicate plot public keys");
+                    Logger.LogWarning($"Miner [{minerId}] tried to activate with duplicate plot public keys");
                     return MinerActivationResult.FromDuplicates();
                 }
                 if (ActiveMiners.ContainsKey(minerId))
@@ -133,7 +133,7 @@ namespace ChiaPool.Services
 
                 if (conflicts.Any())
                 {
-                    Logger.LogWarning($"Miner {minerId} tried to activate with {conflicts.Count} conflicing plots!");
+                    Logger.LogWarning($"Miner [{minerId}] tried to activate with {conflicts.Count} conflicing plots!");
                     status = new MinerStatus(status.PlotCount - conflicts.Count);
                 }
 
@@ -170,7 +170,8 @@ namespace ChiaPool.Services
                 }
                 if (oldValue.ConnectionId != connectionId)
                 {
-                    throw new InvalidOperationException("Cannot update active miner from different connection");
+                    Logger.LogWarning($"Miner [{minerId}] tried to update state from a different connection");
+                    return MinerUpdateResult.FromInvalidConnection();
                 }
 
                 RemovePlotInfos(oldValue.PlotInfos);
@@ -178,7 +179,7 @@ namespace ChiaPool.Services
 
                 if (conflicts.Any())
                 {
-                    Logger.LogWarning($"Miner {minerId} tried to update with {conflicts.Count} conflicing plots!");
+                    Logger.LogWarning($"Miner [{minerId}] tried to update with {conflicts.Count} conflicing plots!");
                     status = new MinerStatus(status.PlotCount - conflicts.Count);
                 }
 
@@ -207,11 +208,10 @@ namespace ChiaPool.Services
             {
                 if (!ActiveMiners.TryGetValue(minerId, out var oldValue))
                 {
-                    throw new InvalidOperationException("Cannot deactivate inactive miner");
+                    return;
                 }
                 if (oldValue.ConnectionId != connectionId)
                 {
-                    Logger.LogWarning("Cannot deactivate miner from different connection");
                     return;
                 }
 
@@ -240,7 +240,7 @@ namespace ChiaPool.Services
         private List<PlotInfo> AddPlotInfosAndFilterConflicts(List<PlotInfo> plotInfos) //May only be called inside of MinerLock
         {
             List<PlotInfo> conflicingPlots = new List<PlotInfo>();
-            foreach (var plotInfo in plotInfos)
+            foreach (var plotInfo in plotInfos.ToArray())
             {
                 if (!PlotInfos.Add(plotInfo))
                 {

@@ -28,6 +28,9 @@ namespace ChiaPool.Models
         public static MinerUpdateResult FromConflicingPlots(PlotInfo[] conflicts)
             => new MinerUpdateResult(true, conflicts, default);
 
+        public static MinerUpdateResult FromInvalidConnection()
+            => new MinerUpdateResult(false, default, "You cannot update this miner from this connection");
+
         public static MinerUpdateResult FromError()
             => FromFailed("An unknown error occurred");
 
