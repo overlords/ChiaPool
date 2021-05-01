@@ -242,7 +242,7 @@ namespace ChiaPool.Services
             List<PlotInfo> conflicingPlots = new List<PlotInfo>();
             foreach (var plotInfo in plotInfos.ToArray())
             {
-                if (!PlotInfos.Add(plotInfo))
+                if (PlotInfos.Add(plotInfo))
                 {
                     continue;
                 }
