@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace ChiaPool.Services
         private readonly StatusService StatusService;
         [Inject]
         private readonly PlotService PlotService;
+        [Inject]
+        private readonly IHost Application;
 
         protected override ValueTask InitializeAsync()
         {
@@ -87,56 +90,73 @@ namespace ChiaPool.Services
 
         public async Task SendStatusUpdateAsync()
         {
-            var status = StatusService.GetCurrentStatus();
-            var plotInfos = await PlotService.GetPlotInfosAsync();
-
-            if (status.PlotCount != plotInfos.Length)
+            try
             {
-                Logger.LogInformation("Plot count not matching with plot infos.\n" +
-                                      "Updating Status...");
-                await StatusService.RefreshStatusAsync();
-                status = StatusService.GetCurrentStatus();
+                var status = StatusService.GetCurrentStatus();
+                var plotInfos = await PlotService.GetPlotInfosAsync();
+
+                if (status.PlotCount != plotInfos.Length)
+                {
+                    Logger.LogInformation("Plot count not matching with plot infos.\n" +
+                                          "Updating Status...");
+                    await StatusService.RefreshStatusAsync();
+                    status = StatusService.GetCurrentStatus();
+                }
+
+                var result = await Connection.InvokeAsync<MinerUpdateResult>(MinerHubMethods.Update, status, plotInfos);
+
+                if (!result.Successful)
+                {
+                    Logger.LogError($"Failed to execute {MinerHubMethods.Update} via the websocket!\n" +
+                                    $"Reason: \"{result.Reason}\"");
+                    Logger.LogInformation("Restarting socket...");
+                    await RestartConnectionAsync();
+                    return;
+                }
+
+                HandleConflicts(result.Conflicts);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "There was an error while trying to update the miner status!");
+                await Application.StopAsync();
             }
 
-            var result = await Connection.InvokeAsync<MinerUpdateResult>(MinerHubMethods.Update, status, plotInfos);
-
-            if (!result.Successful)
-            {
-                Logger.LogError($"Failed to execute {MinerHubMethods.Update} via the websocket!\n" +
-                                $"Reason: \"{result.Reason}\"");
-                Logger.LogInformation("Restarting socket...");
-                await RestartConnectionAsync();
-                return;
-            }
-
-            HandleConflicts(result.Conflicts);
         }
         public async Task SendActivateRequestAsync()
         {
-            var status = StatusService.GetCurrentStatus();
-            var plotInfos = await PlotService.GetPlotInfosAsync();
-
-            if (status.PlotCount != plotInfos.Length)
+            try
             {
-                Logger.LogInformation("Plot count not matching with plot infos.\n" +
-                                      "Updating Status...");
-                await StatusService.RefreshStatusAsync();
-                status = StatusService.GetCurrentStatus();
+                var status = StatusService.GetCurrentStatus();
+                var plotInfos = await PlotService.GetPlotInfosAsync();
+
+                if (status.PlotCount != plotInfos.Length)
+                {
+                    Logger.LogInformation("Plot count not matching with plot infos.\n" +
+                                          "Updating Status...");
+                    await StatusService.RefreshStatusAsync();
+                    status = StatusService.GetCurrentStatus();
+                }
+
+                var result = await Connection.InvokeAsync<MinerActivationResult>(MinerHubMethods.Activate, status, plotInfos);
+
+                if (!result.Successful)
+                {
+                    Logger.LogError($"Failed to execute {MinerHubMethods.Activate} via the websocket!\n" +
+                                    $"Reason: \"{result.Reason}\"");
+                    Logger.LogInformation("Restarting socket...");
+                    await RestartConnectionAsync();
+                    return;
+                }
+
+                HandleConflicts(result.Conflicts);
+                UserId = result.UserId;
             }
-
-            var result = await Connection.InvokeAsync<MinerActivationResult>(MinerHubMethods.Activate, status, plotInfos);
-
-            if (!result.Successful)
+            catch (Exception ex)
             {
-                Logger.LogError($"Failed to execute {MinerHubMethods.Activate} via the websocket!\n" +
-                                $"Reason: \"{result.Reason}\"");
-                Logger.LogInformation("Restarting socket...");
-                await RestartConnectionAsync();
-                return;
+                Logger.LogCritical(ex, "There was an error while trying to enable the miner!");
+                await Application.StopAsync();
             }
-
-            HandleConflicts(result.Conflicts);
-            UserId = result.UserId;
         }
 
         private void HandleConflicts(PlotInfo[] conflicts)
