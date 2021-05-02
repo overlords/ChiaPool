@@ -43,3 +43,8 @@ This is enabled by default, you only need to add your keys to the node.env file.
 | Accessible by miners   | Yes           | No           |
 | Accessible by plotters | Only pks      | No           |
 | Used for plotting      | Yes           | No           |
+
+## State of Development
+The current version of the miner & pool are functioning and can be used, the plotter is currently not working and I have pushed it back on the priority list.
+There are no prebuilt stable images provided currently, if you want to use this pool you will need to build the image yourself.
+The main branch will not always contain stable code, as soon as I finish a release I will create a seperate stable branch.
