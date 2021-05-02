@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
 namespace ChiaPool.Models
 {
@@ -18,7 +19,7 @@ namespace ChiaPool.Models
         private MinerUpdateResult(bool successful, PlotInfo[] conflicts, string reason)
         {
             Successful = successful;
-            Conflicts = conflicts;
+            Conflicts = conflicts ?? Array.Empty<PlotInfo>();
             Reason = reason;
         }
 
