@@ -3,7 +3,7 @@ using System;
 
 namespace ChiaPool.Extensions
 {
-    public static class WalletExtensions
+    public static partial class Extensions
     {
         public static Wallet GetFraction(this Wallet wallet, double fraction)
         {

@@ -1,6 +1,7 @@
 using Chia.NET.Clients;
 using ChiaPool.Authentication;
 using ChiaPool.Configuration;
+using ChiaPool.Extensions;
 using ChiaPool.Hubs;
 using ChiaPool.Models;
 using Common.Extensions;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 namespace ChiaPool
@@ -46,6 +48,23 @@ namespace ChiaPool
                 .AddJsonProtocol();
 
             services.AddControllers();
+
+            if (Configuration.IsSwaggerEnabled())
+            {
+                services.AddSwaggerGen(c =>
+                {
+                    var apiInfo = new OpenApiInfo()
+                    {
+                        Title = "ChiaPool",
+                        Description = "The web api of the crypto mining pool software ChiaPool",
+                        Version = "v0.9",
+                    };
+
+                    c.SwaggerDoc("v0.9", apiInfo);
+                });
+            }
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +73,14 @@ namespace ChiaPool
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            if (Configuration.IsSwaggerEnabled())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v0.9/swagger.json", "ChiaPool API v0.9");
+                });
             }
 
             app.UseRouting();
